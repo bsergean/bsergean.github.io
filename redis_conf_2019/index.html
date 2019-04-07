@@ -1,0 +1,70 @@
+<html>
+<xmp theme="united" style="display:none;">
+
+# Redis Conf 2019 report
+
+I had a fantastic time at the [Redis conference](https://twitter.com/RedisConf) in San Francisco. I got to meet a lot of nice and smart people and I did learn a bunch about redis. I think that the best part was simply meeting peoples and exchanging ideas. This was also my first time ever presenting [something](slides.html) at a conference, which was both stressing and exiting.
+
+## Talks
+
+### Training day
+
+I started the conference on Monday April first (my birthday, no kidding) by attending the introduction to Redis Streams. The training materials was available through a nifty online interactive platform which had all required software installed through some javascript magic (a python interpreter, a redis-cli and a git client to download example code). Since I wanted to be run the samples locally too, I upgraded my mac redis install to 5.0.4. I had read blog posts about streams, but there is really nothing like sitting through a tutorial and going slowly through every commands, and playing with commands in the redis-cli and tutorials. I learned that prefixing a command with a number N will execute that command N times, which is pretty convenient when you want to do a batch 'insert' or run a bunch of XADD to add data to your stream. Being the vi nerd that I am I noticed that redis-cli does not have vim bindings, but there's already a [pull request](https://github.com/antirez/linenoise/pull/11) for linenoise I could/should help with to fix that. Getting to know streams more re-enforced my will to try to switch my analytics system from PubSub to Streams so that we have a way to not lose events. I asked [Itamar Haber](https://twitter.com/itamarhaber), the presenter, if there was a plan or a way to just capture individual fields when we consume data with [XREAD](https://redis.io/commands/xread) or [XRANGE](https://redis.io/commands/xrange), which could be useful to minimize transfered data, but there isn't yet. Maybe one day. Writing a redis lua script could solve this however, as the lua code would 'strip' down the unwanted fields before transfering data.
+
+The next talk I attended, by [Loris Cro](https://twitter.com/kristoff_it), was about probabilistic data structures, which is a domain I found fascinating. By making some tradeoffs on precision, we can do things almost magically such as computing the cardinality of a huge set using a fixed and tiny amount of memory. That technique named [HyperLogLog](https://en.wikipedia.org/wiki/HyperLogLog) was discovered by Philipe Flajolet, a French researcher who was the adviser of a good [friend](http://membres-timc.imag.fr/Michael.Blum/) of mine in college in Grenoble. It's a [small world](https://en.wikipedia.org/wiki/Six_degrees_of_separation). The talk was also explaining how Bloom filters and Cukoo filters work. Bloom filters are used in LevelDB to accelerate lookup queries, and have been there for a while. They perform horribly if not initialized properly. Cukoo filters are solving the same problems as Bloom filters (set lookups), but they are more flexible as they allow removal operation. All those probabilistic data structures are available in redis core or through redis modules. A cuckoo filter sounds like a great way to compute and maintain an approximate active user count.
+
+The last talk of the day I attended was about [Active/Active redis](https://redislabs.com/landing/active-active/), (aka Master/Master in databases, as opposed to Master/Slave). The goal with an Active/Active configuration is to use the computing resources better than with a master/slave setup, where the slave instance is mostly sleeping or only replicating data while it waits to be elected as the new master in case the previous master fails. The talk went through every data structure in redis, and explained the end results when competing operations to the same data-structure are happening on 2 active nodes.
+
+The day ended up with a relaxing happy hour, and then taking the train home to eat my birthday cake with my family.
+
+### First day
+
+The day started with the key-notes with a presentation by Salvatore, the creator of redis, of the upcoming redis-6.0 features, which are ACL (access control lists), redis proxy and IO threading. There were good presentations and demos about all the Redis Modules, for doing all sort of things ; graphs, search, AI, Time Series Database (a new module). The CEO of Google Cloud was interviewed, and it ended up with a panel by Video Games company who are running their Redis instances through RedisLab, which sounds like a good idea.
+
+The rest of the day was a bit blurry as I was starting to stress out waiting for my talk to happen. The first talk I saw was about using Closure and Redis Streams to write webapps. After lunch I saw a talk about all sorts of redis use cases at Hacker-Rank. The speaker had stuttering issues with some words, and I found that very courageous to go on stage and make a presentation to a big crowd ... nice job. I went to the expo, talked to the AWS guys who have a hosted Redis called Elastic-Cache, and discovered that you can have 13TB hard-drives those days at the Western Digital booth. I signed up for a free Redis training on [Redis University](https://university.redislabs.com/). I hope I'll have time to take it and not flake out ... as there are still a lot I need to learn about streams and redis modules.
+
+### Second day
+
+On the second day I actually only attended 2 talks for a couple of hours in the afternoon, because I had taken the day off. I went while my family was at the San Francisco Aquarium. I saw one talk about a redis proxy that had been written at Machine Zone by Kevin Xiao, and how it was rewritten in [Rust](https://github.com/kex103/redis-flare-proxy) later on. I'm curious about those proxys, and I wonder if I should use one, paired with redis cluster. The setup I use for cobra is rather simplistic and not robust if some redis nodes go down. Luckily this has never happened but it's not super safe to bet on redis never going down, or a more likely thing to happen, a network partition happening. The second and last talk I attended was about using Apache Spark with redis streams, and execute SQL queries against a redis source.
+
+The day wrapped up fast with another nice chat with Loris and other folks at the happy hour. We discussed having [websockets](https://en.wikipedia.org/wiki/WebSocket) supported natively by Redis (whose network layer is over a TCP socket, so technically speaking that wouldn't be an impossible change). It would allow some Javascript web applications to talk directly to redis which would reduce latency, and this could become a form of 'server-less' computing, where there is no 'Rails' or 'Django' that sits between a webapp and a database, redis in that case. There are probably a million problems with this approach, security being the biggest one, but with ACLs in redis-6, maybe that could be viables for some workflow. For example a user would only be allowed some redis operations on keys he owns.
+
+## My presentation
+
+Slides are [here](slides.html). The presentation was recorded so hopefully I'll be able to share a youtube link soon. It felt that the presentation went ok, I didn't bug or crash too much while doing it and no-one felt asleep :)
+
+### Redis Streams
+
+After my stream training I tried to hack cobra (the 'broker' in my pubsub system) to swap pubsub with streams in the train while going to the first day of the conference. I got something running, but was puzzled by a very slow message rate. I have a benchmark which display how many messages can be received per second, when another publisher process is sending messages, and I was getting very few messages received per second with the stream based implementation. It turns out that I was calling [XREAD](https://redis.io/commands/xread) improperly, by always passing in the special character $ for the last id. Once I started to record the id of the last message received, and pass it as a parameter to XREAD, the stream based implementation caught up and I could see expected numbers.
+
+Console output with the bug
+
+```
+#messages 30 msg/s 29
+#messages 51 msg/s 21
+#messages 66 msg/s 15
+#messages 82 msg/s 16
+```
+
+Console output with the bug fixed
+
+```
+#messages 454 msg/s 453
+#messages 1247 msg/s 793
+#messages 1620 msg/s 373
+#messages 1911 msg/s 291
+```
+
+### Pypy
+
+After it was brought up by Loris that I could be using [Pypy3](https://pypy.org/) with cobra I wanted to give it a try. Indeed latest pypy is compatible with asyncio and I got it to work.
+Cobra does have a pure python simple SQL evaluation engine, which is an almost pure CPU intensive workflow, so I wonder if pypy could speed that up compared to CPython. Here are the caveats:
+
+* The docker image is based on debian stretch, while there is a small alpine Linux version of CPython3.
+* tracemalloc does not work or cannot be imported
+* uvloop isn't supported
+* cobra is using some python 3.7 asyncio which are missing in pypy3.6 (asyncio.create_task(), and asyncio.all_tasks()).
+</xmp>
+
+<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
+</html>
