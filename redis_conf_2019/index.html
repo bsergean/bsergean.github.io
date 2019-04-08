@@ -19,7 +19,7 @@ The day ended up with a relaxing happy hour, and then taking the train home to e
 
 ### First day
 
-The day started with the key-notes with a presentation by Salvatore, the creator of redis, of the upcoming redis-6.0 features, which are ACL (access control lists), redis proxy and IO threading. There were good presentations and demos about all the Redis Modules, for doing all sort of things ; graphs, search, AI, Time Series Database (a new module). The CEO of Google Cloud was interviewed, and it ended up with a panel by Video Games company who are running their Redis instances through RedisLab, which sounds like a good idea.
+The day started with the key-notes with a presentation by Salvatore, the creator of redis, of the upcoming redis-6.0 features, which are ACL (access control lists), redis proxy and IO threading. There were good presentations and demos about all the Redis Modules, for doing all sort of things ; graphs, search, AI, Time Series Database (a new module). The CEO of Google Cloud was interviewed, and it ended up with a panel by Video Games company who are running their Redis instances on RedisLab Cloud instances.
 
 The rest of the day was a bit blurry as I was starting to stress out waiting for my talk to happen. The first talk I saw was about using Closure and Redis Streams to write webapps. After lunch I saw a talk about all sorts of redis use cases at Hacker-Rank. The speaker had stuttering issues with some words, and I found that very courageous to go on stage and make a presentation to a big crowd ... nice job. I went to the expo, talked to the AWS guys who have a hosted Redis called Elastic-Cache, and discovered that you can have 13TB hard-drives those days at the Western Digital booth. I signed up for a free Redis training on [Redis University](https://university.redislabs.com/). I hope I'll have time to take it and not flake out ... as there are still a lot I need to learn about streams and redis modules.
 
@@ -62,7 +62,6 @@ Cobra does have a pure python simple SQL evaluation engine, which is an almost p
 
 * The docker image is based on debian stretch, while there is a small alpine Linux version of CPython3.
 * tracemalloc does not work or cannot be imported
-* uvloop isn't supported
 * cobra is using some python 3.7 asyncio which are missing in pypy3.6 (asyncio.create_task(), and asyncio.all_tasks()).
 </xmp>
 
