@@ -8,7 +8,7 @@
         
         
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>Usage - IXWebSocket</title>
+        <title>Examples - IXWebSocket</title>
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome.min.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
@@ -56,7 +56,7 @@
                                 <a href="../design/">Design</a>
                             </li>
                             <li class="active">
-                                <a href="./">Usage</a>
+                                <a href="./">Examples</a>
                             </li>
                             <li >
                                 <a href="../ws/">Ws</a>
@@ -97,9 +97,9 @@
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h2 id="examples">Examples</h2>
+<h1 id="examples">Examples</h1>
 <p>The <a href="https://github.com/machinezone/IXWebSocket/tree/master/ws"><em>ws</em></a> folder countains many interactive programs for chat, <a href="https://github.com/machinezone/IXWebSocket/blob/master/ws/ws_send.cpp">file transfers</a>, <a href="https://github.com/machinezone/IXWebSocket/blob/master/ws/ws_http_client.cpp">curl like</a> http clients, demonstrating client and server usage.</p>
-<h3 id="windows-note">Windows note</h3>
+<h2 id="windows-note">Windows note</h2>
 <p>To use the network system on Windows, you need to initialize it once with <em>WSAStartup()</em> and clean it up with <em>WSACleanup()</em>. We have helpers for that which you can use, see below. This init would typically take place in your main function.</p>
 <pre><code>#include &lt;ixwebsocket/IXNetSystem.h&gt;
 
@@ -114,7 +114,7 @@ int main()
 }
 </code></pre>
 
-<h3 id="websocket-client-api">WebSocket client API</h3>
+<h2 id="websocket-client-api">WebSocket client API</h2>
 <pre><code>#include &lt;ixwebsocket/IXWebSocket.h&gt;
 
 ...
@@ -157,7 +157,105 @@ webSocket.sendBinary(&quot;some serialized binary data&quot;);
 webSocket.stop()
 </code></pre>
 
-<h3 id="websocket-server-api">WebSocket server API</h3>
+<h3 id="sending-messages">Sending messages</h3>
+<p><code>websocket.send("foo")</code> will send a message.</p>
+<p>If the connection was closed and sending failed, the return value will be set to false.</p>
+<h3 id="readystate">ReadyState</h3>
+<p><code>getReadyState()</code> returns the state of the connection. There are 4 possible states.</p>
+<ol>
+<li>ReadyState::Connecting - The connection is not yet open.</li>
+<li>ReadyState::Open       - The connection is open and ready to communicate.</li>
+<li>ReadyState::Closing    - The connection is in the process of closing.</li>
+<li>ReadyState::Closed     - The connection is closed or could not be opened.</li>
+</ol>
+<h3 id="open-and-close-notifications">Open and Close notifications</h3>
+<p>The onMessage event will be fired when the connection is opened or closed. This is similar to the <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket">Javascript browser API</a>, which has <code>open</code> and <code>close</code> events notification that can be registered with the browser <code>addEventListener</code>.</p>
+<pre><code>webSocket.setOnMessageCallback([](const ix::WebSocketMessagePtr&amp; msg)
+    {
+        if (msg-&gt;type == ix::WebSocketMessageType::Open)
+        {
+            std::cout &lt;&lt; &quot;send greetings&quot; &lt;&lt; std::endl;
+
+            // Headers can be inspected (pairs of string/string)
+            std::cout &lt;&lt; &quot;Handshake Headers:&quot; &lt;&lt; std::endl;
+            for (auto it : msg-&gt;headers)
+            {
+                std::cout &lt;&lt; it.first &lt;&lt; &quot;: &quot; &lt;&lt; it.second &lt;&lt; std::endl;
+            }
+        }
+        else if (msg-&gt;type == ix::WebSocketMessageType::Close)
+        {
+            std::cout &lt;&lt; &quot;disconnected&quot; &lt;&lt; std::endl;
+
+            // The server can send an explicit code and reason for closing.
+            // This data can be accessed through the closeInfo object.
+            std::cout &lt;&lt; msg-&gt;closeInfo.code &lt;&lt; std::endl;
+            std::cout &lt;&lt; msg-&gt;closeInfo.reason &lt;&lt; std::endl;
+        }
+    }
+);
+</code></pre>
+
+<h3 id="error-notification">Error notification</h3>
+<p>A message will be fired when there is an error with the connection. The message type will be <code>ix::WebSocketMessageType::Error</code>. Multiple fields will be available on the event to describe the error.</p>
+<pre><code>webSocket.setOnMessageCallback([](const ix::WebSocketMessagePtr&amp; msg)
+    {
+        if (msg-&gt;type == ix::WebSocketMessageType::Error)
+        {
+            std::stringstream ss;
+            ss &lt;&lt; &quot;Error: &quot;         &lt;&lt; msg-&gt;errorInfo.reason      &lt;&lt; std::endl;
+            ss &lt;&lt; &quot;#retries: &quot;      &lt;&lt; msg-&gt;eventInfo.retries     &lt;&lt; std::endl;
+            ss &lt;&lt; &quot;Wait time(ms): &quot; &lt;&lt; msg-&gt;eventInfo.wait_time   &lt;&lt; std::endl;
+            ss &lt;&lt; &quot;HTTP Status: &quot;   &lt;&lt; msg-&gt;eventInfo.http_status &lt;&lt; std::endl;
+            std::cout &lt;&lt; ss.str() &lt;&lt; std::endl;
+        }
+    }
+);
+</code></pre>
+
+<h3 id="start-stop">start, stop</h3>
+<ol>
+<li><code>websocket.start()</code> connect to the remote server and starts the message receiving background thread.</li>
+<li><code>websocket.stop()</code> disconnect from the remote server and closes the background thread.</li>
+</ol>
+<h3 id="configuring-the-remote-url">Configuring the remote url</h3>
+<p>The url can be set and queried after a websocket object has been created. You will have to call <code>stop</code> and <code>start</code> if you want to disconnect and connect to that new url.</p>
+<pre><code>std::string url(&quot;wss://example.com&quot;);
+websocket.configure(url);
+</code></pre>
+
+<h3 id="pingpong-support">Ping/Pong support</h3>
+<p>Ping/pong messages are used to implement keep-alive. 2 message types exists to identify ping and pong messages. Note that when a ping message is received, a pong is instantly send back as requested by the WebSocket spec.</p>
+<pre><code>webSocket.setOnMessageCallback([](const ix::WebSocketMessagePtr&amp; msg)
+    {
+        if (msg-&gt;type == ix::WebSocketMessageType::Ping ||
+            msg-&gt;type == ix::WebSocketMessageType::Pong)
+        {
+            std::cout &lt;&lt; &quot;pong data: &quot; &lt;&lt; msg-&gt;str &lt;&lt; std::endl;
+        }
+    }
+);
+</code></pre>
+
+<p>A ping message can be sent to the server, with an optional data string.</p>
+<pre><code>websocket.ping(&quot;ping data, optional (empty string is ok): limited to 125 bytes long&quot;);
+</code></pre>
+
+<h3 id="heartbeat">Heartbeat.</h3>
+<p>You can configure an optional heart beat / keep-alive, sent every 45 seconds
+when there is no any traffic to make sure that load balancers do not kill an
+idle connection.</p>
+<pre><code>webSocket.setHeartBeatPeriod(45);
+</code></pre>
+
+<h3 id="supply-extra-http-headers">Supply extra HTTP headers.</h3>
+<p>You can set extra HTTP headers to be sent during the WebSocket handshake.</p>
+<pre><code>WebSocketHttpHeaders headers;
+headers[&quot;foo&quot;] = &quot;bar&quot;;
+webSocket.setExtraHeaders(headers);
+</code></pre>
+
+<h2 id="websocket-server-api">WebSocket server API</h2>
 <pre><code>#include &lt;ixwebsocket/IXWebSocketServer.h&gt;
 
 ...
@@ -220,7 +318,7 @@ server.wait();
 
 </code></pre>
 
-<h3 id="http-client-api">HTTP client API</h3>
+<h2 id="http-client-api">HTTP client API</h2>
 <pre><code>#include &lt;ixwebsocket/IXHttpClient.h&gt;
 
 ...
@@ -301,7 +399,7 @@ bool ok = httpClient.performRequest(args, [](const HttpResponsePtr&amp; response
 // ok will be false if your httpClient is not async
 </code></pre>
 
-<h3 id="http-server-api">HTTP server API</h3>
+<h2 id="http-server-api">HTTP server API</h2>
 <pre><code>#include &lt;ixwebsocket/IXHttpServer.h&gt;
 
 ix::HttpServer server(port, hostname);
