@@ -1,7 +1,7 @@
 {
    "agent": "ixwebsocket",
-   "behavior": "FAILED",
-   "behaviorClose": "WRONG CODE",
+   "behavior": "OK",
+   "behaviorClose": "OK",
    "case": 222,
    "closedByMe": true,
    "createStats": true,
@@ -21,28 +21,28 @@
       "closedByMe": true,
       "requireClean": false
    },
-   "failedByMe": true,
-   "httpRequest": "GET /runCase?case=222&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: h1HDfha6c6bfeg2cbbgB1c==\r\nUser-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: t6d6G5VJkX4WeqtoJ85Ai4w3loQ=\r\n\r\n",
+   "failedByMe": false,
+   "httpRequest": "GET /runCase?case=222&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 240E04E9660cbH075c18Cd==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: POYZLRqHjAT1Nt50H+sZBa7vKFg=\r\n\r\n",
    "id": "7.5.1",
    "isServer": true,
    "localCloseCode": 1000,
    "localCloseReason": "cebae1bdb9cf83cebcceb5eda080656469746564",
    "received": [],
-   "remoteCloseCode": 1000,
-   "remoteCloseReason": "\u03ba\u1f79\u03c3\u03bc\u03b5\ud800edited",
+   "remoteCloseCode": 1007,
+   "remoteCloseReason": "Invalid frame payload data",
    "reportCompressionRatio": false,
    "reportTime": false,
-   "result": "The close code should have been 1002,1007 or empty",
-   "resultClose": "The close code should have been 1002,1007 or empty",
+   "result": "Actual events match at least one expected.",
+   "resultClose": "Connection was properly closed",
    "rxFrameStats": {
       "8": 1
    },
    "rxOctetStats": {
-      "28": 1,
-      "348": 1
+      "34": 1,
+      "350": 1
    },
-   "started": "2019-09-01T18:29:36.358Z",
+   "started": "2019-09-04T16:51:54.551Z",
    "trafficStats": null,
    "txFrameStats": {
       "8": 1
@@ -51,7 +51,7 @@
       "24": 1,
       "206": 1
    },
-   "wasClean": false,
+   "wasClean": true,
    "wasCloseHandshakeTimeout": false,
    "wasNotCleanReason": null,
    "wasOpenHandshakeTimeout": false,
@@ -60,7 +60,7 @@
       [
          "RO",
          [
-            348,
+            350,
             "474554202f72756e436173653f636173653d323232266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f73 ..."
          ]
       ],
@@ -101,21 +101,21 @@
       [
          "RO",
          [
-            28,
-            "88965d6c0e105e84c0aabcd1b7dfdea2b2dee881ae90380867643808"
+            34,
+            "889c5d6febaa5e80a2c42b0e87c3394f8dd83c028e8a2d0e92c6320e8f8a390e9fcb"
          ]
       ],
       [
          "RF",
          [
-            22,
-            "0x03e8cebae1bdb9cf83cebcceb5eda080656469746564"
+            28,
+            "0x03ef496e76616c6964206672616d65207061796c6f61642064617461"
          ],
          8,
          true,
          0,
          true,
-         "5d6c0e10"
+         "5d6febaa"
       ]
    ]
 }

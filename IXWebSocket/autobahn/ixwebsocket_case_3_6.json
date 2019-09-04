@@ -1,14 +1,14 @@
 {
    "agent": "ixwebsocket",
-   "behavior": "FAILED",
-   "behaviorClose": "FAILED",
+   "behavior": "OK",
+   "behaviorClose": "OK",
    "case": 33,
-   "closedByMe": true,
+   "closedByMe": false,
    "createStats": true,
    "createWirelog": true,
    "description": "Send Ping with <b>RSV = 6</b>.",
    "droppedByMe": true,
-   "duration": 1005,
+   "duration": 3,
    "expectation": "The connection is failed immediately, since RSV must be 0.",
    "expected": {
       "OK": []
@@ -20,43 +20,35 @@
       "closedByMe": false,
       "requireClean": false
    },
-   "failedByMe": true,
-   "httpRequest": "GET /runCase?case=33&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: d948FbACd2d0HeghbcC8He==\r\nUser-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: /fvioeEUmQwPDpWDwLMjyNThwRA=\r\n\r\n",
+   "failedByMe": false,
+   "httpRequest": "GET /runCase?case=33&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: Gg6bf6bHgE1d47eeAe3EC6==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: Io+/LThcYyBB4GdPoSA/Mk4urvI=\r\n\r\n",
    "id": "3.6",
    "isServer": true,
-   "localCloseCode": 1001,
-   "localCloseReason": "Going Away",
-   "received": [
-      [
-         "message",
-         "Hello, world!",
-         true
-      ]
-   ],
-   "remoteCloseCode": 1001,
-   "remoteCloseReason": "Going Away",
+   "localCloseCode": 1000,
+   "localCloseReason": null,
+   "received": [],
+   "remoteCloseCode": 1002,
+   "remoteCloseReason": "Reserved bit used",
    "reportCompressionRatio": false,
    "reportTime": false,
-   "result": "Actual events differ from any expected.",
-   "resultClose": "The connection was failed by the wrong endpoint",
+   "result": "Actual events match at least one expected.",
+   "resultClose": "Connection was properly closed",
    "rxFrameStats": {
-      "2": 1,
       "8": 1
    },
    "rxOctetStats": {
-      "18": 1,
-      "19": 1,
-      "347": 1
+      "25": 1,
+      "349": 1
    },
-   "started": "2019-09-01T18:28:53.791Z",
+   "started": "2019-09-04T16:51:41.871Z",
    "trafficStats": null,
    "txFrameStats": {
       "2": 1,
       "8": 1
    },
    "txOctetStats": {
-      "14": 1,
+      "4": 1,
       "15": 1,
       "206": 1
    },
@@ -69,7 +61,7 @@
       [
          "RO",
          [
-            347,
+            349,
             "474554202f72756e436173653f636173653d3333266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f7374 ..."
          ]
       ],
@@ -110,30 +102,27 @@
       [
          "RO",
          [
-            19,
-            "828d5d6c0de51509618932402d92321e61817c"
+            25,
+            "88935d6feb9d5e85b9f82e0a99eb380bcbff341bcbe82e0a8f"
          ]
       ],
       [
          "RF",
          [
-            13,
-            "Hello, world!"
+            19,
+            "0x03ea5265736572766564206269742075736564"
          ],
-         2,
+         8,
          true,
          0,
          true,
-         "5d6c0de5"
-      ],
-      [
-         "KLE"
+         "5d6feb9d"
       ],
       [
          "TF",
          [
-            12,
-            "0x03e9476f696e672041776179"
+            2,
+            "0x03e8"
          ],
          8,
          true,
@@ -146,29 +135,10 @@
       [
          "TO",
          [
-            14,
-            "880c03e9476f696e672041776179"
+            4,
+            "880203e8"
          ],
          false
-      ],
-      [
-         "RO",
-         [
-            18,
-            "888c5d6c0de65e854a8934026ac61c1b6c9f"
-         ]
-      ],
-      [
-         "RF",
-         [
-            12,
-            "0x03e9476f696e672041776179"
-         ],
-         8,
-         true,
-         0,
-         true,
-         "5d6c0de6"
       ]
    ]
 }

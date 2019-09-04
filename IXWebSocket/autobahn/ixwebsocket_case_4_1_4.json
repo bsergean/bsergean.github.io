@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send small text message, then send frame with reserved non-control <b>Opcode = 6</b> and non-empty payload, then send Ping.",
    "droppedByMe": true,
-   "duration": 3,
+   "duration": 2,
    "expectation": "Echo for first message is received, but then connection is failed immediately, since reserved opcode frame is used. A Pong is not received.",
    "expected": {
       "NON-STRICT": [],
@@ -28,8 +28,8 @@
       "requireClean": false
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=38&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 7b67E3DD80heHaDef61DF8==\r\nUser-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: gRvbs/m0yu8Bdmv4EEROE44U/Tw=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=38&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: F4AeEb4hafdh1F1h0hg9d5==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: tytro2iC15eB/KIcIyV3+IS5fJE=\r\n\r\n",
    "id": "4.1.4",
    "isServer": true,
    "localCloseCode": 1000,
@@ -53,9 +53,9 @@
    },
    "rxOctetStats": {
       "47": 1,
-      "347": 1
+      "349": 1
    },
-   "started": "2019-09-01T18:28:54.823Z",
+   "started": "2019-09-04T16:51:42.503Z",
    "trafficStats": null,
    "txFrameStats": {
       "1": 1,
@@ -78,7 +78,7 @@
       [
          "RO",
          [
-            347,
+            349,
             "474554202f72756e436173653f636173653d3338266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f7374 ..."
          ]
       ],
@@ -164,7 +164,7 @@
          "RO",
          [
             47,
-            "818d5d6c0de61509618a32402d91321e61827c88905d6c0de65e865d943218628532002d832f1e62948a805d6c0de6"
+            "818d5d6feb9e150a87f23243cbe9321d87fa7c88905d6feb9e5e85bbec321b84fd3203cbfb2f1d84ec8a805d6feb9e"
          ]
       ],
       [
@@ -177,7 +177,7 @@
          true,
          0,
          true,
-         "5d6c0de6"
+         "5d6feb9e"
       ],
       [
          "RF",
@@ -189,7 +189,7 @@
          true,
          0,
          true,
-         "5d6c0de6"
+         "5d6feb9e"
       ],
       [
          "TF",

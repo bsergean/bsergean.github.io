@@ -1,6 +1,6 @@
 {
    "agent": "ixwebsocket",
-   "behavior": "FAILED",
+   "behavior": "OK",
    "behaviorClose": "OK",
    "case": 63,
    "closedByMe": true,
@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "A fragmented text message is sent in multiple frames. After\n   sending the first 2 frames of the text message, a Ping is sent. Then we wait 1s,\n   then we send 2 more text fragments, another Ping and then the final text fragment.\n   Everything is legal.",
    "droppedByMe": true,
-   "duration": 2009,
+   "duration": 1008,
    "expectation": "The peer immediately answers the first Ping before\n   it has received the last text message fragment. The peer pong's back the Ping's\n   payload exactly, and echo's the payload of the fragmented message back to us.",
    "expected": {
       "OK": [
@@ -35,11 +35,11 @@
       "requireClean": true
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=63&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: g9cagb6hA3DHH89eBhGaDf==\r\nUser-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: 2HOuZMNY4jLaHHrp4+/IrLoeb2Y=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=63&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: g6bac18cd39c47DFC4dc8D==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: jj9DjDzyMj6aejGgLS1it4yGX90=\r\n\r\n",
    "id": "5.19",
    "isServer": true,
-   "localCloseCode": null,
+   "localCloseCode": 1000,
    "localCloseReason": null,
    "received": [
       [
@@ -53,27 +53,27 @@
       [
          "message",
          "fragment1fragment2fragment3fragment4fragment5",
-         true
+         false
       ]
    ],
-   "remoteCloseCode": null,
+   "remoteCloseCode": 1000,
    "remoteCloseReason": null,
    "reportCompressionRatio": false,
    "reportTime": false,
-   "result": "Actual events differ from any expected.",
+   "result": "Actual events match at least one expected.",
    "resultClose": "Connection was properly closed",
    "rxFrameStats": {
-      "2": 1,
+      "1": 1,
       "8": 1,
       "10": 2
    },
    "rxOctetStats": {
-      "6": 1,
+      "8": 1,
       "15": 1,
       "66": 1,
-      "347": 1
+      "349": 1
    },
-   "started": "2019-09-01T18:29:13.108Z",
+   "started": "2019-09-04T16:51:43.311Z",
    "trafficStats": null,
    "txFrameStats": {
       "0": 4,
@@ -82,7 +82,7 @@
       "9": 2
    },
    "txOctetStats": {
-      "2": 1,
+      "4": 1,
       "11": 7,
       "206": 1
    },
@@ -95,7 +95,7 @@
       [
          "RO",
          [
-            347,
+            349,
             "474554202f72756e436173653f636173653d3633266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f7374 ..."
          ]
       ],
@@ -182,7 +182,7 @@
          "RO",
          [
             15,
-            "8a895d6c0df92d03639e30092dc87c"
+            "8a895d6feb9f2d0085f8300acbae7c"
          ]
       ],
       [
@@ -195,7 +195,7 @@
          true,
          0,
          true,
-         "5d6c0df9"
+         "5d6feb9f"
       ],
       [
          "CTE",
@@ -297,7 +297,7 @@
          "RO",
          [
             66,
-            "8a895d6c0dfa2d03639d30092dc87c82ad5d6c0dfa3b1e6c9d3009638e6c0a7f9b3a016894295e6b883c0b609f33183e9c2f0d6a97380279ce3b1e6c9d300963 ..."
+            "8a895d6feba02d0085c7300acb927c81ad5d6feba03b1d8ac7300a85d46c0999c13a028ece295d8dd23c0886c5331bd8c62f0e8ccd38019f943b1d8ac7300a85 ..."
          ]
       ],
       [
@@ -310,7 +310,7 @@
          true,
          0,
          true,
-         "5d6c0dfa"
+         "5d6feba0"
       ],
       [
          "RF",
@@ -318,20 +318,17 @@
             45,
             "fragment1fragment2fragment3fragment4fragment5"
          ],
-         2,
+         1,
          true,
          0,
          true,
-         "5d6c0dfa"
-      ],
-      [
-         "TIE"
+         "5d6feba0"
       ],
       [
          "TF",
          [
-            0,
-            ""
+            2,
+            "0x03e8"
          ],
          8,
          true,
@@ -344,29 +341,29 @@
       [
          "TO",
          [
-            2,
-            "8800"
+            4,
+            "880203e8"
          ],
          false
       ],
       [
          "RO",
          [
-            6,
-            "88805d6c0dfb"
+            8,
+            "88825d6feba05e87"
          ]
       ],
       [
          "RF",
          [
-            0,
-            ""
+            2,
+            "0x03e8"
          ],
          8,
          true,
          0,
          true,
-         "5d6c0dfb"
+         "5d6feba0"
       ]
    ]
 }

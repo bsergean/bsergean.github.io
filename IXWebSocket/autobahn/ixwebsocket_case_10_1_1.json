@@ -1,14 +1,14 @@
 {
    "agent": "ixwebsocket",
-   "behavior": "FAILED",
-   "behaviorClose": "WRONG CODE",
+   "behavior": "OK",
+   "behaviorClose": "OK",
    "case": 303,
    "closedByMe": true,
    "createStats": true,
    "createWirelog": true,
    "description": "Send text message with payload of length 65536 auto-fragmented with <b>autoFragmentSize = 1300</b>.",
    "droppedByMe": true,
-   "duration": 10009,
+   "duration": 19,
    "expectation": "Receive echo'ed text message (with payload as sent and transmitted frame counts as expected). Clean close with normal code.",
    "expected": {
       "OK": [
@@ -26,39 +26,39 @@
       "closedByMe": true,
       "requireClean": true
    },
-   "failedByMe": true,
-   "httpRequest": "GET /runCase?case=303&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: H1e79GdCAFcAg2d3dAEdHF==\r\nUser-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: QgbOOOXJa954YBDS5zBw7DP/gvQ=\r\n\r\n",
+   "failedByMe": false,
+   "httpRequest": "GET /runCase?case=303&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 36dFcaB32Fc4E71B3cGh9b==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: z0Uwr72nkCLpgPWggEzuzTwuDu8=\r\n\r\n",
    "id": "10.1.1",
    "isServer": true,
-   "localCloseCode": 1001,
-   "localCloseReason": "Going Away",
+   "localCloseCode": 1000,
+   "localCloseReason": null,
    "received": [
       [
          "message",
          "**************************************************************** ...",
-         true
+         false
       ]
    ],
-   "remoteCloseCode": 1001,
-   "remoteCloseReason": "Going Away",
+   "remoteCloseCode": 1000,
+   "remoteCloseReason": null,
    "reportCompressionRatio": false,
    "reportTime": false,
-   "result": "Actual events differ from any expected.",
-   "resultClose": "The close code should have been 1000 or empty",
+   "result": "Actual events match at least one expected.",
+   "resultClose": "Connection was properly closed",
    "rxFrameStats": {
       "0": 1,
-      "2": 1,
+      "1": 1,
       "8": 1
    },
    "rxOctetStats": {
-      "18": 1,
-      "348": 1,
-      "364": 1,
-      "7240": 1,
-      "57948": 1
+      "8": 1,
+      "350": 1,
+      "3816": 1,
+      "28960": 1,
+      "32776": 1
    },
-   "started": "2019-09-01T18:30:01.527Z",
+   "started": "2019-09-04T16:52:43.994Z",
    "trafficStats": null,
    "txFrameStats": {
       "0": 50,
@@ -66,7 +66,7 @@
       "8": 1
    },
    "txOctetStats": {
-      "14": 1,
+      "4": 1,
       "206": 1,
       "540": 1,
       "1304": 50
@@ -80,7 +80,7 @@
       [
          "RO",
          [
-            348,
+            350,
             "474554202f72756e436173653f636173653d333033266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f73 ..."
          ]
       ],
@@ -1221,15 +1221,15 @@
       [
          "RO",
          [
-            7240,
-            "02fe80005d6c0e297746240377462403774624037746240377462403774624037746240377462403774624037746240377462403774624037746240377462403 ..."
+            28960,
+            "01fe80005d6febdc7745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f6 ..."
          ]
       ],
       [
          "RO",
          [
-            57948,
-            "77462403774624037746240377462403774624037746240377462403774624037746240377462403774624037746240377462403774624037746240377462403 ..."
+            3816,
+            "7745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f6 ..."
          ]
       ],
       [
@@ -1238,17 +1238,17 @@
             32768,
             "**************************************************************** ..."
          ],
-         2,
+         1,
          false,
          0,
          true,
-         "5d6c0e29"
+         "5d6febdc"
       ],
       [
          "RO",
          [
-            364,
-            "77462403774624037746240377462403774624037746240377462403774624037746240377462403774624037746240377462403774624037746240377462403 ..."
+            32776,
+            "80fe80005d6febdc7745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f67745c1f6 ..."
          ]
       ],
       [
@@ -1261,16 +1261,13 @@
          true,
          0,
          true,
-         "5d6c0e29"
-      ],
-      [
-         "KLE"
+         "5d6febdc"
       ],
       [
          "TF",
          [
-            12,
-            "0x03e9476f696e672041776179"
+            2,
+            "0x03e8"
          ],
          8,
          true,
@@ -1283,29 +1280,29 @@
       [
          "TO",
          [
-            14,
-            "880c03e9476f696e672041776179"
+            4,
+            "880203e8"
          ],
          false
       ],
       [
          "RO",
          [
-            18,
-            "888c5d6c0e335e85495c340269131c1b6f4a"
+            8,
+            "88825d6febdc5e87"
          ]
       ],
       [
          "RF",
          [
-            12,
-            "0x03e9476f696e672041776179"
+            2,
+            "0x03e8"
          ],
          8,
          true,
          0,
          true,
-         "5d6c0e33"
+         "5d6febdc"
       ]
    ]
 }

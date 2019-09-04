@@ -1,14 +1,14 @@
 {
    "agent": "ixwebsocket",
-   "behavior": "FAILED",
-   "behaviorClose": "FAILED",
+   "behavior": "OK",
+   "behaviorClose": "OK",
    "case": 45,
-   "closedByMe": true,
+   "closedByMe": false,
    "createStats": true,
    "createWirelog": true,
    "description": "Send Ping fragmented into 2 fragments.",
    "droppedByMe": true,
-   "duration": 1008,
+   "duration": 3,
    "expectation": "Connection is failed immediately, since control message MUST NOT be fragmented.",
    "expected": {
       "OK": []
@@ -20,41 +20,28 @@
       "closedByMe": false,
       "requireClean": false
    },
-   "failedByMe": true,
-   "httpRequest": "GET /runCase?case=45&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 5CaH48E0g98AdEAgbchbeh==\r\nUser-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: VQ269rM9/wM9z/fB7ZgLIO73cXc=\r\n\r\n",
+   "failedByMe": false,
+   "httpRequest": "GET /runCase?case=45&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 54h1CCHF8G4g568F356E23==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: 1QE1im6HoH4L+OpS54Kv4N8ie/8=\r\n\r\n",
    "id": "5.1",
    "isServer": true,
-   "localCloseCode": 1001,
-   "localCloseReason": "Going Away",
-   "received": [
-      [
-         "pong",
-         "fragment1"
-      ],
-      [
-         "message",
-         "fragment2",
-         true
-      ]
-   ],
-   "remoteCloseCode": 1001,
-   "remoteCloseReason": "Going Away",
+   "localCloseCode": 1000,
+   "localCloseReason": null,
+   "received": [],
+   "remoteCloseCode": 1002,
+   "remoteCloseReason": "Control message fragmented",
    "reportCompressionRatio": false,
    "reportTime": false,
-   "result": "Actual events differ from any expected.",
-   "resultClose": "The connection was failed by the wrong endpoint",
+   "result": "Actual events match at least one expected.",
+   "resultClose": "Connection was properly closed",
    "rxFrameStats": {
-      "2": 1,
-      "8": 1,
-      "10": 1
+      "8": 1
    },
    "rxOctetStats": {
-      "18": 1,
-      "30": 1,
-      "347": 1
+      "34": 1,
+      "349": 1
    },
-   "started": "2019-09-01T18:28:54.936Z",
+   "started": "2019-09-04T16:51:42.564Z",
    "trafficStats": null,
    "txFrameStats": {
       "0": 1,
@@ -62,8 +49,8 @@
       "9": 1
    },
    "txOctetStats": {
+      "4": 1,
       "11": 2,
-      "14": 1,
       "206": 1
    },
    "wasClean": true,
@@ -75,7 +62,7 @@
       [
          "RO",
          [
-            347,
+            349,
             "474554202f72756e436173653f636173653d3435266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f7374 ..."
          ]
       ],
@@ -138,42 +125,27 @@
       [
          "RO",
          [
-            30,
-            "8a895d6c0de63b1e6c81300963926c82895d6c0de63b1e6c81300963926f"
+            34,
+            "889c5d6feb9e5e85a8f1331b99f1314f86fb2e1c8af9384f8dec3c0886fb331b8efa"
          ]
       ],
       [
          "RF",
          [
-            9,
-            "fragment1"
+            28,
+            "0x03ea436f6e74726f6c206d65737361676520667261676d656e746564"
          ],
-         10,
+         8,
          true,
          0,
          true,
-         "5d6c0de6"
-      ],
-      [
-         "RF",
-         [
-            9,
-            "fragment2"
-         ],
-         2,
-         true,
-         0,
-         true,
-         "5d6c0de6"
-      ],
-      [
-         "KLE"
+         "5d6feb9e"
       ],
       [
          "TF",
          [
-            12,
-            "0x03e9476f696e672041776179"
+            2,
+            "0x03e8"
          ],
          8,
          true,
@@ -186,29 +158,10 @@
       [
          "TO",
          [
-            14,
-            "880c03e9476f696e672041776179"
+            4,
+            "880203e8"
          ],
          false
-      ],
-      [
-         "RO",
-         [
-            18,
-            "888c5d6c0de75e854a8834026ac71c1b6c9e"
-         ]
-      ],
-      [
-         "RF",
-         [
-            12,
-            "0x03e9476f696e672041776179"
-         ],
-         8,
-         true,
-         0,
-         true,
-         "5d6c0de7"
       ]
    ]
 }

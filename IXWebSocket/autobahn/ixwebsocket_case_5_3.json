@@ -1,6 +1,6 @@
 {
    "agent": "ixwebsocket",
-   "behavior": "FAILED",
+   "behavior": "OK",
    "behaviorClose": "OK",
    "case": 47,
    "closedByMe": true,
@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send text Message fragmented into 2 fragments.",
    "droppedByMe": true,
-   "duration": 1006,
+   "duration": 4,
    "expectation": "Message is processed and echo'ed back to us.",
    "expected": {
       "OK": [
@@ -27,35 +27,35 @@
       "requireClean": true
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=47&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: bB396A8e4fBg7g2fBcaBEC==\r\nUser-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: 25JtVVYuZea16Q4RSMrJcS4PJ/8=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=47&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 6H5bA6749cBGeg3EhCe1B1==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ifuPMWcm68of2xFRX0gdnhg9Ipg=\r\n\r\n",
    "id": "5.3",
    "isServer": true,
-   "localCloseCode": null,
+   "localCloseCode": 1000,
    "localCloseReason": null,
    "received": [
       [
          "message",
          "fragment1fragment2",
-         true
+         false
       ]
    ],
-   "remoteCloseCode": null,
+   "remoteCloseCode": 1000,
    "remoteCloseReason": null,
    "reportCompressionRatio": false,
    "reportTime": false,
-   "result": "Actual events differ from any expected.",
+   "result": "Actual events match at least one expected.",
    "resultClose": "Connection was properly closed",
    "rxFrameStats": {
-      "2": 1,
+      "1": 1,
       "8": 1
    },
    "rxOctetStats": {
-      "6": 1,
+      "8": 1,
       "24": 1,
-      "347": 1
+      "349": 1
    },
-   "started": "2019-09-01T18:28:56.956Z",
+   "started": "2019-09-04T16:51:43.178Z",
    "trafficStats": null,
    "txFrameStats": {
       "0": 1,
@@ -63,7 +63,7 @@
       "8": 1
    },
    "txOctetStats": {
-      "2": 1,
+      "4": 1,
       "11": 2,
       "206": 1
    },
@@ -76,7 +76,7 @@
       [
          "RO",
          [
-            347,
+            349,
             "474554202f72756e436173653f636173653d3437266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f7374 ..."
          ]
       ],
@@ -140,7 +140,7 @@
          "RO",
          [
             24,
-            "82925d6c0de83b1e6c8f3009639c6c0a7f893a016886295e"
+            "81925d6feb9f3b1d8af8300a85eb6c0999fe3a028ef1295d"
          ]
       ],
       [
@@ -149,20 +149,17 @@
             18,
             "fragment1fragment2"
          ],
-         2,
+         1,
          true,
          0,
          true,
-         "5d6c0de8"
-      ],
-      [
-         "TIE"
+         "5d6feb9f"
       ],
       [
          "TF",
          [
-            0,
-            ""
+            2,
+            "0x03e8"
          ],
          8,
          true,
@@ -175,29 +172,29 @@
       [
          "TO",
          [
-            2,
-            "8800"
+            4,
+            "880203e8"
          ],
          false
       ],
       [
          "RO",
          [
-            6,
-            "88805d6c0de9"
+            8,
+            "88825d6feb9f5e87"
          ]
       ],
       [
          "RF",
          [
-            0,
-            ""
+            2,
+            "0x03e8"
          ],
          8,
          true,
          0,
          true,
-         "5d6c0de9"
+         "5d6feb9f"
       ]
    ]
 }

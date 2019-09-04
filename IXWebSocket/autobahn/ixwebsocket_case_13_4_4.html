@@ -202,7 +202,7 @@ pre.wirelog_tcp_closed_by_peer {color: #fff; margin: 0; background-color: #000; 
       <center><a href="http://autobahn.ws/testsuite" title="Autobahn WebSocket Testsuite"><img src="http://autobahn.ws/static/img/ws_protocol_test_report.png"          border="0" width="820" height="46" alt="Autobahn WebSocket Testsuite Report"></img></a></center>
       <center><a href="http://autobahn.ws"           title="Autobahn WebSocket">          <img src="http://autobahn.ws/static/img/ws_protocol_test_report_autobahn.png" border="0" width="300" height="68" alt="Autobahn WebSocket">                 </img></a></center>
       <br/>
-      <p class="case case_ok">ixwebsocket - <span style="font-size: 1.3em;"><b>Case 13.4.4</b></span> : Pass - <span style="font-size: 0.9em;"><b>1458</b> ms @ 2019-09-01T18:34:13.291Z</a></p>
+      <p class="case case_ok">ixwebsocket - <span style="font-size: 1.3em;"><b>Case 13.4.4</b></span> : Pass - <span style="font-size: 0.9em;"><b>1288</b> ms @ 2019-09-04T17:04:55.306Z</a></p>
       <p class="case_text_block case_desc"><b>Case Description</b><br/><br/>Send 1000 compressed messages each of payload size 1024, auto-fragment to 0 octets. Use permessage-deflate client offers (requestNoContextTakeover, requestMaxWindowBits): [(False, 15)]</p>
       <p class="case_text_block case_expect"><b>Case Expectation</b><br/><br/>Receive echo'ed messages (with payload as sent). Timeout case after 240 secs.</p>
 
@@ -219,15 +219,15 @@ Host: localhost:9001
 Upgrade: websocket
 Connection: Upgrade
 Sec-WebSocket-Version: 13
-Sec-WebSocket-Key: Fc12AB60300c11d9hcH9Cc==
-User-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11
+Sec-WebSocket-Key: A5aeaHf05d2DBCc95ebAhe==
+User-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11
 Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15</pre>
       <pre class="http_dump">HTTP/1.1 101 Switching Protocols
 Server: AutobahnTestSuite/0.8.0-0.10.9
 X-Powered-By: AutobahnPython/0.10.9
 Upgrade: WebSocket
 Connection: Upgrade
-Sec-WebSocket-Accept: iyneSHOfFTOt10i/H4gDXH5dFyI=
+Sec-WebSocket-Accept: 2Bh2o/8O3Gpslg7HmRvN5EmBYlo=
 Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15</pre>
       <br/><hr/>
       <h2>Closing Behavior</h2>
@@ -317,8 +317,8 @@ Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_
          <tr class="stats_row"><td>114</td><td>1</td><td>114</td></tr>
          <tr class="stats_row"><td>118</td><td>1</td><td>118</td></tr>
          <tr class="stats_row"><td>174</td><td>1</td><td>174</td></tr>
-         <tr class="stats_row"><td>348</td><td>1</td><td>348</td></tr>
-         <tr class="stats_total"><td>Total</td><td>1002</td><td>65027</td></tr>
+         <tr class="stats_row"><td>350</td><td>1</td><td>350</td></tr>
+         <tr class="stats_total"><td>Total</td><td>1002</td><td>65029</td></tr>
       </table>
       <h3>Octets Transmitted by Chop Size</h3>
       <table>
@@ -418,8 +418,8 @@ Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_
          <pre class="wirelog_tx_frame">005 TX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=2, MASK=None, PAYLOAD-REPEAT-LEN=None, CHOPSIZE=None, SYNC=False</pre>
          <pre class="wirelog_tx_frame">               0x03e8</pre>
          <pre class="wirelog_tx_octets">006 TX OCTETS: 880203e8</pre>
-         <pre class="wirelog_rx_octets">007 RX OCTETS: 88825d6c0f265e84</pre>
-         <pre class="wirelog_rx_frame">008 RX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=2, MASKED=True, MASK=3564366330663236</pre>
+         <pre class="wirelog_rx_octets">007 RX OCTETS: 88825d6feeb85e87</pre>
+         <pre class="wirelog_rx_frame">008 RX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=2, MASKED=True, MASK=3564366665656238</pre>
          <pre class="wirelog_rx_frame">               0x03e8</pre>
          <pre class="wirelog_tcp_closed_by_me">009 TCP DROPPED BY ME</pre>
       </div>

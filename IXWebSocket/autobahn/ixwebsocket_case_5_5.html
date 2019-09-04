@@ -202,14 +202,14 @@ pre.wirelog_tcp_closed_by_peer {color: #fff; margin: 0; background-color: #000; 
       <center><a href="http://autobahn.ws/testsuite" title="Autobahn WebSocket Testsuite"><img src="http://autobahn.ws/static/img/ws_protocol_test_report.png"          border="0" width="820" height="46" alt="Autobahn WebSocket Testsuite Report"></img></a></center>
       <center><a href="http://autobahn.ws"           title="Autobahn WebSocket">          <img src="http://autobahn.ws/static/img/ws_protocol_test_report_autobahn.png" border="0" width="300" height="68" alt="Autobahn WebSocket">                 </img></a></center>
       <br/>
-      <p class="case case_failed">ixwebsocket - <span style="font-size: 1.3em;"><b>Case 5.5</b></span> : Fail - <span style="font-size: 0.9em;"><b>1007</b> ms @ 2019-09-01T18:28:58.981Z</a></p>
+      <p class="case case_ok">ixwebsocket - <span style="font-size: 1.3em;"><b>Case 5.5</b></span> : Pass - <span style="font-size: 0.9em;"><b>6</b> ms @ 2019-09-04T16:51:43.193Z</a></p>
       <p class="case_text_block case_desc"><b>Case Description</b><br/><br/>Send text Message fragmented into 2 fragments, octets are sent in octet-wise chops.</p>
       <p class="case_text_block case_expect"><b>Case Expectation</b><br/><br/>Message is processed and echo'ed back to us.</p>
 
       <p class="case_text_block case_outcome">
-         <b>Case Outcome</b><br/><br/>Actual events differ from any expected.<br/><br/>
+         <b>Case Outcome</b><br/><br/>Actual events match at least one expected.<br/><br/>
          <i>Expected:</i><br/><span class="case_pickle">{'OK': [('message', u'fragment1fragment2', False)]}</span><br/><br/>
-         <i>Observed:</i><br><span class="case_pickle">[('message', u'fragment1fragment2', True)]</span>
+         <i>Observed:</i><br><span class="case_pickle">[('message', u'fragment1fragment2', False)]</span>
       </p>
       <p class="case_text_block case_closing_beh"><b>Case Closing Behavior</b><br/><br/>Connection was properly closed (OK)</p>
       <br/><hr/>
@@ -219,15 +219,15 @@ Host: localhost:9001
 Upgrade: websocket
 Connection: Upgrade
 Sec-WebSocket-Version: 13
-Sec-WebSocket-Key: 1fbDfd47Hgg542H4cec4B6==
-User-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11
+Sec-WebSocket-Key: 4DGGd2eG0a6b422762aaBE==
+User-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11
 Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15</pre>
       <pre class="http_dump">HTTP/1.1 101 Switching Protocols
 Server: AutobahnTestSuite/0.8.0-0.10.9
 X-Powered-By: AutobahnPython/0.10.9
 Upgrade: WebSocket
 Connection: Upgrade
-Sec-WebSocket-Accept: BZ1zDSY5fX7qDjj3PfB6f3KNDF4=</pre>
+Sec-WebSocket-Accept: +Rgq0Mg/duezMtNsP4sjGVtiHf8=</pre>
       <br/><hr/>
       <h2>Closing Behavior</h2>
       <table>
@@ -241,32 +241,32 @@ Sec-WebSocket-Accept: BZ1zDSY5fX7qDjj3PfB6f3KNDF4=</pre>
          <tr class="stats_row"><td>wasServerConnectionDropTimeout</td><td class="left">False</td><td class="left">When we are a client, and we expected the server to drop the TCP, but that didn't happen in time, this gets True.</td></tr>
          <tr class="stats_row"><td>wasOpenHandshakeTimeout</td><td class="left">False</td><td class="left">When performing the opening handshake, but the peer did not finish in time, this gets True.</td></tr>
          <tr class="stats_row"><td>wasCloseHandshakeTimeout</td><td class="left">False</td><td class="left">When we initiated a closing handshake, but the peer did not respond in time, this gets True.</td></tr>
-         <tr class="stats_row"><td>localCloseCode</td><td class="left">None</td><td class="left">The close code I sent in close frame (if any).</td></tr>
+         <tr class="stats_row"><td>localCloseCode</td><td class="left">1000</td><td class="left">The close code I sent in close frame (if any).</td></tr>
          <tr class="stats_row"><td>localCloseReason</td><td class="left">None</td><td class="left">The close reason I sent in close frame (if any).</td></tr>
-         <tr class="stats_row"><td>remoteCloseCode</td><td class="left">None</td><td class="left">The close code the peer sent me in close frame (if any).</td></tr>
+         <tr class="stats_row"><td>remoteCloseCode</td><td class="left">1000</td><td class="left">The close code the peer sent me in close frame (if any).</td></tr>
          <tr class="stats_row"><td>remoteCloseReason</td><td class="left">None</td><td class="left">The close reason the peer sent me in close frame (if any).</td></tr>
       </table>      <br/><hr/>
       <h2>Wire Statistics</h2>
       <h3>Octets Received by Chop Size</h3>
       <table>
          <tr class="stats_header"><td>Chop Size</td><td>Count</td><td>Octets</td></tr>
-         <tr class="stats_row"><td>6</td><td>1</td><td>6</td></tr>
+         <tr class="stats_row"><td>8</td><td>1</td><td>8</td></tr>
          <tr class="stats_row"><td>24</td><td>1</td><td>24</td></tr>
-         <tr class="stats_row"><td>347</td><td>1</td><td>347</td></tr>
-         <tr class="stats_total"><td>Total</td><td>3</td><td>377</td></tr>
+         <tr class="stats_row"><td>349</td><td>1</td><td>349</td></tr>
+         <tr class="stats_total"><td>Total</td><td>3</td><td>381</td></tr>
       </table>
       <h3>Octets Transmitted by Chop Size</h3>
       <table>
          <tr class="stats_header"><td>Chop Size</td><td>Count</td><td>Octets</td></tr>
          <tr class="stats_row"><td>1</td><td>22</td><td>22</td></tr>
-         <tr class="stats_row"><td>2</td><td>1</td><td>2</td></tr>
+         <tr class="stats_row"><td>4</td><td>1</td><td>4</td></tr>
          <tr class="stats_row"><td>206</td><td>1</td><td>206</td></tr>
-         <tr class="stats_total"><td>Total</td><td>24</td><td>230</td></tr>
+         <tr class="stats_total"><td>Total</td><td>24</td><td>232</td></tr>
       </table>
       <h3>Frames Received by Opcode</h3>
       <table>
          <tr class="stats_header"><td>Opcode</td><td>Count</td></tr>
-         <tr class="stats_row"><td>2</td><td>1</td></tr>
+         <tr class="stats_row"><td>1</td><td>1</td></tr>
          <tr class="stats_row"><td>8</td><td>1</td></tr>
          <tr class="stats_total"><td>Total</td><td>2</td></tr>
       </table>
@@ -312,15 +312,16 @@ Sec-WebSocket-Accept: BZ1zDSY5fX7qDjj3PfB6f3KNDF4=</pre>
          <pre class="wirelog_tx_octets_sync">024 TX OCTETS: 6e</pre>
          <pre class="wirelog_tx_octets_sync">025 TX OCTETS: 74</pre>
          <pre class="wirelog_tx_octets_sync">026 TX OCTETS: 32</pre>
-         <pre class="wirelog_rx_octets">027 RX OCTETS: 82925d6c0dea3b1e6c8d3009639e6c0a7f8b3a016884295e</pre>
-         <pre class="wirelog_rx_frame">028 RX FRAME : OPCODE=2, FIN=True, RSV=0, PAYLOAD-LEN=18, MASKED=True, MASK=3564366330646561</pre>
+         <pre class="wirelog_rx_octets">027 RX OCTETS: 81925d6feb9f3b1d8af8300a85eb6c0999fe3a028ef1295d</pre>
+         <pre class="wirelog_rx_frame">028 RX FRAME : OPCODE=1, FIN=True, RSV=0, PAYLOAD-LEN=18, MASKED=True, MASK=3564366665623966</pre>
          <pre class="wirelog_rx_frame">               fragment1fragment2</pre>
-         <pre class="wirelog_kill_after">029 CLOSING CONNECTION</pre>
-         <pre class="wirelog_tx_frame">030 TX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=0, MASK=None, PAYLOAD-REPEAT-LEN=None, CHOPSIZE=None, SYNC=False</pre>
-         <pre class="wirelog_tx_octets">031 TX OCTETS: 8800</pre>
-         <pre class="wirelog_rx_octets">032 RX OCTETS: 88805d6c0deb</pre>
-         <pre class="wirelog_rx_frame">033 RX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=0, MASKED=True, MASK=3564366330646562</pre>
-         <pre class="wirelog_tcp_closed_by_me">034 TCP DROPPED BY ME</pre>
+         <pre class="wirelog_tx_frame">029 TX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=2, MASK=None, PAYLOAD-REPEAT-LEN=None, CHOPSIZE=None, SYNC=False</pre>
+         <pre class="wirelog_tx_frame">               0x03e8</pre>
+         <pre class="wirelog_tx_octets">030 TX OCTETS: 880203e8</pre>
+         <pre class="wirelog_rx_octets">031 RX OCTETS: 88825d6feb9f5e87</pre>
+         <pre class="wirelog_rx_frame">032 RX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=2, MASKED=True, MASK=3564366665623966</pre>
+         <pre class="wirelog_rx_frame">               0x03e8</pre>
+         <pre class="wirelog_tcp_closed_by_me">033 TCP DROPPED BY ME</pre>
       </div>
       <br/><hr/>
    </body>

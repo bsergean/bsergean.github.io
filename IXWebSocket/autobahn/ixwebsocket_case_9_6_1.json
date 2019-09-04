@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send binary message message with payload of length 1 * 2**20 (1M). Sent out data in chops of 64 octets.",
    "droppedByMe": true,
-   "duration": 1760,
+   "duration": 525,
    "expectation": "Receive echo'ed binary message (with payload as sent).",
    "expected": {},
    "expectedClose": {
@@ -19,8 +19,8 @@
       "requireClean": true
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=285&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: b84c8cgfhebGaGcAG8H9a6==\r\nUser-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: GvHjeP8exzPbyGkTU+abs+FFym0=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=285&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 8ee3f4Ah2bdf622DCcef1d==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: prniN0BFqNHyusU6+iwz17vuB88=\r\n\r\n",
    "id": "9.6.1",
    "isServer": true,
    "localCloseCode": 1000,
@@ -38,13 +38,16 @@
       "8": 1
    },
    "rxOctetStats": {
-      "8": 1,
-      "348": 1,
-      "32768": 5,
-      "33024": 1,
-      "65536": 13
+      "8": 6,
+      "32": 1,
+      "350": 1,
+      "9600": 1,
+      "32760": 1,
+      "32768": 6,
+      "32776": 23,
+      "55944": 1
    },
-   "started": "2019-09-01T18:29:48.300Z",
+   "started": "2019-09-04T16:52:33.453Z",
    "trafficStats": null,
    "txFrameStats": {
       "2": 1,
@@ -65,7 +68,7 @@
       [
          "RO",
          [
-            348,
+            350,
             "474554202f72756e436173653f636173653d323835266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f73 ..."
          ]
       ],
@@ -107,7 +110,7 @@
          "RO",
          [
             8,
-            "88825d6c0e1e5e84"
+            "88825d6febd15e87"
          ]
       ],
       [
@@ -120,7 +123,7 @@
          true,
          0,
          true,
-         "5d6c0e1e"
+         "5d6febd1"
       ]
    ]
 }

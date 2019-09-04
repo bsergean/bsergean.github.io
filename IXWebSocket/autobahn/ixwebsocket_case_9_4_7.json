@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send fragmented binary message message with message payload of length 4 * 2**20 (4M). Sent out in fragments of 256k.",
    "droppedByMe": true,
-   "duration": 145,
+   "duration": 548,
    "expectation": "Receive echo'ed binary message (with payload as sent).",
    "expected": {},
    "expectedClose": {
@@ -19,8 +19,8 @@
       "requireClean": true
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=276&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: D5dF349503d1g0eBd4aDDc==\r\nUser-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: BI+L1tONvDdotLdH1Wn7aS+SLp8=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=276&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: C6aH3c0f79e92FeGCeHceh==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: r/fQypAEjhgXBJVGJxd16aXytoA=\r\n\r\n",
    "id": "9.4.7",
    "isServer": true,
    "localCloseCode": 1000,
@@ -38,31 +38,17 @@
       "8": 1
    },
    "rxOctetStats": {
-      "8": 1,
-      "348": 1,
-      "3808": 1,
-      "6704": 1,
-      "9600": 6,
-      "13944": 1,
-      "15392": 1,
-      "18288": 1,
-      "24080": 1,
-      "25528": 1,
-      "26976": 1,
-      "32768": 69,
-      "33792": 1,
-      "38560": 1,
-      "40008": 1,
-      "41456": 1,
-      "47248": 1,
-      "50144": 1,
-      "51592": 1,
-      "55936": 6,
-      "58832": 1,
-      "61728": 1,
-      "65536": 15
+      "8": 84,
+      "152": 8,
+      "350": 1,
+      "13952": 1,
+      "18824": 1,
+      "32624": 8,
+      "32760": 1,
+      "32768": 81,
+      "32776": 37
    },
-   "started": "2019-09-01T18:29:44.024Z",
+   "started": "2019-09-04T16:52:29.601Z",
    "trafficStats": null,
    "txFrameStats": {
       "0": 16,
@@ -84,7 +70,7 @@
       [
          "RO",
          [
-            348,
+            350,
             "474554202f72756e436173653f636173653d323736266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f73 ..."
          ]
       ],
@@ -126,7 +112,7 @@
          "RO",
          [
             8,
-            "88825d6c0e185e84"
+            "88825d6febce5e87"
          ]
       ],
       [
@@ -139,7 +125,7 @@
          true,
          0,
          true,
-         "5d6c0e18"
+         "5d6febce"
       ]
    ]
 }

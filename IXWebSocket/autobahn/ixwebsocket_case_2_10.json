@@ -62,8 +62,8 @@
       "requireClean": true
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=26&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: eg0FFF49Dg01H832D87hC5==\r\nUser-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: 5mNf9aH+zr54kqZzbxwXTWqvzzU=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=26&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: d4D87E2Gb5EAC091aCCEFa==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: bAYhgUkmiH0jCTMtWHYhuUGxSVw=\r\n\r\n",
    "id": "2.10",
    "isServer": true,
    "localCloseCode": 1000,
@@ -122,10 +122,11 @@
    },
    "rxOctetStats": {
       "8": 1,
-      "150": 1,
-      "347": 1
+      "15": 1,
+      "135": 1,
+      "349": 1
    },
-   "started": "2019-09-01T18:28:48.688Z",
+   "started": "2019-09-04T16:51:40.318Z",
    "trafficStats": null,
    "txFrameStats": {
       "8": 1,
@@ -145,7 +146,7 @@
       [
          "RO",
          [
-            347,
+            349,
             "474554202f72756e436173653f636173653d3236266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f7374 ..."
          ]
       ],
@@ -384,8 +385,8 @@
       [
          "RO",
          [
-            150,
-            "8a895d6c0de02d0d748c320d69cd6d8a895d6c0de02d0d748c320d69cd6c8a895d6c0de02d0d748c320d69cd6f8a895d6c0de02d0d748c320d69cd6e8a895d6c ..."
+            135,
+            "8a895d6feb9c2d0e92f0320e8fb16d8a895d6feb9c2d0e92f0320e8fb16c8a895d6feb9c2d0e92f0320e8fb16f8a895d6feb9c2d0e92f0320e8fb16e8a895d6f ..."
          ]
       ],
       [
@@ -398,7 +399,7 @@
          true,
          0,
          true,
-         "5d6c0de0"
+         "5d6feb9c"
       ],
       [
          "RF",
@@ -410,7 +411,7 @@
          true,
          0,
          true,
-         "5d6c0de0"
+         "5d6feb9c"
       ],
       [
          "RF",
@@ -422,7 +423,7 @@
          true,
          0,
          true,
-         "5d6c0de0"
+         "5d6feb9c"
       ],
       [
          "RF",
@@ -434,7 +435,7 @@
          true,
          0,
          true,
-         "5d6c0de0"
+         "5d6feb9c"
       ],
       [
          "RF",
@@ -446,7 +447,7 @@
          true,
          0,
          true,
-         "5d6c0de0"
+         "5d6feb9c"
       ],
       [
          "RF",
@@ -458,7 +459,7 @@
          true,
          0,
          true,
-         "5d6c0de0"
+         "5d6feb9c"
       ],
       [
          "RF",
@@ -470,7 +471,7 @@
          true,
          0,
          true,
-         "5d6c0de0"
+         "5d6feb9c"
       ],
       [
          "RF",
@@ -482,7 +483,7 @@
          true,
          0,
          true,
-         "5d6c0de0"
+         "5d6feb9c"
       ],
       [
          "RF",
@@ -494,7 +495,14 @@
          true,
          0,
          true,
-         "5d6c0de0"
+         "5d6feb9c"
+      ],
+      [
+         "RO",
+         [
+            15,
+            "8a895d6feb9c2d0e92f0320e8fb164"
+         ]
       ],
       [
          "RF",
@@ -506,7 +514,7 @@
          true,
          0,
          true,
-         "5d6c0de0"
+         "5d6feb9c"
       ],
       [
          "TF",
@@ -534,7 +542,7 @@
          "RO",
          [
             8,
-            "88825d6c0de05e84"
+            "88825d6feb9c5e87"
          ]
       ],
       [
@@ -547,7 +555,7 @@
          true,
          0,
          true,
-         "5d6c0de0"
+         "5d6feb9c"
       ]
    ]
 }

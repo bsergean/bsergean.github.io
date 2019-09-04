@@ -1,14 +1,14 @@
 {
    "agent": "ixwebsocket",
-   "behavior": "FAILED",
-   "behaviorClose": "FAILED",
+   "behavior": "OK",
+   "behaviorClose": "OK",
    "case": 46,
-   "closedByMe": true,
+   "closedByMe": false,
    "createStats": true,
    "createWirelog": true,
    "description": "Send Pong fragmented into 2 fragments.",
    "droppedByMe": true,
-   "duration": 1008,
+   "duration": 2,
    "expectation": "Connection is failed immediately, since control message MUST NOT be fragmented.",
    "expected": {
       "OK": []
@@ -20,36 +20,28 @@
       "closedByMe": false,
       "requireClean": false
    },
-   "failedByMe": true,
-   "httpRequest": "GET /runCase?case=46&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: e44dH6ga7CHG484B5e6G0G==\r\nUser-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: o+RXYSG90KRk8wnKFnqZCVlhYPw=\r\n\r\n",
+   "failedByMe": false,
+   "httpRequest": "GET /runCase?case=46&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: fb35c2aBeEH0gg6dEhd950==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: hb2L+jfQHt76J0ZAi81shk89fFQ=\r\n\r\n",
    "id": "5.2",
    "isServer": true,
-   "localCloseCode": 1001,
-   "localCloseReason": "Going Away",
-   "received": [
-      [
-         "message",
-         "fragment2",
-         true
-      ]
-   ],
-   "remoteCloseCode": 1001,
-   "remoteCloseReason": "Going Away",
+   "localCloseCode": 1000,
+   "localCloseReason": null,
+   "received": [],
+   "remoteCloseCode": 1002,
+   "remoteCloseReason": "Control message fragmented",
    "reportCompressionRatio": false,
    "reportTime": false,
-   "result": "Actual events differ from any expected.",
-   "resultClose": "The connection was failed by the wrong endpoint",
+   "result": "Actual events match at least one expected.",
+   "resultClose": "Connection was properly closed",
    "rxFrameStats": {
-      "2": 1,
       "8": 1
    },
    "rxOctetStats": {
-      "15": 1,
-      "18": 1,
-      "347": 1
+      "34": 1,
+      "349": 1
    },
-   "started": "2019-09-01T18:28:55.947Z",
+   "started": "2019-09-04T16:51:42.871Z",
    "trafficStats": null,
    "txFrameStats": {
       "0": 1,
@@ -57,8 +49,8 @@
       "10": 1
    },
    "txOctetStats": {
+      "4": 1,
       "11": 2,
-      "14": 1,
       "206": 1
    },
    "wasClean": true,
@@ -70,7 +62,7 @@
       [
          "RO",
          [
-            347,
+            349,
             "474554202f72756e436173653f636173653d3436266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f7374 ..."
          ]
       ],
@@ -133,30 +125,27 @@
       [
          "RO",
          [
-            15,
-            "82895d6c0de73b1e6c80300963936f"
+            34,
+            "889c5d6feb9e5e85a8f1331b99f1314f86fb2e1c8af9384f8dec3c0886fb331b8efa"
          ]
       ],
       [
          "RF",
          [
-            9,
-            "fragment2"
+            28,
+            "0x03ea436f6e74726f6c206d65737361676520667261676d656e746564"
          ],
-         2,
+         8,
          true,
          0,
          true,
-         "5d6c0de7"
-      ],
-      [
-         "KLE"
+         "5d6feb9e"
       ],
       [
          "TF",
          [
-            12,
-            "0x03e9476f696e672041776179"
+            2,
+            "0x03e8"
          ],
          8,
          true,
@@ -169,29 +158,10 @@
       [
          "TO",
          [
-            14,
-            "880c03e9476f696e672041776179"
+            4,
+            "880203e8"
          ],
          false
-      ],
-      [
-         "RO",
-         [
-            18,
-            "888c5d6c0de85e854a8734026ac81c1b6c91"
-         ]
-      ],
-      [
-         "RF",
-         [
-            12,
-            "0x03e9476f696e672041776179"
-         ],
-         8,
-         true,
-         0,
-         true,
-         "5d6c0de8"
       ]
    ]
 }

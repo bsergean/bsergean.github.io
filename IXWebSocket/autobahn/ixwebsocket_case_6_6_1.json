@@ -1,14 +1,14 @@
 {
    "agent": "ixwebsocket",
-   "behavior": "FAILED",
-   "behaviorClose": "FAILED",
+   "behavior": "OK",
+   "behaviorClose": "OK",
    "case": 83,
-   "closedByMe": true,
+   "closedByMe": false,
    "createStats": true,
    "createWirelog": true,
    "description": "Send a text message with payload which is not valid UTF-8 in one fragment.<br><br>Payload: 0xce",
    "droppedByMe": true,
-   "duration": 4,
+   "duration": 2,
    "expectation": "The connection is failed immediately, since the payload is not valid UTF-8.",
    "expected": {
       "OK": []
@@ -21,30 +21,28 @@
       "closedByWrongEndpointIsFatal": true,
       "requireClean": false
    },
-   "failedByMe": true,
-   "httpRequest": "GET /runCase?case=83&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 962g1ebE2c0Bf99B4h1g17==\r\nUser-Agent: ixwebsocket/5.1.0 macos ssl/mbedtls zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: JBesC/KcZ4I49qwDqOZgrEuitys=\r\n\r\n",
+   "failedByMe": false,
+   "httpRequest": "GET /runCase?case=83&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: HhG75BbEb0BFC0bEGF6fd7==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: dhIGy7V9DWbNW6cW/5gt1ArCsSY=\r\n\r\n",
    "id": "6.6.1",
    "isServer": true,
-   "localCloseCode": 1007,
-   "localCloseReason": "UTF-8 text message payload ended within Unicode code point at payload octet index 1",
+   "localCloseCode": 1000,
+   "localCloseReason": null,
    "received": [],
    "remoteCloseCode": 1007,
-   "remoteCloseReason": "UTF-8 text message payload ended within Unicode code point at payload octet index 1",
+   "remoteCloseReason": "Invalid frame payload data",
    "reportCompressionRatio": false,
    "reportTime": false,
    "result": "Actual events match at least one expected.",
-   "resultClose": "The connection was failed by the wrong endpoint",
+   "resultClose": "Connection was properly closed",
    "rxFrameStats": {
-      "1": 1,
       "8": 1
    },
    "rxOctetStats": {
-      "7": 1,
-      "91": 1,
-      "347": 1
+      "34": 1,
+      "349": 1
    },
-   "started": "2019-09-01T18:29:35.299Z",
+   "started": "2019-09-04T16:51:53.499Z",
    "trafficStats": null,
    "txFrameStats": {
       "1": 1,
@@ -52,7 +50,7 @@
    },
    "txOctetStats": {
       "3": 1,
-      "87": 1,
+      "4": 1,
       "206": 1
    },
    "wasClean": true,
@@ -64,7 +62,7 @@
       [
          "RO",
          [
-            347,
+            349,
             "474554202f72756e436173653f636173653d3833266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f7374 ..."
          ]
       ],
@@ -105,27 +103,27 @@
       [
          "RO",
          [
-            7,
-            "81815d6c0e0f93"
+            34,
+            "889c5d6feba95e80a2c72b0e87c0394f8ddb3c028e892d0e92c5320e8f89390e9fc8"
          ]
       ],
       [
          "RF",
          [
-            1,
-            "0xce"
+            28,
+            "0x03ef496e76616c6964206672616d65207061796c6f61642064617461"
          ],
-         1,
+         8,
          true,
          0,
          true,
-         "5d6c0e0f"
+         "5d6feba9"
       ],
       [
          "TF",
          [
-            85,
-            "0x03ef5554462d382074657874206d657373616765207061796c6f616420656e6465642077697468696e20556e69636f646520636f646520706f696e7420617420 ..."
+            2,
+            "0x03e8"
          ],
          8,
          true,
@@ -138,29 +136,10 @@
       [
          "TO",
          [
-            87,
-            "885503ef5554462d382074657874206d657373616765207061796c6f616420656e6465642077697468696e20556e69636f646520636f646520706f696e742061 ..."
+            4,
+            "880203e8"
          ],
          false
-      ],
-      [
-         "RO",
-         [
-            91,
-            "88d55d6c0e0f5e835b5b1b41362f2909767b7d016b7c2e0d696a7d1c6f7631036f6b7d09606b38082e7834186666334c5b61340f616b384c6d6039092e7f3205 ..."
-         ]
-      ],
-      [
-         "RF",
-         [
-            85,
-            "0x03ef5554462d382074657874206d657373616765207061796c6f616420656e6465642077697468696e20556e69636f646520636f646520706f696e7420617420 ..."
-         ],
-         8,
-         true,
-         0,
-         true,
-         "5d6c0e0f"
       ]
    ]
 }
