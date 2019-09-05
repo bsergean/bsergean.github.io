@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send small text message, then send frame with reserved control <b>Opcode = 14</b> and non-empty payload, then send Ping.",
    "droppedByMe": true,
-   "duration": 3,
+   "duration": 1,
    "expectation": "Echo for first message is received, but then connection is failed immediately, since reserved opcode frame is used. A Pong is not received.",
    "expected": {
       "NON-STRICT": [],
@@ -28,8 +28,8 @@
       "requireClean": false
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=43&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: fFCDHE1E7ec7HfdBHaDA83==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: hVVXIlNEkxt1BZlIUs4UEZLis7I=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=43&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 410ae1F0BA34hGeBbGbaaH==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: CgbMg3KM9fXuGuIRiECPvvbBqUQ=\r\n\r\n",
    "id": "4.2.4",
    "isServer": true,
    "localCloseCode": 1000,
@@ -55,7 +55,7 @@
       "47": 1,
       "349": 1
    },
-   "started": "2019-09-04T16:51:42.545Z",
+   "started": "2019-09-05T20:48:53.584Z",
    "trafficStats": null,
    "txFrameStats": {
       "1": 1,
@@ -164,7 +164,7 @@
          "RO",
          [
             47,
-            "818d5d6feb9e150a87f23243cbe9321d87fa7c88905d6feb9e5e85bbec321b84fd3203cbfb2f1d84ec8a805d6feb9e"
+            "818d5d7174b5151418d9325d54c2320318d17c88905d7174b55e9b24c732051bd6321d54d02f031bc78a805d7174b5"
          ]
       ],
       [
@@ -177,7 +177,7 @@
          true,
          0,
          true,
-         "5d6feb9e"
+         "5d7174b5"
       ],
       [
          "RF",
@@ -189,7 +189,7 @@
          true,
          0,
          true,
-         "5d6feb9e"
+         "5d7174b5"
       ],
       [
          "TF",

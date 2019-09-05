@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send a text message with payload which is valid UTF-8 in one fragment.<br><br>Payload: 0xe0a080",
    "droppedByMe": true,
-   "duration": 3,
+   "duration": 1,
    "expectation": "The message is echo'ed back to us.",
    "expected": {
       "OK": [
@@ -27,8 +27,8 @@
       "requireClean": true
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=96&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 4GDCH6GAH3570CAf8bG9Cd==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: rDpTEHT0Jv7fxLIRDj/degAt8vc=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=96&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 4Bb5AFcabFF73Gcf72ha89==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: G6GTgwrjxhwkkZujivyR00ap8sI=\r\n\r\n",
    "id": "6.7.3",
    "isServer": true,
    "localCloseCode": 1000,
@@ -55,7 +55,7 @@
       "9": 1,
       "349": 1
    },
-   "started": "2019-09-04T16:51:53.592Z",
+   "started": "2019-09-05T20:49:04.422Z",
    "trafficStats": null,
    "txFrameStats": {
       "1": 1,
@@ -117,7 +117,7 @@
          "RO",
          [
             9,
-            "81835d6feba9bdcf6b"
+            "81835d7174c0bdd1f4"
          ]
       ],
       [
@@ -130,7 +130,7 @@
          true,
          0,
          true,
-         "5d6feba9"
+         "5d7174c0"
       ],
       [
          "TF",
@@ -158,7 +158,7 @@
          "RO",
          [
             8,
-            "88825d6feba95e87"
+            "88825d7174c05e99"
          ]
       ],
       [
@@ -171,7 +171,7 @@
          true,
          0,
          true,
-         "5d6feba9"
+         "5d7174c0"
       ]
    ]
 }

@@ -202,7 +202,7 @@ pre.wirelog_tcp_closed_by_peer {color: #fff; margin: 0; background-color: #000; 
       <center><a href="http://autobahn.ws/testsuite" title="Autobahn WebSocket Testsuite"><img src="http://autobahn.ws/static/img/ws_protocol_test_report.png"          border="0" width="820" height="46" alt="Autobahn WebSocket Testsuite Report"></img></a></center>
       <center><a href="http://autobahn.ws"           title="Autobahn WebSocket">          <img src="http://autobahn.ws/static/img/ws_protocol_test_report_autobahn.png" border="0" width="300" height="68" alt="Autobahn WebSocket">                 </img></a></center>
       <br/>
-      <p class="case case_ok">ixwebsocket - <span style="font-size: 1.3em;"><b>Case 6.18.1</b></span> : Pass - <span style="font-size: 0.9em;"><b>2</b> ms @ 2019-09-04T16:51:53.931Z</a></p>
+      <p class="case case_ok">ixwebsocket - <span style="font-size: 1.3em;"><b>Case 6.18.1</b></span> : Pass - <span style="font-size: 0.9em;"><b>1</b> ms @ 2019-09-05T20:49:04.605Z</a></p>
       <p class="case_text_block case_desc"><b>Case Description</b><br/><br/>Send a text message with payload which is not valid UTF-8 in one fragment.<br><br>Payload: 0xc1bf</p>
       <p class="case_text_block case_expect"><b>Case Expectation</b><br/><br/>The connection is failed immediately, since the payload is not valid UTF-8.</p>
 
@@ -219,15 +219,15 @@ Host: localhost:9001
 Upgrade: websocket
 Connection: Upgrade
 Sec-WebSocket-Version: 13
-Sec-WebSocket-Key: geCe983853b928BdHeHcAB==
-User-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11
+Sec-WebSocket-Key: a28cBFa7h3FBBb1Hf26D9d==
+User-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11
 Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15</pre>
       <pre class="http_dump">HTTP/1.1 101 Switching Protocols
-Server: AutobahnTestSuite/0.8.0-0.10.9
+Server: AutobahnTestSuite/0.8.1-0.10.9
 X-Powered-By: AutobahnPython/0.10.9
 Upgrade: WebSocket
 Connection: Upgrade
-Sec-WebSocket-Accept: SknYiNIyoZYs7JEtFal8HL2dC54=</pre>
+Sec-WebSocket-Accept: DjCDThSVlX3KTukZjrFch8gr584=</pre>
       <br/><hr/>
       <h2>Closing Behavior</h2>
       <table>
@@ -285,8 +285,8 @@ Sec-WebSocket-Accept: SknYiNIyoZYs7JEtFal8HL2dC54=</pre>
          <pre class="wirelog_tx_frame">               0xc1bf</pre>
          <pre class="wirelog_tx_octets">003 TX OCTETS: 8102c1bf</pre>
          <pre class="wirelog_kill_after">004 FAIL CONNECTION AFTER 0.500000 sec</pre>
-         <pre class="wirelog_rx_octets">005 RX OCTETS: 889c5d6feba95e80a2c72b0e87c0394f8ddb3c028e892d0e92c5320e8f89390e9fc8</pre>
-         <pre class="wirelog_rx_frame">006 RX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=28, MASKED=True, MASK=3564366665626139</pre>
+         <pre class="wirelog_rx_octets">005 RX OCTETS: 889c5d7174c05e9e3dae2b1018a9395112b23c1c11e02d100dac321010e0391000a1</pre>
+         <pre class="wirelog_rx_frame">006 RX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=28, MASKED=True, MASK=3564373137346330</pre>
          <pre class="wirelog_rx_frame">               0x03ef496e76616c6964206672616d65207061796c6f61642064617461</pre>
          <pre class="wirelog_tx_frame">007 TX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=2, MASK=None, PAYLOAD-REPEAT-LEN=None, CHOPSIZE=None, SYNC=False</pre>
          <pre class="wirelog_tx_frame">               0x03e8</pre>

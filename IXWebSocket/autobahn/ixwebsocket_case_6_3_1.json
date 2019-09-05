@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send invalid UTF-8 text message unfragmented.<br><br>MESSAGE:<br>cebae1bdb9cf83cebcceb5eda080656469746564",
    "droppedByMe": true,
-   "duration": 3,
+   "duration": 1,
    "expectation": "The connection is failed immediately, since the payload is not valid UTF-8.",
    "expected": {
       "OK": []
@@ -22,8 +22,8 @@
       "requireClean": false
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=72&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: D2gH1a3DhEAAD4cHe8Hgf3==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: YeNIRePvAjLy7aLeCUNPZSoda28=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=72&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 1fCHgehbfBdF1H6Bd1E29G==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: xooiMcGEjzU6hYTBD2LrP3JIdKo=\r\n\r\n",
    "id": "6.3.1",
    "isServer": true,
    "localCloseCode": 1000,
@@ -42,7 +42,7 @@
       "34": 1,
       "349": 1
    },
-   "started": "2019-09-04T16:51:45.399Z",
+   "started": "2019-09-05T20:48:56.316Z",
    "trafficStats": null,
    "txFrameStats": {
       "1": 1,
@@ -104,7 +104,7 @@
          "RO",
          [
             34,
-            "889c5d6feba15e80a2cf2b0e87c8394f8dd33c028e812d0e92cd320e8f81390e9fc0"
+            "889c5d7174b85e9e3dd62b1018d1395112ca3c1c11982d100dd432101098391000d9"
          ]
       ],
       [
@@ -117,7 +117,7 @@
          true,
          0,
          true,
-         "5d6feba1"
+         "5d7174b8"
       ],
       [
          "TF",

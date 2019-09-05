@@ -2,13 +2,13 @@
    "agent": "ixwebsocket",
    "behavior": "OK",
    "behaviorClose": "OK",
-   "case": 323,
+   "case": 321,
    "closedByMe": true,
    "createStats": true,
    "createWirelog": true,
    "description": "Send 1000 compressed messages each of payload size 64, auto-fragment to 0 octets. Use default permessage-deflate offer.",
    "droppedByMe": true,
-   "duration": 628,
+   "duration": 209,
    "expectation": "Receive echo'ed messages (with payload as sent). Timeout case after 60 secs.",
    "expected": {},
    "expectedClose": {
@@ -19,8 +19,8 @@
       "requireClean": true
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=323&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: B7geEH73e2D33h4DCgc6He==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: Yh9pV5reIiZbVzhLoJcvbYWSBjI=\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15\r\n\r\n",
+   "httpRequest": "GET /runCase?case=321&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: a5A7fchbFABe1249A048fB==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: oUQIU02nsHfEX7z/82gbdz0Cgz0=\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15\r\n\r\n",
    "id": "12.2.2",
    "isServer": true,
    "localCloseCode": 1000,
@@ -63,7 +63,7 @@
       "76": 63,
       "350": 1
    },
-   "started": "2019-09-04T16:54:08.601Z",
+   "started": "2019-09-05T20:50:56.621Z",
    "trafficStats": {
       "incomingCompressionRatio": 0.99625,
       "incomingOctetsAppLevel": 64000,
@@ -123,7 +123,7 @@
          "RO",
          [
             350,
-            "474554202f72756e436173653f636173653d333233266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f73 ..."
+            "474554202f72756e436173653f636173653d333231266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f73 ..."
          ]
       ],
       [
@@ -172,7 +172,7 @@
          "RO",
          [
             8,
-            "88825d6fec315e87"
+            "88825d7175305e99"
          ]
       ],
       [
@@ -185,7 +185,7 @@
          true,
          0,
          true,
-         "5d6fec31"
+         "5d717530"
       ]
    ]
 }

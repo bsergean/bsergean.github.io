@@ -2,13 +2,13 @@
    "agent": "ixwebsocket",
    "behavior": "OK",
    "behaviorClose": "OK",
-   "case": 249,
+   "case": 247,
    "closedByMe": true,
    "createStats": true,
    "createWirelog": true,
    "description": "Send text message message with payload of length 64 * 2**10 (64k).",
    "droppedByMe": true,
-   "duration": 14,
+   "duration": 11,
    "expectation": "Receive echo'ed text message (with payload as sent).",
    "expected": {},
    "expectedClose": {
@@ -19,8 +19,8 @@
       "requireClean": true
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=249&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 7beeD00FC3b2h7ghE39BhB==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: 90cFpuR4FCnTIiBjMMEodL1n6Vo=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=247&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 9D9E30F8GH43Gdc4g9FHfa==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: djTBQfiQmcMuFXTTpc25ml0en3U=\r\n\r\n",
    "id": "9.1.1",
    "isServer": true,
    "localCloseCode": 1000,
@@ -42,7 +42,7 @@
       "350": 1,
       "32776": 2
    },
-   "started": "2019-09-04T16:51:54.771Z",
+   "started": "2019-09-05T20:49:05.034Z",
    "trafficStats": null,
    "txFrameStats": {
       "1": 1,
@@ -63,7 +63,7 @@
          "RO",
          [
             350,
-            "474554202f72756e436173653f636173653d323439266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f73 ..."
+            "474554202f72756e436173653f636173653d323437266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f73 ..."
          ]
       ],
       [
@@ -104,7 +104,7 @@
          "RO",
          [
             8,
-            "88825d6febaa5e87"
+            "88825d7174c15e99"
          ]
       ],
       [
@@ -117,7 +117,7 @@
          true,
          0,
          true,
-         "5d6febaa"
+         "5d7174c1"
       ]
    ]
 }

@@ -6,9 +6,9 @@
    "closedByMe": true,
    "createStats": true,
    "createWirelog": true,
-   "description": "Send close with invalid close code 1015",
+   "description": "Send close with invalid close code 1100",
    "droppedByMe": true,
-   "duration": 3,
+   "duration": 1,
    "expectation": "Clean close with protocol error code or drop TCP",
    "expected": {
       "OK": []
@@ -21,15 +21,15 @@
       "requireClean": false
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=242&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: DFDfChcHaFh23HFBf415hB==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: uMHpCZPc0n7fmVf4xceJgBVbwyM=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=242&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: C0g76bCff4b2AE53CfE2Da==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: cWzneIpdajXUWzO1doCeQgUc41U=\r\n\r\n",
    "id": "7.9.7",
    "isServer": true,
-   "localCloseCode": 1015,
+   "localCloseCode": 1100,
    "localCloseReason": null,
    "received": [],
    "remoteCloseCode": 1002,
-   "remoteCloseReason": "Invalid close code: 1015",
+   "remoteCloseReason": "Invalid close code: 1100",
    "reportCompressionRatio": false,
    "reportTime": false,
    "result": "Actual events match at least one expected.",
@@ -41,7 +41,7 @@
       "32": 1,
       "350": 1
    },
-   "started": "2019-09-04T16:51:54.735Z",
+   "started": "2019-09-05T20:49:05.017Z",
    "trafficStats": null,
    "txFrameStats": {
       "8": 1
@@ -75,7 +75,7 @@
          "TF",
          [
             2,
-            "0x03f7"
+            "\u0004L"
          ],
          8,
          true,
@@ -89,7 +89,7 @@
          "TO",
          [
             4,
-            "880203f7"
+            "8802044c"
          ],
          false
       ],
@@ -101,20 +101,20 @@
          "RO",
          [
             32,
-            "889a5d6febaa5e85a2c42b0e87c3394f88c6321c8e8a3e008fcf674fda9a6c5a"
+            "889a5d7174c15e9b3daf2b1018a8395117ad320211e13e1e10a4675145f06d41"
          ]
       ],
       [
          "RF",
          [
             26,
-            "0x03ea496e76616c696420636c6f736520636f64653a2031303135"
+            "0x03ea496e76616c696420636c6f736520636f64653a2031313030"
          ],
          8,
          true,
          0,
          true,
-         "5d6febaa"
+         "5d7174c1"
       ]
    ]
 }

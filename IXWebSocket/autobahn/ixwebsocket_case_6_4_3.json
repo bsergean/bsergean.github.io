@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Same as Case 6.4.1, but we send message not in 3 frames, but in 3 chops of the same message frame.\n<br><br>MESSAGE PARTS:<br>\nPART1 = cebae1bdb9cf83cebcceb5<br>\nPART2 = f4908080<br>\nPART3 = 656469746564<br>\n",
    "droppedByMe": true,
-   "duration": 2007,
+   "duration": 2002,
    "expectation": "The first chop is accepted, we expect to timeout on the first wait. The 2nd chop should be rejected immediately (fail fast on UTF-8). If we timeout, we expect the connection is failed at least then, since the complete message payload is not valid UTF-8.",
    "expected": {
       "NON-STRICT": [
@@ -37,8 +37,8 @@
       "requireClean": false
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=76&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: G41Beb6D1bFfccf59bEA5E==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: AOjt+bBCwoHq+UyVEK0slIcXJOw=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=76&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: FFFae5ED6aehAg0a2dE386==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: mgy2s9I/WzyfTs8dKW2XQgM7XCw=\r\n\r\n",
    "id": "6.4.3",
    "isServer": true,
    "localCloseCode": 1000,
@@ -66,7 +66,7 @@
       "34": 1,
       "349": 1
    },
-   "started": "2019-09-04T16:51:49.438Z",
+   "started": "2019-09-05T20:49:00.343Z",
    "trafficStats": null,
    "txFrameStats": {
       "0": 1,
@@ -180,7 +180,7 @@
          "RO",
          [
             34,
-            "889c5d6feba75e80a2c92b0e87ce394f8dd53c028e872d0e92cb320e8f87390e9fc6"
+            "889c5d7174be5e9e3dd02b1018d7395112cc3c1c119e2d100dd23210109e391000df"
          ]
       ],
       [
@@ -193,7 +193,7 @@
          true,
          0,
          true,
-         "5d6feba7"
+         "5d7174be"
       ],
       [
          "TF",

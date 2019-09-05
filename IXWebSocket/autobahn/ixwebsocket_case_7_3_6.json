@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send a close frame with close code and close reason which is too long (124) - total frame payload 126 octets",
    "droppedByMe": true,
-   "duration": 2,
+   "duration": 1,
    "expectation": "Clean close with protocol error code or dropped TCP connection.",
    "expected": {
       "OK": []
@@ -21,8 +21,8 @@
       "requireClean": false
    },
    "failedByMe": true,
-   "httpRequest": "GET /runCase?case=221&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 600C1G821bc34G2Fhhd5C2==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: Jg4xaoRp5Z3neroSIU9tTHnzdHE=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=221&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: fC5A57G4DFFAGdh8BdFf7E==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: 6DM7WDUdYw53L32acVbh3ypuykQ=\r\n\r\n",
    "id": "7.3.6",
    "isServer": true,
    "localCloseCode": 1000,
@@ -39,7 +39,7 @@
       "134": 1,
       "350": 1
    },
-   "started": "2019-09-04T16:51:54.546Z",
+   "started": "2019-09-05T20:49:04.942Z",
    "trafficStats": null,
    "txFrameStats": {
       "8": 1
@@ -99,7 +99,7 @@
          "RO",
          [
             134,
-            "88fe007e5d6febaa5e87c1807745c1807745c1807745c1807745c1807745c1807745c1807745c1807745c1807745c1807745c1807745c1807745c1807745c180 ..."
+            "88fe007e5d7174c05e995eea775b5eea775b5eea775b5eea775b5eea775b5eea775b5eea775b5eea775b5eea775b5eea775b5eea775b5eea775b5eea775b5eea ..."
          ]
       ]
    ]

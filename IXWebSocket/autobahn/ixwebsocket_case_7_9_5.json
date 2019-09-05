@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send close with invalid close code 1006",
    "droppedByMe": true,
-   "duration": 2,
+   "duration": 1,
    "expectation": "Clean close with protocol error code or drop TCP",
    "expected": {
       "OK": []
@@ -21,8 +21,8 @@
       "requireClean": false
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=240&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 8F54E915HDa6cEebEFfgc1==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: B/gBLiyJp/ZTDzPtGiMyyvR3nT0=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=240&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: e30g7D13fFb8DA2Ba5FFc1==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: btejVrQyK4cykBUkupJev+Q0mBQ=\r\n\r\n",
    "id": "7.9.5",
    "isServer": true,
    "localCloseCode": 1006,
@@ -41,7 +41,7 @@
       "32": 1,
       "350": 1
    },
-   "started": "2019-09-04T16:51:54.725Z",
+   "started": "2019-09-05T20:49:05.009Z",
    "trafficStats": null,
    "txFrameStats": {
       "8": 1
@@ -101,7 +101,7 @@
          "RO",
          [
             32,
-            "889a5d6febaa5e85a2c42b0e87c3394f88c6321c8e8a3e008fcf674fda9a6d59"
+            "889a5d7174c15e9b3daf2b1018a8395117ad320211e13e1e10a4675145f16d47"
          ]
       ],
       [
@@ -114,7 +114,7 @@
          true,
          0,
          true,
-         "5d6febaa"
+         "5d7174c1"
       ]
    ]
 }

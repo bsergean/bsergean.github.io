@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send Ping with <b>RSV = 6</b>.",
    "droppedByMe": true,
-   "duration": 3,
+   "duration": 1,
    "expectation": "The connection is failed immediately, since RSV must be 0.",
    "expected": {
       "OK": []
@@ -21,8 +21,8 @@
       "requireClean": false
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=33&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: Gg6bf6bHgE1d47eeAe3EC6==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: Io+/LThcYyBB4GdPoSA/Mk4urvI=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=33&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 5dh2500f9fFahF1HDFHHFB==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: Zz/I8wxlAJPXBIvs/rmdQwxncOI=\r\n\r\n",
    "id": "3.6",
    "isServer": true,
    "localCloseCode": 1000,
@@ -41,7 +41,7 @@
       "25": 1,
       "349": 1
    },
-   "started": "2019-09-04T16:51:41.871Z",
+   "started": "2019-09-05T20:48:52.945Z",
    "trafficStats": null,
    "txFrameStats": {
       "2": 1,
@@ -103,7 +103,7 @@
          "RO",
          [
             25,
-            "88935d6feb9d5e85b9f82e0a99eb380bcbff341bcbe82e0a8f"
+            "88935d7174b45e9b26d12e1406c2381554d6340554c12e1410"
          ]
       ],
       [
@@ -116,7 +116,7 @@
          true,
          0,
          true,
-         "5d6feb9d"
+         "5d7174b4"
       ],
       [
          "TF",

@@ -2,13 +2,13 @@
    "agent": "ixwebsocket",
    "behavior": "OK",
    "behaviorClose": "OK",
-   "case": 487,
+   "case": 485,
    "closedByMe": true,
    "createStats": true,
    "createWirelog": true,
    "description": "Send 1000 compressed messages each of payload size 1024, auto-fragment to 0 octets. Use permessage-deflate client offers (requestNoContextTakeover, requestMaxWindowBits): [(True, 15)]",
    "droppedByMe": true,
-   "duration": 1381,
+   "duration": 912,
    "expectation": "Receive echo'ed messages (with payload as sent). Timeout case after 240 secs.",
    "expected": {},
    "expectedClose": {
@@ -19,8 +19,8 @@
       "requireClean": true
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=487&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 3833Ga6cge7A97bbCAEBbE==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: b5m/UNrlcteGuf2grU3bJ4Wq2z4=\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_no_context_takeover; client_max_window_bits=15\r\n\r\n",
+   "httpRequest": "GET /runCase?case=485&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 5d5c0dA2h8hG7023568AF1==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: TxhBvh+mOpRkvtj1+Tk8wn281io=\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_no_context_takeover; client_max_window_bits=15\r\n\r\n",
    "id": "13.6.4",
    "isServer": true,
    "localCloseCode": 1000,
@@ -92,7 +92,7 @@
       "227": 2,
       "350": 1
    },
-   "started": "2019-09-04T17:06:22.507Z",
+   "started": "2019-09-05T21:09:39.921Z",
    "trafficStats": {
       "incomingCompressionRatio": 0.1696484375,
       "incomingOctetsAppLevel": 1024000,
@@ -193,7 +193,7 @@
          "RO",
          [
             350,
-            "474554202f72756e436173653f636173653d343837266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f73 ..."
+            "474554202f72756e436173653f636173653d343835266167656e743d6978776562736f636b657420485454502f312e310d0a486f73743a206c6f63616c686f73 ..."
          ]
       ],
       [
@@ -242,7 +242,7 @@
          "RO",
          [
             8,
-            "88825d6fef0f5e87"
+            "88825d7179945e99"
          ]
       ],
       [
@@ -255,7 +255,7 @@
          true,
          0,
          true,
-         "5d6fef0f"
+         "5d717994"
       ]
    ]
 }

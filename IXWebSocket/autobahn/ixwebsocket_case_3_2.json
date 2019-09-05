@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send small text message, then send again with <b>RSV = 2</b>, then send Ping.",
    "droppedByMe": true,
-   "duration": 3,
+   "duration": 1,
    "expectation": "Echo for first message is received, but then connection is failed immediately, since RSV must be 0, when no extension defining RSV meaning has been negotiated. The Pong is not received.",
    "expected": {
       "NON-STRICT": [],
@@ -28,8 +28,8 @@
       "requireClean": false
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=29&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: f9A60301AegH4HB745aH5F==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: 39gkSKa6Le3cRzph/suuVe/WVJ8=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=29&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: f1dc20BB6B0e50EddFDeF8==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: kFc1WkPKdWV6s8Pq/sUh+Nozxyw=\r\n\r\n",
    "id": "3.2",
    "isServer": true,
    "localCloseCode": 1000,
@@ -55,7 +55,7 @@
       "44": 1,
       "349": 1
    },
-   "started": "2019-09-04T16:51:40.665Z",
+   "started": "2019-09-05T20:48:51.729Z",
    "trafficStats": null,
    "txFrameStats": {
       "1": 2,
@@ -163,7 +163,7 @@
          "RO",
          [
             44,
-            "818d5d6feb9c150a87f03243cbeb321d87f87c88935d6feb9c5e85b9f92e0a99ea380bcbfe341bcbe92e0a8f"
+            "818d5d7174b3151418df325d54c4320318d77c88935d7174b35e9b26d62e1406c5381554d1340554c62e1410"
          ]
       ],
       [
@@ -176,7 +176,7 @@
          true,
          0,
          true,
-         "5d6feb9c"
+         "5d7174b3"
       ],
       [
          "RF",
@@ -188,7 +188,7 @@
          true,
          0,
          true,
-         "5d6feb9c"
+         "5d7174b3"
       ],
       [
          "TF",

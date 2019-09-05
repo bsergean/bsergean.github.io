@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send invalid UTF-8 text message in 3 fragments (frames).\nFirst frame payload is valid, then wait, then 2nd frame which contains the payload making the sequence invalid, then wait, then 3rd frame with rest.\nNote that PART1 and PART3 are valid UTF-8 in themselves, PART2 is a 0x110000 encoded as in the UTF-8 integer encoding scheme, but the codepoint is invalid (out of range).\n<br><br>MESSAGE PARTS:<br>\nPART1 = cebae1bdb9cf83cebcceb5<br>\nPART2 = f4908080<br>\nPART3 = 656469746564<br>\n",
    "droppedByMe": true,
-   "duration": 2007,
+   "duration": 2004,
    "expectation": "The first frame is accepted, we expect to timeout on the first wait. The 2nd frame should be rejected immediately (fail fast on UTF-8). If we timeout, we expect the connection is failed at least then, since the complete message payload is not valid UTF-8.",
    "expected": {
       "NON-STRICT": [
@@ -37,8 +37,8 @@
       "requireClean": false
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=74&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 6d2f1EEedH77dGEdAgGA9H==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: cUu32/g6tkLtyoxL97/W3eYEqhQ=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=74&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: B427CAab26bd2eA65d8Db4==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: Nfm64z4W8SAYCiTVTkscz34IFwk=\r\n\r\n",
    "id": "6.4.1",
    "isServer": true,
    "localCloseCode": 1000,
@@ -66,7 +66,7 @@
       "34": 1,
       "349": 1
    },
-   "started": "2019-09-04T16:51:45.414Z",
+   "started": "2019-09-05T20:48:56.324Z",
    "trafficStats": null,
    "txFrameStats": {
       "0": 2,
@@ -193,7 +193,7 @@
          "RO",
          [
             34,
-            "889c5d6feba35e80a2cd2b0e87ca394f8dd13c028e832d0e92cf320e8f83390e9fc2"
+            "889c5d7174ba5e9e3dd42b1018d3395112c83c1c119a2d100dd63210109a391000db"
          ]
       ],
       [
@@ -206,7 +206,7 @@
          true,
          0,
          true,
-         "5d6feba3"
+         "5d7174ba"
       ],
       [
          "TF",

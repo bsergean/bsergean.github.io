@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send message fragment1 followed by close then fragment",
    "droppedByMe": true,
-   "duration": 3,
+   "duration": 1,
    "expectation": "Clean close with normal code.",
    "expected": {
       "OK": []
@@ -21,8 +21,8 @@
       "requireClean": true
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=214&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 7D2eHA6A8F8fG2C1a3EehG==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: Dexb01FLnq28dSot+vzCCYiRn6E=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=214&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: FdaG9CdFCBd5Hhg1BCbfhg==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: C/VKOX7w6EOqWGvbT2TZqwmoMlM=\r\n\r\n",
    "id": "7.1.5",
    "isServer": true,
    "localCloseCode": 1000,
@@ -41,7 +41,7 @@
       "8": 1,
       "350": 1
    },
-   "started": "2019-09-04T16:51:54.461Z",
+   "started": "2019-09-05T20:49:04.874Z",
    "trafficStats": null,
    "txFrameStats": {
       "0": 1,
@@ -148,7 +148,7 @@
          "RO",
          [
             8,
-            "88825d6febaa5e87"
+            "88825d7174c05e99"
          ]
       ],
       [
@@ -161,7 +161,7 @@
          true,
          0,
          true,
-         "5d6febaa"
+         "5d7174c0"
       ]
    ]
 }

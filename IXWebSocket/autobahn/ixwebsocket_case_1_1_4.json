@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send text message message with payload of length 127.",
    "droppedByMe": true,
-   "duration": 5,
+   "duration": 1,
    "expectation": "Receive echo'ed text message (with payload as sent). Clean close with normal code.",
    "expected": {
       "OK": [
@@ -27,8 +27,8 @@
       "requireClean": true
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=4&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: 4B0gFcb74A6F7EA5db1F04==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: xU+Kwvy4okwwTZuIEy/QPT2h0bE=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=4&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: A2BF8Bah8G98Hc5D7C9Acc==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: lIZC+Kqr4t2ZZ039ytfM2b0MNPI=\r\n\r\n",
    "id": "1.1.4",
    "isServer": true,
    "localCloseCode": 1000,
@@ -55,7 +55,7 @@
       "135": 1,
       "348": 1
    },
-   "started": "2019-09-04T16:51:39.774Z",
+   "started": "2019-09-05T20:48:50.904Z",
    "trafficStats": null,
    "txFrameStats": {
       "1": 1,
@@ -117,7 +117,7 @@
          "RO",
          [
             135,
-            "81fe007f5d6feb9b7745c1b17745c1b17745c1b17745c1b17745c1b17745c1b17745c1b17745c1b17745c1b17745c1b17745c1b17745c1b17745c1b17745c1b1 ..."
+            "81fe007f5d7174b2775b5e98775b5e98775b5e98775b5e98775b5e98775b5e98775b5e98775b5e98775b5e98775b5e98775b5e98775b5e98775b5e98775b5e98 ..."
          ]
       ],
       [
@@ -130,7 +130,7 @@
          true,
          0,
          true,
-         "5d6feb9b"
+         "5d7174b2"
       ],
       [
          "TF",
@@ -158,7 +158,7 @@
          "RO",
          [
             8,
-            "88825d6feb9b5e87"
+            "88825d7174b25e99"
          ]
       ],
       [
@@ -171,7 +171,7 @@
          true,
          0,
          true,
-         "5d6feb9b"
+         "5d7174b2"
       ]
    ]
 }

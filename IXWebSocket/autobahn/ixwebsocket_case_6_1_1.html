@@ -202,7 +202,7 @@ pre.wirelog_tcp_closed_by_peer {color: #fff; margin: 0; background-color: #000; 
       <center><a href="http://autobahn.ws/testsuite" title="Autobahn WebSocket Testsuite"><img src="http://autobahn.ws/static/img/ws_protocol_test_report.png"          border="0" width="820" height="46" alt="Autobahn WebSocket Testsuite Report"></img></a></center>
       <center><a href="http://autobahn.ws"           title="Autobahn WebSocket">          <img src="http://autobahn.ws/static/img/ws_protocol_test_report_autobahn.png" border="0" width="300" height="68" alt="Autobahn WebSocket">                 </img></a></center>
       <br/>
-      <p class="case case_ok">ixwebsocket - <span style="font-size: 1.3em;"><b>Case 6.1.1</b></span> : Pass - <span style="font-size: 0.9em;"><b>4</b> ms @ 2019-09-04T16:51:45.336Z</a></p>
+      <p class="case case_ok">ixwebsocket - <span style="font-size: 1.3em;"><b>Case 6.1.1</b></span> : Pass - <span style="font-size: 0.9em;"><b>2</b> ms @ 2019-09-05T20:48:56.284Z</a></p>
       <p class="case_text_block case_desc"><b>Case Description</b><br/><br/>Send text message of length 0.</p>
       <p class="case_text_block case_expect"><b>Case Expectation</b><br/><br/>A message is echo'ed back to us (with empty payload).</p>
 
@@ -219,15 +219,15 @@ Host: localhost:9001
 Upgrade: websocket
 Connection: Upgrade
 Sec-WebSocket-Version: 13
-Sec-WebSocket-Key: C8dgcDcf7GGF7BF29514GH==
-User-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11
+Sec-WebSocket-Key: gG849HgHEGA50764eh68D5==
+User-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11
 Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15</pre>
       <pre class="http_dump">HTTP/1.1 101 Switching Protocols
-Server: AutobahnTestSuite/0.8.0-0.10.9
+Server: AutobahnTestSuite/0.8.1-0.10.9
 X-Powered-By: AutobahnPython/0.10.9
 Upgrade: WebSocket
 Connection: Upgrade
-Sec-WebSocket-Accept: ZRwwAqlE+GTnz3Z38vO54yX9qGo=</pre>
+Sec-WebSocket-Accept: C5+Q4e2zQFcSE1rG9uG11oaAhog=</pre>
       <br/><hr/>
       <h2>Closing Behavior</h2>
       <table>
@@ -287,13 +287,13 @@ Sec-WebSocket-Accept: ZRwwAqlE+GTnz3Z38vO54yX9qGo=</pre>
          <pre class="wirelog_tx_frame">002 TX FRAME : OPCODE=1, FIN=True, RSV=0, PAYLOAD-LEN=0, MASK=None, PAYLOAD-REPEAT-LEN=None, CHOPSIZE=None, SYNC=False</pre>
          <pre class="wirelog_tx_octets">003 TX OCTETS: 8100</pre>
          <pre class="wirelog_kill_after">004 CLOSE CONNECTION AFTER 1.000000 sec</pre>
-         <pre class="wirelog_rx_octets">005 RX OCTETS: 81805d6feba1</pre>
-         <pre class="wirelog_rx_frame">006 RX FRAME : OPCODE=1, FIN=True, RSV=0, PAYLOAD-LEN=0, MASKED=True, MASK=3564366665626131</pre>
+         <pre class="wirelog_rx_octets">005 RX OCTETS: 81805d7174b8</pre>
+         <pre class="wirelog_rx_frame">006 RX FRAME : OPCODE=1, FIN=True, RSV=0, PAYLOAD-LEN=0, MASKED=True, MASK=3564373137346238</pre>
          <pre class="wirelog_tx_frame">007 TX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=2, MASK=None, PAYLOAD-REPEAT-LEN=None, CHOPSIZE=None, SYNC=False</pre>
          <pre class="wirelog_tx_frame">               0x03e8</pre>
          <pre class="wirelog_tx_octets">008 TX OCTETS: 880203e8</pre>
-         <pre class="wirelog_rx_octets">009 RX OCTETS: 88825d6feba15e87</pre>
-         <pre class="wirelog_rx_frame">010 RX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=2, MASKED=True, MASK=3564366665626131</pre>
+         <pre class="wirelog_rx_octets">009 RX OCTETS: 88825d7174b85e99</pre>
+         <pre class="wirelog_rx_frame">010 RX FRAME : OPCODE=8, FIN=True, RSV=0, PAYLOAD-LEN=2, MASKED=True, MASK=3564373137346238</pre>
          <pre class="wirelog_rx_frame">               0x03e8</pre>
          <pre class="wirelog_tcp_closed_by_me">011 TCP DROPPED BY ME</pre>
       </div>

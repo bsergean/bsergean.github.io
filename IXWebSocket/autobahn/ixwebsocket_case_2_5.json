@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Send ping with binary payload of 126 octets.",
    "droppedByMe": true,
-   "duration": 2,
+   "duration": 1,
    "expectation": "Connection is failed immediately (1002/Protocol Error), since control frames are only allowed to have payload up to and including 125 octets..",
    "expected": {
       "OK": []
@@ -21,8 +21,8 @@
       "requireClean": false
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=21&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: A1bfdA4gFcHC1d6H6agEgB==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: 9Gw0rEpp02YV/jZKiGdQT7di9FQ=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=21&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: FBbdbH2H3g1Fe07ed378D2==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: py1YdPTYiWOpJ+9dmMiQTx6t744=\r\n\r\n",
    "id": "2.5",
    "isServer": true,
    "localCloseCode": 1000,
@@ -41,7 +41,7 @@
       "66": 1,
       "349": 1
    },
-   "started": "2019-09-04T16:51:39.963Z",
+   "started": "2019-09-05T20:48:51.081Z",
    "trafficStats": null,
    "txFrameStats": {
       "8": 1,
@@ -103,7 +103,7 @@
          "RO",
          [
             66,
-            "88bc5d6feb9b5e85bbf23308cbe9380e98f4334f88f4331b99f4314f8de93c028ebb2a069ff37d1f8ae231008aff7d038ef53a1b83bb634fdaa9684f84f8290a ..."
+            "88bc5d7174b35e9b24da331654c1381007dc335117dc330506dc315112c13c1c11932a1800db7d0115ca311e15d77d1d11dd3a051c936351458168511bd02914 ..."
          ]
       ],
       [
@@ -116,7 +116,7 @@
          true,
          0,
          true,
-         "5d6feb9b"
+         "5d7174b3"
       ],
       [
          "TF",

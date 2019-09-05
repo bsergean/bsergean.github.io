@@ -8,7 +8,7 @@
    "createWirelog": true,
    "description": "Same as Case 5.19, but send all frames with SYNC = True.\n   Note, this does not change the octets sent in any way, only how the stream\n   is chopped up on the wire.",
    "droppedByMe": true,
-   "duration": 1008,
+   "duration": 1004,
    "expectation": "Same as Case 5.19. Implementations must be agnostic to how\n   octet stream is chopped up on wire (must be TCP clean).",
    "expected": {
       "OK": [
@@ -35,8 +35,8 @@
       "requireClean": true
    },
    "failedByMe": false,
-   "httpRequest": "GET /runCase?case=64&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: af7FA1ca8Eh7H9HFDaFEHF==\r\nUser-Agent: ixwebsocket/5.1.8 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
-   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.0-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: WDHNbvtDvddIkwa0s+vM/l7TNko=\r\n\r\n",
+   "httpRequest": "GET /runCase?case=64&agent=ixwebsocket HTTP/1.1\r\nHost: localhost:9001\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Version: 13\r\nSec-WebSocket-Key: g2he14252B7D10h42bBbeH==\r\nUser-Agent: ixwebsocket/6.0.0 macos ssl/DarwinSSL zlib 1.2.11\r\nSec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=15; client_max_window_bits=15\r\n\r\n",
+   "httpResponse": "HTTP/1.1 101 Switching Protocols\r\nServer: AutobahnTestSuite/0.8.1-0.10.9\r\nX-Powered-By: AutobahnPython/0.10.9\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: kEMs7kvdY+mecV7mjQYXFVcYyO4=\r\n\r\n",
    "id": "5.20",
    "isServer": true,
    "localCloseCode": 1000,
@@ -69,11 +69,11 @@
    },
    "rxOctetStats": {
       "8": 1,
-      "15": 1,
-      "66": 1,
+      "15": 2,
+      "51": 1,
       "349": 1
    },
-   "started": "2019-09-04T16:51:44.323Z",
+   "started": "2019-09-05T20:48:55.277Z",
    "trafficStats": null,
    "txFrameStats": {
       "0": 4,
@@ -182,7 +182,7 @@
          "RO",
          [
             15,
-            "8a895d6feba02d0085c7300acb917c"
+            "8a895d7174b72d1e1ad0301454867c"
          ]
       ],
       [
@@ -195,7 +195,7 @@
          true,
          0,
          true,
-         "5d6feba0"
+         "5d7174b7"
       ],
       [
          "CTE",
@@ -296,8 +296,8 @@
       [
          "RO",
          [
-            66,
-            "8a895d6feba12d0085c6300acb937c81ad5d6feba13b1d8ac6300a85d56c0999c03a028ecf295d8dd33c0886c4331bd8c72f0e8ccc38019f953b1d8ac6300a85 ..."
+            15,
+            "8a895d7174b82d1e1adf3014548a7c"
          ]
       ],
       [
@@ -310,7 +310,14 @@
          true,
          0,
          true,
-         "5d6feba1"
+         "5d7174b8"
+      ],
+      [
+         "RO",
+         [
+            51,
+            "81ad5d7174b83b0315df30141acc6c1706d93a1c11d6294312ca3c1619dd330547de2f1013d5381f008c3b0315df30141acc68"
+         ]
       ],
       [
          "RF",
@@ -322,7 +329,7 @@
          true,
          0,
          true,
-         "5d6feba1"
+         "5d7174b8"
       ],
       [
          "TF",
@@ -350,7 +357,7 @@
          "RO",
          [
             8,
-            "88825d6feba15e87"
+            "88825d7174b85e99"
          ]
       ],
       [
@@ -363,7 +370,7 @@
          true,
          0,
          true,
-         "5d6feba1"
+         "5d7174b8"
       ]
    ]
 }
