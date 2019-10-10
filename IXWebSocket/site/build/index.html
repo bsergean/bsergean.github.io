@@ -117,13 +117,14 @@ There is a unittest which can be executed by typing <code>make test</code>.</p>
 <li><code>-DUSE_MBED_TLS=1</code> will use <a href="https://tls.mbed.org/">mbedlts</a> for the TLS support (default on Windows)</li>
 <li><code>-DUSE_WS=1</code> will build the ws interactive command line tool</li>
 </ul>
+<p>If you are on Windows, look at the <a href="https://github.com/machinezone/IXWebSocket/blob/master/appveyor.yml">appveyor</a> file that has instructions for building dependencies.</p>
 <h3 id="vcpkg">vcpkg</h3>
 <p>It is possible to get IXWebSocket through Microsoft <a href="https://github.com/microsoft/vcpkg">vcpkg</a>.</p>
 <pre><code>vcpkg install ixwebsocket
 </code></pre>
 
 <h3 id="conan">Conan</h3>
-<p>Support for building with conan was contributed by Olivia Zoe (thanks !). The package name to reference is <code>IXWebSocket/5.0.0@LunarWatcher/stable</code>. The package is in the process to be published to the official conan package repo, but in the meantime, it can be accessed by adding a new remote </p>
+<p>Support for building with conan was contributed by Olivia Zoe (thanks !). The package name to reference is <code>IXWebSocket/5.0.0@LunarWatcher/stable</code>. The package is in the process to be published to the official conan package repo, but in the meantime, it can be accessed by adding a new remote</p>
 <pre><code>conan remote add remote_name_here https://api.bintray.com/conan/oliviazoe0/conan-packages
 </code></pre>
 
