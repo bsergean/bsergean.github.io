@@ -1,0 +1,693 @@
+<html>
+<xmp theme="united" style="display:none;">
+
+# A cobra client memory leak
+
+<img src="water-leak.jpg" />
+
+```
+NAME                                        READY     STATUS             RESTARTS   AGE
+cobra-py-bots-foo-9-6jm72          0/1       CrashLoopBackOff   260        21h
+cobra-py-bots-bar-5-jqxc4          0/1       CrashLoopBackOff   219        21h
+cobra-py-bots-baz-5-k7ltt          0/1       CrashLoopBackOff   225        21h
+```
+
+When we send a message (PDU) to [cobra](https://github.com/machinezone/cobra),
+we create a queue to wait for the response and try to pull element from that
+queue. getActionResponse does that. Sometimes the connection is dropped,
+externally or internally ; checking the self.stop future tells us about it.
+
+I ran into a severe memory leak which would cause cobra bots to restart very
+frequently. Using the builtin python3 tracemalloc I noticed that a tons of
+object were created and never freed ; those objects where deserialized JSON
+blobs which we would put into our queue. I printed the queue size to make sure
+it stayed constant and the opposite happened. That queue size jumped through
+the roof.
+
+I have to admit asyncio is still a bit of a mystery to me. If anyone knows
+what's wrong with the code below tell me. It seems that the leak happen when an
+entry is pulled from a queue within a co-routine.
+
+## Original version triggering a leak.
+
+```
+    async def getActionResponseLeak(self, actionId, retainQueue=False):
+        q = self.getQueue(actionId)
+        incoming = asyncio.create_task(q.get())  # here we 'pull' from the queue
+
+        done, pending = await asyncio.wait(
+            [incoming, self.stop], return_when=asyncio.FIRST_COMPLETED
+        )
+
+        # Cancel pending tasks to avoid leaking them.
+        if incoming in pending:
+            incoming.cancel()
+
+        # if we enter this branch, it means that a task was ready to be pulled from the queue
+        if incoming in done:
+            data = incoming.result()
+
+            q.task_done()  # Adding this did not make a difference, I thought this was the cause of the leak
+
+            if not retainQueue:
+                self.deleteQueue(actionId)
+
+            return data
+
+        if self.stop in done:
+            # Reraise the exception which was caught in self.waitForResponses
+            exception = self.stop.result()
+            raise exception
+```
+
+Memory used (RSS as reported by psutils) is reported every 5 seconds.
+
+```
+RSS: 35.66 MB
+#7 tasks
+
+position 1571258573961-0 #messages 1 msg/s 1
+position 1571258574911-0 #messages 1402 msg/s 1401
+position 1571258575932-8 #messages 2900 msg/s 1498
+position 1571258576887-0 #messages 4317 msg/s 1417
+position 1571258577851-5 #messages 5740 msg/s 1423
+RSS: 41.75 MB
+#6 tasks
+
+position 1571258578858-4 #messages 7232 msg/s 1492
+position 1571258579760-0 #messages 8617 msg/s 1385
+position 1571258580711-0 #messages 10008 msg/s 1391
+position 1571258581620-1 #messages 11347 msg/s 1339
+position 1571258582509-1 #messages 12694 msg/s 1347
+RSS: 54.26 MB
+#7 tasks
+
+position 1571258583362-0 #messages 13960 msg/s 1266
+position 1571258584300-1 #messages 15360 msg/s 1400
+position 1571258585302-1 #messages 16811 msg/s 1451
+position 1571258586267-0 #messages 18192 msg/s 1381
+position 1571258587101-0 #messages 19438 msg/s 1246
+RSS: 66.41 MB
+#6 tasks
+
+position 1571258588043-1 #messages 20838 msg/s 1400
+position 1571258589051-0 #messages 22316 msg/s 1478
+position 1571258590038-3 #messages 23755 msg/s 1439
+position 1571258590957-0 #messages 25053 msg/s 1298
+position 1571258591824-0 #messages 26385 msg/s 1332
+RSS: 70.43 MB
+#6 tasks
+```
+
+## Second approach, no asyncio task is created and it uses a timeout while querying data
+
+This seems pretty equivalent to the (spoiler alert) good version below,
+approach 3. Memory goes higher than 50M and stops there for a bit. It
+oscillates between 50 and 57MB, but then jumps after a bit and keep going up.
+It looks like it generate some garbage and python isn't able to keep up with
+clearing the garbage.
+
+```
+    async def getActionResponseBug(self, actionId, retainQueue=False):
+        q = self.getQueue(actionId)
+        while True:
+            try:
+                data = await asyncio.wait_for(q.get(), timeout=0.001)
+                break
+            except asyncio.TimeoutError:
+                if self.stop.done():
+                    # Reraise the exception which was caught in self.waitForResponses
+                    exception = self.stop.result()
+                    raise exception
+
+        if not retainQueue:
+            self.deleteQueue(actionId)
+
+        return data
+```
+
+Then it goes up
+
+```
+position 1571254249479-1 #messages 210536 msg/s 1419
+position 1571254250393-3 #messages 211945 msg/s 1409
+position 1571254251245-3 #messages 213297 msg/s 1352
+position 1571254252106-2 #messages 214687 msg/s 1390
+position 1571254252974-3 #messages 216084 msg/s 1397
+RSS: 59.65 MB
+#7 tasks
+
+position 1571254253762-7 #messages 217397 msg/s 1313
+position 1571254254660-2 #messages 218837 msg/s 1440
+position 1571254255633-0 #messages 220346 msg/s 1509
+position 1571254256626-0 #messages 221841 msg/s 1495
+position 1571254257619-2 #messages 223385 msg/s 1544
+RSS: 68.59 MB
+#6 tasks
+
+position 1571254258609-2 #messages 224868 msg/s 1483
+position 1571254259560-0 #messages 226311 msg/s 1443
+position 1571254260609-0 #messages 227893 msg/s 1582
+position 1571254261631-3 #messages 229401 msg/s 1508
+position 1571254262564-1 #messages 230859 msg/s 1458
+RSS: 71.39 MB
+#6 tasks
+
+position 1571254263484-6 #messages 232282 msg/s 1423
+position 1571254264421-0 #messages 233724 msg/s 1442
+position 1571254265370-2 #messages 235220 msg/s 1496
+position 1571254266339-5 #messages 236658 msg/s 1438
+position 1571254267320-0 #messages 238148 msg/s 1490
+RSS: 75.26 MB
+#6 tasks
+
+......
+......
+
+position 1571254306823-1 #messages 297477 msg/s 1555
+position 1571254307880-4 #messages 299014 msg/s 1537
+position 1571254308869-3 #messages 300451 msg/s 1437
+position 1571254309957-1 #messages 302012 msg/s 1561
+position 1571254311018-3 #messages 303648 msg/s 1636
+RSS: 131.16 MB
+#6 tasks
+
+position 1571254312234-1 #messages 305341 msg/s 1693
+position 1571254313412-1 #messages 306981 msg/s 1640
+position 1571254314664-0 #messages 308655 msg/s 1674
+position 1571254315872-0 #messages 310280 msg/s 1625
+position 1571254317148-0 #messages 311966 msg/s 1686
+RSS: 131.16 MB
+#6 tasks
+
+position 1571254318330-0 #messages 313602 msg/s 1636
+position 1571254319498-1 #messages 315187 msg/s 1585
+position 1571254320666-0 #messages 316819 msg/s 1632
+position 1571254321894-7 #messages 318500 msg/s 1681
+position 1571254323177-2 #messages 320249 msg/s 1749
+RSS: 131.16 MB
+#6 tasks
+
+.... waiting like one hour ....
+
+position 1571257463296-1 #messages 69488 msg/s 1134
+position 1571257463979-4 #messages 70625 msg/s 1137
+RSS: 911.36 MB
+#7 tasks
+
+position 1571257464558-0 #messages 71597 msg/s 972
+position 1571257465206-2 #messages 72720 msg/s 1123
+position 1571257465887-2 #messages 73833 msg/s 1113
+RSS: 917.19 MB
+#8 tasks
+
+position 1571257466654-1 #messages 75041 msg/s 1208
+position 1571257467272-7 #messages 76080 msg/s 1039
+RSS: 924.76 MB
+#8 tasks
+```
+
+# Winner approach
+
+I still feel dirty about this technique as the busy loop sleep period is arbitrary (made it 0.1 ms), but it works. I looked at the CPU usage and it's comparable to the previous 2 approaches.
+
+```
+    async def getActionResponse(self, actionId, retainQueue=False):
+        q = self.getQueue(actionId)
+        while True:
+            try:
+                data = q.get_nowait()
+                break
+            except asyncio.QueueEmpty:
+                await asyncio.sleep(0.0001)  # => max 10000 msg/s
+    
+                if self.stop.done():
+                    # Reraise the exception which was caught in self.waitForResponses
+                    exception = self.stop.result()
+                    raise exception
+    
+        if not retainQueue:
+            self.deleteQueue(actionId)
+    
+        return data
+```
+
+No leak observed, after letting this run for a while.
+
+```
+RSS: 35.62 MB
+#6 tasks
+
+position 1571253383071-0 #messages 1 msg/s 1
+position 1571253384068-2 #messages 1653 msg/s 1652
+position 1571253385070-1 #messages 3309 msg/s 1656
+position 1571253386072-1 #messages 4960 msg/s 1651
+position 1571253387068-0 #messages 6572 msg/s 1612
+RSS: 37.47 MB
+#6 tasks
+
+position 1571253388076-0 #messages 8152 msg/s 1580
+position 1571253389077-1 #messages 9793 msg/s 1641
+position 1571253390070-0 #messages 11388 msg/s 1595
+position 1571253391080-7 #messages 13002 msg/s 1614
+position 1571253392082-2 #messages 14634 msg/s 1632
+RSS: 37.59 MB
+#6 tasks
+
+position 1571253393080-3 #messages 16218 msg/s 1584
+position 1571253394085-3 #messages 17829 msg/s 1611
+position 1571253395087-0 #messages 19456 msg/s 1627
+position 1571253396083-4 #messages 21086 msg/s 1630
+position 1571253397089-0 #messages 22746 msg/s 1660
+RSS: 37.71 MB
+#6 tasks
+
+position 1571253398086-5 #messages 24382 msg/s 1636
+position 1571253399086-2 #messages 25959 msg/s 1577
+position 1571253400092-3 #messages 27513 msg/s 1554
+position 1571253401098-1 #messages 29105 msg/s 1592
+position 1571253402086-1 #messages 30688 msg/s 1583
+RSS: 37.77 MB
+#6 tasks
+
+position 1571253403095-3 #messages 32403 msg/s 1715
+position 1571253404100-0 #messages 34029 msg/s 1626
+position 1571253405100-1 #messages 35670 msg/s 1641
+position 1571253406089-1 #messages 37254 msg/s 1584
+position 1571253407101-2 #messages 38825 msg/s 1571
+RSS: 37.78 MB
+#6 tasks
+
+position 1571253408108-0 #messages 40403 msg/s 1578
+position 1571253409106-0 #messages 41961 msg/s 1558
+position 1571253410109-1 #messages 43537 msg/s 1576
+position 1571253411110-1 #messages 45029 msg/s 1492
+position 1571253412114-5 #messages 46521 msg/s 1492
+RSS: 38.12 MB
+#6 tasks
+
+position 1571253413115-0 #messages 48045 msg/s 1524
+position 1571253414120-1 #messages 49577 msg/s 1532
+position 1571253415122-4 #messages 51134 msg/s 1557
+position 1571253416121-1 #messages 52676 msg/s 1542
+position 1571253417127-3 #messages 54276 msg/s 1600
+RSS: 38.12 MB
+#6 tasks
+
+position 1571253418111-3 #messages 55900 msg/s 1624
+position 1571253419125-1 #messages 57556 msg/s 1656
+position 1571253420124-4 #messages 59137 msg/s 1581
+position 1571253421128-6 #messages 60700 msg/s 1563
+position 1571253422135-2 #messages 62250 msg/s 1550
+RSS: 38.12 MB
+#6 tasks
+
+position 1571253423127-0 #messages 63790 msg/s 1540
+position 1571253424137-3 #messages 65434 msg/s 1644
+position 1571253425133-2 #messages 66951 msg/s 1517
+position 1571253426141-1 #messages 68459 msg/s 1508
+position 1571253427133-0 #messages 69920 msg/s 1461
+RSS: 38.14 MB
+#6 tasks
+
+position 1571253428139-0 #messages 71453 msg/s 1533
+position 1571253429142-0 #messages 72947 msg/s 1494
+position 1571253430143-0 #messages 74511 msg/s 1564
+position 1571253431146-0 #messages 76022 msg/s 1511
+position 1571253432117-1 #messages 77469 msg/s 1447
+RSS: 38.19 MB
+#6 tasks
+
+position 1571253433135-7 #messages 78985 msg/s 1516
+position 1571253434148-1 #messages 80521 msg/s 1536
+position 1571253435141-0 #messages 82060 msg/s 1539
+position 1571253436155-2 #messages 83618 msg/s 1558
+position 1571253437153-3 #messages 85177 msg/s 1559
+RSS: 38.2 MB
+#6 tasks
+
+position 1571253438150-4 #messages 86667 msg/s 1490
+position 1571253439157-1 #messages 88193 msg/s 1526
+position 1571253440154-0 #messages 89711 msg/s 1518
+position 1571253441158-0 #messages 91201 msg/s 1490
+position 1571253442159-2 #messages 92637 msg/s 1436
+RSS: 38.2 MB
+#6 tasks
+
+position 1571253443160-2 #messages 94150 msg/s 1513
+position 1571253444157-1 #messages 95662 msg/s 1512
+position 1571253445151-5 #messages 97206 msg/s 1544
+position 1571253446155-4 #messages 98813 msg/s 1607
+position 1571253447166-1 #messages 100417 msg/s 1604
+RSS: 38.25 MB
+#6 tasks
+
+position 1571253448171-0 #messages 102015 msg/s 1598
+position 1571253449166-1 #messages 103525 msg/s 1510
+position 1571253450171-1 #messages 105045 msg/s 1520
+position 1571253451175-1 #messages 106553 msg/s 1508
+position 1571253452175-2 #messages 108132 msg/s 1579
+RSS: 38.29 MB
+#6 tasks
+
+position 1571253453176-1 #messages 109664 msg/s 1532
+position 1571253454179-1 #messages 111205 msg/s 1541
+position 1571253455177-0 #messages 112781 msg/s 1576
+position 1571253456178-1 #messages 114310 msg/s 1529
+position 1571253457186-2 #messages 115839 msg/s 1529
+RSS: 38.29 MB
+#6 tasks
+
+position 1571253458175-1 #messages 117328 msg/s 1489
+position 1571253459186-1 #messages 118848 msg/s 1520
+position 1571253460184-5 #messages 120377 msg/s 1529
+position 1571253461184-0 #messages 121890 msg/s 1513
+position 1571253462187-1 #messages 123434 msg/s 1544
+RSS: 38.3 MB
+#6 tasks
+
+position 1571253463187-4 #messages 125031 msg/s 1597
+position 1571253464187-3 #messages 126527 msg/s 1496
+position 1571253465189-1 #messages 128021 msg/s 1494
+position 1571253466196-2 #messages 129549 msg/s 1528
+position 1571253467198-4 #messages 131046 msg/s 1497
+RSS: 38.3 MB
+#6 tasks
+
+position 1571253468174-3 #messages 132505 msg/s 1459
+position 1571253469200-1 #messages 133993 msg/s 1488
+position 1571253470201-2 #messages 135577 msg/s 1584
+position 1571253471196-1 #messages 136995 msg/s 1418
+position 1571253472193-0 #messages 138449 msg/s 1454
+RSS: 38.32 MB
+#6 tasks
+
+position 1571253473203-4 #messages 139882 msg/s 1433
+position 1571253474195-1 #messages 141343 msg/s 1461
+position 1571253475200-3 #messages 142882 msg/s 1539
+position 1571253476201-3 #messages 144356 msg/s 1474
+position 1571253477204-1 #messages 145742 msg/s 1386
+RSS: 38.32 MB
+#6 tasks
+
+position 1571253478200-2 #messages 147151 msg/s 1409
+position 1571253479205-2 #messages 148544 msg/s 1393
+position 1571253480211-2 #messages 149974 msg/s 1430
+position 1571253481212-1 #messages 151446 msg/s 1472
+position 1571253482226-0 #messages 152866 msg/s 1420
+RSS: 38.32 MB
+#6 tasks
+
+position 1571253483228-1 #messages 154309 msg/s 1443
+position 1571253484234-2 #messages 155798 msg/s 1489
+position 1571253485231-1 #messages 157232 msg/s 1434
+position 1571253486235-0 #messages 158718 msg/s 1486
+position 1571253487232-7 #messages 160167 msg/s 1449
+RSS: 38.32 MB
+#6 tasks
+
+position 1571253488234-4 #messages 161726 msg/s 1559
+position 1571253489237-3 #messages 163200 msg/s 1474
+position 1571253490240-0 #messages 164769 msg/s 1569
+position 1571253491239-3 #messages 166347 msg/s 1578
+position 1571253492241-0 #messages 167857 msg/s 1510
+RSS: 38.32 MB
+#6 tasks
+
+position 1571253493246-1 #messages 169323 msg/s 1466
+position 1571253494248-2 #messages 170831 msg/s 1508
+position 1571253495217-1 #messages 172281 msg/s 1450
+position 1571253496235-0 #messages 173799 msg/s 1518
+position 1571253497251-0 #messages 175266 msg/s 1467
+RSS: 38.36 MB
+#6 tasks
+
+position 1571253498243-2 #messages 176754 msg/s 1488
+position 1571253499252-2 #messages 178222 msg/s 1468
+position 1571253500255-1 #messages 179730 msg/s 1508
+position 1571253501258-3 #messages 181177 msg/s 1447
+position 1571253502261-0 #messages 182660 msg/s 1483
+RSS: 38.36 MB
+#6 tasks
+
+position 1571253503261-1 #messages 184043 msg/s 1383
+position 1571253504266-1 #messages 185513 msg/s 1470
+position 1571253505268-2 #messages 186918 msg/s 1405
+position 1571253506268-5 #messages 188325 msg/s 1407
+position 1571253507270-0 #messages 189668 msg/s 1343
+RSS: 38.36 MB
+#6 tasks
+
+position 1571253508268-1 #messages 191059 msg/s 1391
+position 1571253509231-5 #messages 192427 msg/s 1368
+position 1571253510274-3 #messages 193963 msg/s 1536
+position 1571253511275-0 #messages 195418 msg/s 1455
+position 1571253512278-1 #messages 196856 msg/s 1438
+RSS: 38.43 MB
+#6 tasks
+
+position 1571253513276-5 #messages 198396 msg/s 1540
+position 1571253514281-1 #messages 199870 msg/s 1474
+position 1571253515288-1 #messages 201354 msg/s 1484
+position 1571253516288-1 #messages 202818 msg/s 1464
+position 1571253517289-0 #messages 204270 msg/s 1452
+RSS: 38.43 MB
+#6 tasks
+
+position 1571253518289-2 #messages 205702 msg/s 1432
+position 1571253519291-2 #messages 207153 msg/s 1451
+position 1571253520290-1 #messages 208608 msg/s 1455
+position 1571253521295-3 #messages 210110 msg/s 1502
+position 1571253522296-11 #messages 211632 msg/s 1522
+RSS: 38.43 MB
+#6 tasks
+
+position 1571253523299-0 #messages 213195 msg/s 1563
+position 1571253524294-5 #messages 214671 msg/s 1476
+position 1571253525305-0 #messages 216168 msg/s 1497
+position 1571253526315-2 #messages 217591 msg/s 1423
+position 1571253527311-0 #messages 219059 msg/s 1468
+RSS: 38.43 MB
+#6 tasks
+
+position 1571253528318-0 #messages 220505 msg/s 1446
+position 1571253529321-4 #messages 222021 msg/s 1516
+position 1571253530331-3 #messages 223584 msg/s 1563
+position 1571253531332-0 #messages 225131 msg/s 1547
+position 1571253532326-2 #messages 226684 msg/s 1553
+RSS: 38.43 MB
+#6 tasks
+
+position 1571253533333-2 #messages 228279 msg/s 1595
+position 1571253534337-0 #messages 229881 msg/s 1602
+position 1571253535336-2 #messages 231411 msg/s 1530
+position 1571253536339-0 #messages 232980 msg/s 1569
+position 1571253537352-3 #messages 234499 msg/s 1519
+RSS: 38.43 MB
+#6 tasks
+
+position 1571253538334-0 #messages 236017 msg/s 1518
+position 1571253539334-0 #messages 237590 msg/s 1573
+position 1571253540357-1 #messages 239112 msg/s 1522
+position 1571253541373-1 #messages 240626 msg/s 1514
+position 1571253542368-0 #messages 242122 msg/s 1496
+RSS: 38.47 MB
+#6 tasks
+
+position 1571253543350-2 #messages 243678 msg/s 1556
+position 1571253544369-0 #messages 245188 msg/s 1510
+position 1571253545367-2 #messages 246692 msg/s 1504
+position 1571253546371-3 #messages 248200 msg/s 1508
+position 1571253547369-1 #messages 249676 msg/s 1476
+RSS: 38.47 MB
+#6 tasks
+
+position 1571253548384-1 #messages 251152 msg/s 1476
+position 1571253549379-1 #messages 252633 msg/s 1481
+position 1571253550375-2 #messages 254081 msg/s 1448
+position 1571253551384-0 #messages 255545 msg/s 1464
+position 1571253552381-0 #messages 257001 msg/s 1456
+RSS: 38.49 MB
+#6 tasks
+
+position 1571253553382-3 #messages 258450 msg/s 1449
+position 1571253554391-1 #messages 260022 msg/s 1572
+position 1571253555390-1 #messages 261528 msg/s 1506
+position 1571253556386-1 #messages 263101 msg/s 1573
+position 1571253557394-3 #messages 264708 msg/s 1607
+RSS: 38.49 MB
+#6 tasks
+
+position 1571253558385-0 #messages 266363 msg/s 1655
+position 1571253559395-0 #messages 267845 msg/s 1482
+position 1571253560402-2 #messages 269294 msg/s 1449
+position 1571253561378-0 #messages 270681 msg/s 1387
+position 1571253562413-0 #messages 272180 msg/s 1499
+RSS: 38.49 MB
+#6 tasks
+
+position 1571253563412-2 #messages 273627 msg/s 1447
+position 1571253564415-1 #messages 275180 msg/s 1553
+position 1571253565417-0 #messages 276587 msg/s 1407
+position 1571253566415-0 #messages 278021 msg/s 1434
+position 1571253567419-2 #messages 279455 msg/s 1434
+RSS: 38.49 MB
+#6 tasks
+
+position 1571253568417-1 #messages 280869 msg/s 1414
+position 1571253569423-1 #messages 282257 msg/s 1388
+position 1571253570427-5 #messages 283725 msg/s 1468
+position 1571253571429-1 #messages 285137 msg/s 1412
+position 1571253572426-0 #messages 286489 msg/s 1352
+RSS: 38.49 MB
+#6 tasks
+
+position 1571253573427-4 #messages 287916 msg/s 1427
+position 1571253574427-1 #messages 289267 msg/s 1351
+position 1571253575425-2 #messages 290701 msg/s 1434
+position 1571253576430-0 #messages 292108 msg/s 1407
+position 1571253577429-4 #messages 293476 msg/s 1368
+RSS: 38.49 MB
+#6 tasks
+
+position 1571253578435-0 #messages 294892 msg/s 1416
+position 1571253579439-0 #messages 296301 msg/s 1409
+position 1571253580428-3 #messages 297793 msg/s 1492
+position 1571253581441-0 #messages 299252 msg/s 1459
+position 1571253582442-0 #messages 300731 msg/s 1479
+RSS: 38.49 MB
+#6 tasks
+
+position 1571253583443-1 #messages 302176 msg/s 1445
+position 1571253584446-0 #messages 303623 msg/s 1447
+position 1571253585447-3 #messages 305078 msg/s 1455
+position 1571253586451-2 #messages 306523 msg/s 1445
+position 1571253587445-5 #messages 307953 msg/s 1430
+RSS: 38.51 MB
+#6 tasks
+
+position 1571253588441-7 #messages 309306 msg/s 1353
+position 1571253589451-2 #messages 310747 msg/s 1441
+position 1571253590451-1 #messages 312224 msg/s 1477
+position 1571253591446-7 #messages 313695 msg/s 1471
+position 1571253592457-0 #messages 315141 msg/s 1446
+RSS: 38.51 MB
+#6 tasks
+
+position 1571253593453-3 #messages 316568 msg/s 1427
+position 1571253594457-2 #messages 318068 msg/s 1500
+position 1571253595453-5 #messages 319605 msg/s 1537
+position 1571253596456-3 #messages 321105 msg/s 1500
+position 1571253597462-1 #messages 322641 msg/s 1536
+RSS: 38.51 MB
+#6 tasks
+
+position 1571253598461-1 #messages 324179 msg/s 1538
+position 1571253599457-3 #messages 325753 msg/s 1574
+position 1571253600459-1 #messages 327320 msg/s 1567
+position 1571253601467-0 #messages 328924 msg/s 1604
+position 1571253602466-2 #messages 330548 msg/s 1624
+RSS: 38.51 MB
+#6 tasks
+
+position 1571253603461-1 #messages 332061 msg/s 1513
+position 1571253604470-3 #messages 333648 msg/s 1587
+position 1571253605474-2 #messages 335239 msg/s 1591
+position 1571253606471-4 #messages 336844 msg/s 1605
+position 1571253607475-0 #messages 338441 msg/s 1597
+RSS: 38.51 MB
+#6 tasks
+
+position 1571253608477-2 #messages 340064 msg/s 1623
+position 1571253609475-4 #messages 341612 msg/s 1548
+position 1571253610474-1 #messages 343172 msg/s 1560
+position 1571253611479-5 #messages 344742 msg/s 1570
+position 1571253612481-1 #messages 346286 msg/s 1544
+RSS: 38.51 MB
+#6 tasks
+
+position 1571253613479-2 #messages 347833 msg/s 1547
+position 1571253614484-1 #messages 349370 msg/s 1537
+position 1571253615485-2 #messages 350908 msg/s 1538
+position 1571253616482-5 #messages 352454 msg/s 1546
+position 1571253617482-1 #messages 353941 msg/s 1487
+RSS: 38.51 MB
+#6 tasks
+
+position 1571253618488-0 #messages 355449 msg/s 1508
+position 1571253619479-2 #messages 356965 msg/s 1516
+position 1571253620485-1 #messages 358524 msg/s 1559
+position 1571253621487-3 #messages 360076 msg/s 1552
+position 1571253622492-1 #messages 361623 msg/s 1547
+RSS: 38.51 MB
+#6 tasks
+
+position 1571253623492-0 #messages 363099 msg/s 1476
+position 1571253624502-3 #messages 364629 msg/s 1530
+position 1571253625508-2 #messages 366155 msg/s 1526
+position 1571253626510-2 #messages 367677 msg/s 1522
+position 1571253627512-5 #messages 369081 msg/s 1404
+RSS: 38.53 MB
+#6 tasks
+
+position 1571253628519-1 #messages 370466 msg/s 1385
+position 1571253629522-1 #messages 371932 msg/s 1466
+position 1571253630529-0 #messages 373343 msg/s 1411
+position 1571253631532-0 #messages 374715 msg/s 1372
+position 1571253632529-1 #messages 376128 msg/s 1413
+RSS: 38.53 MB
+#6 tasks
+
+position 1571253633532-0 #messages 377506 msg/s 1378
+position 1571253634534-0 #messages 378845 msg/s 1339
+position 1571253635536-0 #messages 380163 msg/s 1318
+position 1571253636534-1 #messages 381506 msg/s 1343
+position 1571253637531-1 #messages 382869 msg/s 1363
+RSS: 38.53 MB
+#6 tasks
+
+position 1571253638537-1 #messages 384226 msg/s 1357
+position 1571253639544-1 #messages 385602 msg/s 1376
+position 1571253640545-1 #messages 387044 msg/s 1442
+position 1571253641542-5 #messages 388533 msg/s 1489
+position 1571253642533-4 #messages 390008 msg/s 1475
+RSS: 38.53 MB
+#6 tasks
+
+position 1571253643550-1 #messages 391520 msg/s 1512
+position 1571253644550-1 #messages 393045 msg/s 1525
+position 1571253645557-1 #messages 394565 msg/s 1520
+position 1571253646550-2 #messages 396032 msg/s 1467
+position 1571253647546-0 #messages 397478 msg/s 1446
+RSS: 38.53 MB
+#6 tasks
+
+position 1571253648554-1 #messages 398885 msg/s 1407
+position 1571253649555-0 #messages 400279 msg/s 1394
+position 1571253650554-0 #messages 401702 msg/s 1423
+position 1571253651559-0 #messages 403105 msg/s 1403
+position 1571253652561-1 #messages 404477 msg/s 1372
+RSS: 38.53 MB
+#6 tasks
+
+position 1571253653554-0 #messages 405867 msg/s 1390
+position 1571253654561-0 #messages 407216 msg/s 1349
+position 1571253655559-3 #messages 408581 msg/s 1365
+position 1571253656562-0 #messages 409943 msg/s 1362
+position 1571253657563-1 #messages 411244 msg/s 1301
+RSS: 38.53 MB
+#6 tasks
+
+position 1571253658565-2 #messages 412632 msg/s 1388
+position 1571253659566-0 #messages 413977 msg/s 1345
+position 1571253660578-2 #messages 415400 msg/s 1423
+position 1571253661579-1 #messages 416817 msg/s 1417
+position 1571253662587-0 #messages 418211 msg/s 1394
+RSS: 38.54 MB
+#6 tasks
+```
+
+</xmp>
+
+<script src="strapdown.js"></script>
+</html>
