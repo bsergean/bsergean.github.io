@@ -1,0 +1,78 @@
+<html>
+<xmp theme="united" style="display:none;">
+
+# IXWebSocket TLS Options
+
+<img src="tls.png" />
+
+The [IXWebSocket](https://github.com/machinezone/IXWebSocket) library now has more advanced options to configure TLS. Say you are trying to fetch a url over HTTPS from a site whose certificates have expired, or which does not have certificates. We are just interested in the HTTP response status code, not the content of the page, so we'll pass the -I flag.
+
+```
+$ ws curl -I https://expired.badssl.com/
+
+Upload size: 0
+Download size: 0
+Status: 0
+error message: Cannot connect to url: https://expired.badssl.com/ / error : The operation couldn?t be completed. (OSStatus error -9807.)
+```
+
+Things will fails using the default options, for a good reason. But if you are trying to test internal test websites, but are still trying to have SSL 'somewhat' enabled and not totally off, it is possible to configure the library to do so. Most ws subcommands have default TLS options, which are not implemented for all SSL backends (DarwinSSL, OpenSSL, MbedTLS). OpenSSL is the backend that supports the most options, MbedTLS has 'some options', and up until today DarwinSSL had *none*. This just changed and you can now disable peer verification.
+
+Let's list the options of the `ws curl` command.
+
+```
+$ ws curl --help
+HTTP Client
+Usage: ws curl [OPTIONS] url
+
+Positionals:
+  url TEXT REQUIRED           Connection url
+
+Options:
+  -h,--help                   Print this help message and exit
+  -d TEXT                     Form data
+  -F TEXT                     Form data
+  -H TEXT                     Header
+  --output TEXT               Output file
+  -I                          Send a HEAD request
+  -L                          Follow redirects
+  --max-redirects INT         Max Redirects
+  -v                          Verbose
+  -O                          Save output to disk
+  --compress                  Enable gzip compression
+  --connect-timeout INT       Connection timeout
+  --transfer-timeout INT      Transfer timeout
+  --cert-file TEXT:PATH(existing)
+                              Path to the (PEM format) TLS cert file
+  --key-file TEXT:PATH(existing)
+                              Path to the (PEM format) TLS key file
+  --ca-file TEXT:PATH(existing)
+                              Path to the (PEM format) ca roots file
+  --ciphers TEXT              A (comma/space/colon) separated list of ciphers to use for TLS
+  --tls                       Enable TLS (server only)
+  --verify_none               Disable peer cert verification
+```
+
+We need the --verify_none option. If we pass it the request succeed (Status == 200).
+
+```
+$ ws curl -I --verify_none https://expired.badssl.com/
+
+Accept-Ranges: bytes
+Cache-Control: no-store
+Connection: keep-alive
+Content-Length: 494
+Content-Type: text/html
+Date: Wed, 20 Nov 2019 20:07:23 GMT
+ETag: "5d9e704a-1ee"
+Last-Modified: Wed, 09 Oct 2019 23:42:02 GMT
+Server: nginx/1.10.3 (Ubuntu)
+Upload size: 121
+Download size: 0
+Status: 200
+```
+
+</xmp>
+
+<script src="strapdown.js"></script>
+</html>
