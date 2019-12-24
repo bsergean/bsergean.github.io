@@ -1,0 +1,63 @@
+<html>
+<xmp theme="united" style="display:none;">
+
+# IXWebSocket ws utility available in Alpine Linux
+
+<img src="Alpine_Linux.svg" />
+
+The [IXWebSocket](https://github.com/machinezone/IXWebSocket) library comes with a command line tool that can do a lot of things, a client and server for HTTP and WebSocket, a simple redis pubsub client and server, a cobra client and server, a proxy. Some code works better than other :) and there are still many bugs ; it takes a lot of work to make a proper HTTP proxy !
+
+What is remarkable is that, if you are lucky it is very easy to work with the packaging creators. The workflow work with gitlab pull requests, which is more modern and easier than doing something similar with debian or fedora, where the overhead of packaging something is overwhelming. Another package manager OS which seems to be easier to is [nix](https://nixos.org/nix/), as the flow works with github pull requests.
+
+```
+$ docker run -it --rm alpine:3.11
+/ # apk add ws
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
+(1/4) Installing libgcc (9.2.0-r3)
+(2/4) Installing libstdc++ (9.2.0-r3)
+(3/4) Installing jsoncpp (1.9.2-r0)
+(4/4) Installing ws (7.5.3-r0)
+Executing busybox-1.31.1-r8.trigger
+OK: 9 MiB in 18 packages
+/ # ws --help
+ws is a websocket tool
+Usage: ws [OPTIONS] [SUBCOMMAND]
+
+Options:
+  -h,--help                   Print this help message and exit
+  --version                   Connection url
+
+Subcommands:
+  send                        Send a file
+  receive                     Receive a file
+  transfer                    Broadcasting server
+  connect                     Connect to a remote server
+  chat                        Group chat
+  echo_server                 Echo server
+  broadcast_server            Broadcasting server
+  ping                        Ping pong
+  curl                        HTTP Client
+  redis_publish               Redis publisher
+  redis_subscribe             Redis subscriber
+  cobra_subscribe             Cobra subscriber
+  cobra_publish               Cobra publisher
+  cobra_metrics_publish       Cobra metrics publisher
+  cobra_to_statsd             Cobra metrics to statsd
+  cobra_to_sentry             Cobra metrics to sentry
+  cobra_metrics_to_redis      Cobra metrics to redis
+  snake                       Snake server
+  httpd                       HTTP server
+  autobahn                    Test client Autobahn compliance
+  redis_server                Redis server
+  proxy_server                Proxy server
+  upload_minidump             Upload a minidump to sentry
+/ # ws --version
+ws ixwebsocket/7.5.3 linux ssl/OpenSSL OpenSSL 1.1.1d  10 Sep 2019 zlib 1.2.11
+/ #
+```
+
+</xmp>
+
+<script src="strapdown.js"></script>
+</html>
