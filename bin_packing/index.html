@@ -35,7 +35,7 @@ Executing this program prints this on the console:
 10 {'f': 7, 'e': 2, 'd': 1}
 ```
 
-We have 4 bins with a weight of 10 or 11, so things are pretty well distributed. Now image that we were cycling through each objects in our original list of items b, and **picking the destination bin randomly**. The following program does that.
+We have 4 bins with a weight of 10 or 11, so things are pretty well distributed. Now imagine that we were cycling through each objects in our original list of items b, and **picking the destination bin randomly**. The following program does that.
 
 ```
 bins = [{} for _ in range(4)]     # Create 4 bins, each bin is a list of dictionaries
@@ -71,13 +71,13 @@ This is pretty terrible, however this is what randomly picking an item will give
 
 ## Redis Cluster
 
-<img src="hash_slots.png" />
-
 To quote its documentation, *Redis Cluster provides a way to run a Redis installation where data is automatically sharded across multiple Redis nodes*. [Redis cluster](https://redis.io/topics/cluster-tutorial) isn't only about sharding, but this is what we will focus on.
 
 Every time you store something in Redis Cluster, it all starts by hashing the key of your object with a CRC16, modulo something, and that hash assign your key to a slot, called a *hash slot*. There are 16384 hash slots in Redis Cluster. A good hash function should map the expected inputs as evenly as possible over its output range, that is 16384 hash slots in our case. That propery is called [uniformity](https://en.wikipedia.org/wiki/Hash_function#Uniformity).
 
 Each node in a cluster is responsible for a range of hash slots, and that assignment is usually done automatically early on, but the power of this system is that the assignment can be manual as well. If you know of a great way to distribute your hash slots to nodes, you can arrange for an optimal load balancing, and keep each redis nodes as busy as possible.
+
+<img src="hash_slots.png" />
 
 **Just like you wouldn't want to have some reindeers do more work than other, you would not want some redis machine have little work to do, while others are crazy busy**.
 
@@ -157,6 +157,8 @@ plt.show()
 
 <img src="random_1_pie_chart.png" />
 
+This isn't a great distribution. Node 3 got very few hash slots assigned, while Node 4 seems to do too much work.
+
 ### Random distribution 2
 
 ```
@@ -169,7 +171,7 @@ stdev 493807.17986663507
 
 <img src="random_2_pie_chart.png" />
 
-This is pretty bad... Ideally we would want to see a pie chart with 4 somewhat equal quadrants.
+That one is even worse ; Node 3 got assigned a lot of slots ; this is pretty bad... Ideally we would want to see a pie chart with 4 somewhat equal quadrants.
 
 However, if we can find in which hash slot each channel traffic will land, and use the published count as a weight for that channel, **we can allocate that channel to be handled by a Redis Cluster node using the Bin Packing algorithm**. This will give us a **fair or optimal** load balancing.
 
