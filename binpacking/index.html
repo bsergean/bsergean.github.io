@@ -178,7 +178,7 @@ However, if we can find in which hash slot each channel traffic will land, and u
 2 Redis commands are required to do that:
 
 * The [CLUSTER KEYSLOT](https://redis.io/commands/cluster-keyslot) command run the CRC16 hash on a key.
-* The [CLUSTER SETSLOT](https://redis.io/commands/cluster-keyslot) command run will be used to allocate a hash slot to a Redis cluster node. Practically speaking, it is easier to use the redis-cli command which can do that for us, and handle the resharding better. Here are all the things that the CLI can do for you.
+* The [CLUSTER SETSLOT](https://redis.io/commands/cluster-keyslot) command will be used to allocate a hash slot to a Redis cluster node. Practically speaking, it is easier to use the redis-cli command which can do that for us, and handle the resharding better. Here are all the things that the CLI can do for you.
 
 ```
 $ redis-cli --cluster help

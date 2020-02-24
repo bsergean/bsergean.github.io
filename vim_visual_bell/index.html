@@ -1,0 +1,39 @@
+<html>
+<xmp theme="united" style="display:none;">
+
+# Disabling a very annoying vi feature
+
+<img src="flashing.jpg" />
+
+While I am editing something with my favoite editor, vi, I am used to
+frantically pressing the Escape key to be a hundred per cent sure I am out of
+insert mode in vi, but when running vim inside a terminal this leads to the
+screen flashing terribly at me. There is also a beep sounds that can be heard,
+with the wrong config.
+
+Here is the magic it takes to disable this behavior.
+
+```
+" Disable visual bell
+" This is explained in the documentation of 'visualbell'
+set visualbell
+set t_vb=
+```
+
+Thanks you stack overflow once again, where I found that dark
+[incantation](https://unix.stackexchange.com/questions/5310/how-can-i-disable-bells-visualbells-in-vim).
+I should start contributing to it, at least so that I can upvotes some good
+answers.
+
+As a side note if you are a vi user and you wished you could use vi navigation
+in your terminal, it is possible. It works quite well with zsh. All you need to
+do is adding that to your .zshrc file.
+
+```
+bindkey -v
+```
+
+</xmp>
+
+<script src="strapdown.js"></script>
+</html>
