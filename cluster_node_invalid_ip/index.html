@@ -11,7 +11,32 @@ Sometimes a redis cluster node dies, and kubernetes restarts it for you. And whe
 
 ## Solution
 
-This can be fixed automatically, so that when redis start it updates its ip address in nodes.conf with the one currently assigned. However sometimes you just want to fix things manually. To do that it is as simple as editing the script with an editor, and shutting down the node with `redis-cli SHUTDOWN`.
+### The nice way
+
+This can be fixed automatically, so that when redis start it updates its ip address in nodes.conf with the one currently assigned. A nice way to do that is explained in this [guide](https://github.com/rustudorcalin/deploying-redis-cluster). Essentially we use a configmap that contain the script, and use that to start redis-server. An environment variable containing the pod ip is setup with this magic, in the deployment config file.
+
+```
+env:
+- name: POD_IP
+  valueFrom:
+    fieldRef:
+      fieldPath: status.podIP
+```
+
+The shell script regexp is from the update-node.sh.
+
+```
+#!/bin/sh
+REDIS_NODES="/data/nodes.conf"
+sed -i -e "/myself/ s/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/${POD_IP}/" ${REDIS_NODES}
+exec "$@"
+```
+
+Don't ask me to debug this regexp :)
+
+### The lame way
+
+However sometimes you just want to fix things manually, before you automate them. To do that it is as simple as editing the script with an editor, and shutting down the node with `redis-cli SHUTDOWN`.
 
 I figured this out thanks to the new [rcc](https://github.com/machinezone/rcc/) cluster-check command, while trying to reshard my cluster.
 
