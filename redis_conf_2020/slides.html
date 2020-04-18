@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 30%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 65%;
+        float: right;
+        padding-top: 1em;
+      }
+
+      #slide-first {
+        background-image: url(redisconf_first_slide.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      #slide-last {
+        background-image: url(redisconf_last_slide.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      #slide-tenyears {
+        background-image: url(redisconf_10_years.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+    </style>
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+name: first
+
+---
+
+class: center, middle
+
+# Hello world
+
+- Benjamin Sergeant (bsergean@gmail.com)
+
+![Alt text](logo-machine_zone.svg)
+
+???
+Been working on Graphics a lot, at MZ I've worked on the Game Engine, on fast asset delivery, the game chat and monitoring a lot.
+
+???
+== 15 seconds
+
+---
+
+# Agenda
+
+1. Cobra
+2. Redis Streams
+3. Analyzing commands and used keys
+4. Resharding
+
+---
+
+.left-column[
+  ## Cobra
+]
+
+---
+
+# Architecture
+
+```
+
+
+
+
+   
+              Publishers        Message Broker            Subscribers
+             
+                           +-----------------------+
+                           |                       |
+             +-----------> |     Cobra             | +-------------->
+                           |                       |
+             +-----------> |     * Python3         | +-------------->
+                           |     * Redis PubSub    |
+             +-----------> |                       | +-------------->
+                           |                       |
+                           +-----------------------+
+```
+
+---
+
+# PubSub for analytics
+
+## N subscribers
+
+```
+       Publishers                           Broker                  Subscribers
+                                +-------------------------------+
+                                |                               |
+{ id: fps_id,          ----->   | SELECT data.fps from `fps_id` +------>  60
+  data: { fps: 60 } }           |                               |
+                                |                               |
+{ id: mem_id,          ----->   | SELECT data.mem from `mem_id` +------>  100000
+  data: { mem: 100000 } }       |                               |
+                                |                               |
+                                +-------------------------------+
+             
+```
+
+---
+
+# Example Stream SQL expressions
+
+## HTTP Errors
+
+```
+SELECT data.url, data.status FROM \`engine_net_request_id\` 
+ WHERE data.status != 200 AND 
+        data.url LIKE 'why'
+
+{'data.url': 'https://why_are_we_still_making/this_request', 'data.status': 404}
+{'data.url': 'https://why_are_we_still_making/this_request', 'data.status': 404}
+{'data.url': 'https://why_are_we_still_making/this_request', 'data.status': 404}
+{'data.url': 'https://why_are_we_still_making/this_request', 'data.status': 404}
+{'data.url': 'https://why_are_we_still_making/this_one_too', 'data.status': 404}
+```
+
+## CDN requests
+
+```
+SELECT data.url, data.duration_ms FROM \`engine_net_request_id\` 
+ WHERE data.url LIKE '.png'
+
+{'data.url': 'https://big.cdn.provider/asset_1.png', 'data.duration_ms': 28}}
+{'data.url': 'https://big.cdn.provider/asset_2.png', 'data.duration_ms': 1008}}
+{'data.url': 'https://other.cdn.provider/asset_2.png', 'data.duration_ms': 512}}
+```
+
+???
+We used this to deprecate sending low res assets to old devices, as very few of them remained in use, and it would speed up our deployment process, and reduce our CDNs costs to do so.
+
+---
+
+# Open
+
+## Open source
+## Protocol described as a WebSocket Sub-Protocol (like WAMP)
+
+---
+
+.left-column[
+  ## Cobra
+  ## Redis Streams
+]
+
+---
+
+# Make cobra better
+
+* More reliable (message dropped)
+* More scalable
+
+---
+
+# Subscribers down/upgraded
+
+## Down
+## Upgraded
+## Network partitioning
+
+Usage tracking / Performance monitoring (aggregates)
+
+---
+
+# Redis Streams
+
+Saw a Stream presentation at RedisConf 2019 and scratched an itch.
+
+Like log file.
+
+* You can append to them (XADD)
+* You can tail -f them (XREAD)
+* You can truncate them (XTRIM or XADD with trim option)
+
+---
+
+# Scaling cobra
+
+## Handling lots of traffic
+### Scaling horizontally with more redis instances
+## What about failover. Master-Replica ?
+## Redis Sentinel ?
+## Redis Cluster !
+
+---
+
+# Channel Sharding
+
+- Split traffic to multiple redis nodes
+- Using [Consistent hashing](https://techspot.zzzeek.org/2012/07/07/the-absolutely-simplest-consistent-hashing-example/)
+
+```
+                              Cobra
+                          +-------------+         +---------+
+                          |             |         | redis-1 |
+       engine_fps_id +-------+          |         +---------+
+                          |  |  hash()  |
+                          |  |          |         +---------+
+       engine_mem_id +--------------------------->+ redis-2 |
+                          |  |          |         +---------+
+                          |  |          |
+           ....           |  |          |         +---------+
+                          |  +------------------->+ redis-3 |
+                          |             |         +---------+
+                          +-------------+
+                                                     .....
+```
+
+---
+
+# Redis Cluster
+
+Every problem in computer science is solved by adding one level of indirection.
+
+---
+
+.left-column[
+  ## Cobra
+  ## Redis Streams
+  ## Redis Cluster
+  ## Key space analysis
+]
+
+---
+
+# Help knowing if the traffic is well distributed to our machines
+
+* Key access frequency analysis
+* Wrote a generic tool to help, rcc
+* Limited to frequency analysis, not considering key 'size'
+
+---
+
+# Application level analysis
+
+## We can instrument cobra directly
+
+```
+$ cobra monitor --hide_nodes --hide_roles --hide_summary \
+    --metric_filter published_count
+
+Channels                  published_count    published_count_per_second
+----------------------  -----------------  ----------------------------
+/stats                                  0                             0
+channel_1                              12                             0
+channel_10                             64                             3
+channel_11                              1                             0
+channel_12                              9                             1
+channel_13                             66                             4
+channel_14                             93                            11
+channel_15                           5335                           126
+channel_16                            889                            47
+channel_17                             65                            17
+channel_3                            4300                           200
+channel_4                             320                            46
+channel_5                             346                            35
+channel_6                            4182                           193
+channel_7                            1597                            93
+channel_8                              46                             2
+sms_republished_v1_neo              17786                           841
+```
+
+???
+Cobra has an internal `monitor` command that display application level metrics.
+
+---
+
+# Ask Redis (1/2)
+
+* [Keyspace Notifications](https://redis.io/topics/notifications)
+* Based on PubSub. Tell you which key is accessed, by which command. Very configurable.
+* Do not track all commands
+
+```
+PUBLISH __keyspace@0__:mykey xadd
+PUBLISH __keyevent@0__:xadd mykey
+```
+
+---
+
+# Ask Redis (2/2)
+
+* MONITOR command
+* Track all commands (and parameters)
+* Could be used to capture key size (limited)
+* Slower, more data
+
+```
+XADD streams mykey maybe_a_very_large_value
+```
+
+---
+
+# Demo
+
+![Alt text](demo_keyspace_simple.svg)
+
+---
+
+.left-column[
+  ## Cobra
+  ## Redis Streams
+  ## Redis Cluster
+  ## Key space analysis
+  ## Resharding
+]
+
+---
+
+# Distributing keys to redis-cluster instances
+
+--
+
+# Bin-packing
+
+"Heuristic distribution of weighted items to bins"
+
+---
+
+    </textarea>
+    <!-- <script src="https://remarkjs.com/downloads/remark-latest.min.js"> -->
+    <script src="remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
