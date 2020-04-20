@@ -1,0 +1,30 @@
+<html>
+<xmp theme="united" style="display:none;">
+
+# Dash dash
+
+Sometimes the shell prevents you from fixing your mistake. I'm not sure what I did but I created a file name --help, and `rm` won't let me delete it.
+
+```
+(venv) javascript$ ls    
+--help			node_modules		trusted-client-crt.pem
+echo_server.js		package-lock.json	trusted-client-key.pem
+(venv) javascript$ rm --help 
+rm: illegal option -- -
+usage: rm [-f | -i] [-dPRrvW] file ...
+       unlink file
+```
+
+The solution: use the magic -- argument. After that, no argument parsing will happen. This is how we get our magic --help file to go away.
+
+```
+(venv) javascript$ rm -- --help
+(venv) javascript$ ls
+echo_server.js		package-lock.json	trusted-client-key.pem
+node_modules		trusted-client-crt.pem
+```
+
+</xmp>
+
+<script src="strapdown.js"></script>
+</html>

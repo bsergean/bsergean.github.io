@@ -1,0 +1,149 @@
+<html>
+<xmp theme="united" style="display:none;">
+
+# Playing with dtruss on macOS
+
+<img src="tls.png" />
+
+```
+USAGE: dtruss [-acdefholLs] [-t syscall] { -p PID | -n name | command | -W name }
+
+          -p PID          # examine this PID
+          -n name         # examine this process name
+          -t syscall      # examine this syscall only
+          -W name         # wait for a process matching this name
+          -a              # print all details
+          -c              # print syscall counts
+          -d              # print relative times (us)
+          -e              # print elapsed times (us)
+          -f              # follow children
+          -l              # force printing pid/lwpid
+          -o              # print on cpu times
+          -s              # print stack backtraces
+          -L              # don't print pid/lwpid
+          -b bufsize      # dynamic variable buf size
+   eg,
+       dtruss df -h       # run and examine "df -h"
+       dtruss -p 1871     # examine PID 1871
+       dtruss -n tar      # examine all processes called "tar"
+       dtruss -f test.sh  # run test.sh and follow children
+```
+
+We will be using the -c option (count syscalls).
+
+```
+CALL                                        COUNT
+psynch_mutexdrop                               26
+psynch_mutexwait                               26
+write                                        4070
+psynch_cvwait                                4080
+psynch_cvsignal                              4083
+kevent                                       4099
+read                                         4114
+
+
+---
+
+
+CALL                                        COUNT
+psynch_mutexdrop                               51
+psynch_mutexwait                               51
+madvise                                        96
+write                                        4792
+psynch_cvwait                                4819
+psynch_cvsignal                              4820
+kevent                                       4842
+read                                         4870
+```
+
+psynch_cvwait and psync_cvsignal are the macOS [undocumented](https://stackoverflow.com/questions/13680614/interpret-dtruss-output-like-psynch-cvwait-1-err316) (no man page) kernel function used by the pthread code, they are releated to condition variables, which are more elegant and efficient ways to wait for a user event. A search in node source code for pthread_cond_wait shows [2 hits](https://github.com/nodejs/node/search?q=pthread_cond_wait&unscoped_q=pthread_cond_wait), one in v8 platform code and the other in libuv code. Libuv is node own platform for working with socket, waiting on file descriptors events, etc...
+
+kevent is an efficient way to react to socket events, such as when data is ready to be read. It is part of kqueue which originated in FreeBSD.
+
+There is a -s option to display the stack at a 
+```
+sudo dtruss -c -s -n ws -t __semwait_signal
+```
+
+```
+55109/0x1b682af:  __semwait_signal(0x1403, 0x0, 0x1)		 = -1 Err#4
+
+              libsystem_kernel.dylib`__semwait_signal+0xa
+              libc++.1.dylib`std::__1::this_thread::sleep_for(std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l> > const&)+0x49
+              ws`void std::__1::this_thread::sleep_for<long long, std::__1::ratio<1l, 1l> >(std::__1::chrono::duration<long long, std::__1::ratio<1l, 1l> > const&)+0xaf
+              ws`ix::ws_cobra_subscribe_main(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, bool)::$_0::operator()() const+0xb4
+```
+
+## Redis throughput and compression
+
+```
+watch redis-cli INFO | grep instantaneous_
+instantaneous_ops_per_sec:17550
+instantaneous_input_kbps:29049.81
+instantaneous_output_kbps:4349.81
+```
+
+One way to make this faster would be to compress data before we send it to redis. lz4 is a very fast compressor, but the compression for our small 1K messages is not significant (around 10% smaller when using the highest compression option, -c2).
+
+```
+$ lz4c -c2 /tmp/msg.json
+Compressed filename will be : /tmp/msg.json.lz4
+/tmp/msg.json.lz4 already exists; do you wish to overwrite (y/N) ? y
+Compressed 844 bytes into 758 bytes ==> 89.81%
+```
+
+gzip/zlib compress much more, 64.69%
+
+```
+$ wc -c /tmp/msg.json.gz 
+     546 /tmp/msg.json.gz
+```
+
+brotli compress to 53.90%
+
+```
+$ wc -c /tmp/msg.json.br
+     455 /tmp/msg.json.br
+```
+
+### Batching messages
+
+With a batch size of 100
+
+```
+position 1575251335975-1 #messages 35000 msg/s 0
+position 1575251336091-6 #messages 35400 msg/s 400
+position 1575251336319-9 #messages 36100 msg/s 700
+position 1575251337638-11 #messages 37400 msg/s 1300
+position 1575251338951-2 #messages 38900 msg/s 1500
+position 1575251341707-8 #messages 40300 msg/s 1400
+position 1575251341772-2 #messages 40500 msg/s 200
+position 1575251343309-4 #messages 41800 msg/s 1300
+position 1575251343309-4 #messages 41800 msg/s 0
+position 1575251345043-1 #messages 43700 msg/s 1900
+position 1575251345071-6 #messages 43800 msg/s 100
+position 1575251345669-6 #messages 45600 msg/s 1800
+position 1575251345896-3 #messages 46300 msg/s 700
+position 1575251347025-8 #messages 48000 msg/s 1700
+position 1575251348862-3 #messages 49600 msg/s 1600
+position 1575251349191-11 #messages 50600 msg/s 1000
+position 1575251349699-5 #messages 52100 msg/s 1500
+position 1575251353306-8 #messages 52300 msg/s 200
+position 1575251353650-11 #messages 53300 msg/s 1000
+position 1575251354398-0 #messages 55200 msg/s 1900
+position 1575251354398-0 #messages 55200 msg/s 0
+position 1575251354398-0 #messages 55200 msg/s 0
+position 1575251354398-0 #messages 55200 msg/s 0
+position 1575251355168-8 #messages 56200 msg/s 1000
+position 1575251355893-9 #messages 57200 msg/s 1000
+position 1575251359251-11 #messages 59800 msg/s 2600
+position 1575251362375-8 #messages 63400 msg/s 3600
+position 1575251364443-4 #messages 66500 msg/s 3100
+position 1575251368834-17 #messages 70600 msg/s 4100
+position 1575251369249-12 #messages 71800 msg/s 1200
+```
+
+</xmp>
+
+<script src="strapdown.js"></script>
+</html>
