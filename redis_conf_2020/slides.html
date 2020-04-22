@@ -41,6 +41,13 @@
         background-size: contain;
       }
 
+      #slide-whoami {
+        background-image: url(whoami.png);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
       #slide-last {
         background-image: url(redisconf_last_slide.png);
         background-position: center;
@@ -48,12 +55,6 @@
         background-size: contain;
       }
 
-      #slide-tenyears {
-        background-image: url(redisconf_10_years.png);
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: contain;
-      }
     </style>
     </style>
   </head>
@@ -64,28 +65,17 @@ name: first
 
 ---
 
-class: center, middle
-
-# Hello world
-
-- Benjamin Sergeant (bsergean@gmail.com)
-
-![Alt text](logo-machine_zone.svg)
-
-???
-Been working on Graphics a lot, at MZ I've worked on the Game Engine, on fast asset delivery, the game chat and monitoring a lot.
-
-???
-== 15 seconds
+name: whoami
 
 ---
 
 # Agenda
 
-1. Cobra
-2. Redis Streams
-3. Analyzing commands and used keys
-4. Resharding
+  1. Cobra
+  2. Redis Streams
+  3. Redis Cluster
+  4. Key space analysis
+  5. Resharding
 
 ---
 
@@ -93,9 +83,32 @@ Been working on Graphics a lot, at MZ I've worked on the Game Engine, on fast as
   ## Cobra
 ]
 
+.right-column[
+```
+         ,,'6''-,.
+        <====,.;;--.
+        _`---===. """==__
+      //""@@-\===\@@@@ ""\\
+     |( @@@  |===|  @@@  ||
+      \\ @@   |===|  @@  //
+        \\ @@ |===|@@@ //
+         \\  |===|  //
+___________\\|===| //_____,----""""""""""-----,_
+  """"---,__`\===`/ _________,---------,____    `,
+             |==||                           `\   \
+            |==| |    Python 3 + Redis         )   |
+           |==| |       _____         ______,--'   '
+           |=|  `----"""     `""""""""         _,-'
+            `=\     __,---"""-------------"""''
+                """"
+```
+]
+
 ---
 
 # Architecture
+
+## Real time messaging system
 
 ```
 
@@ -170,10 +183,90 @@ We used this to deprecate sending low res assets to old devices, as very few of 
 
 ---
 
+# Subscribers ecosystem
+
+```
+           Broker                  Subscribers
+    
+    +----------------------+      +-------------+  http
+    |                      | ws   |             +--------> Sentry
+    |                      +----->+   node.js   |
+    |     Cobra            |      |             +--------> Grafana
+    |     * Python3        |      +-------------+  udp
+    |     * Redis PubSub   |
+    |                      |      +-------------+  mysql
+    |                      | ws   |             +--------> Tableau
+    |                      +----->+   Python    |
+    |                      |      |             +--------> "Terminal"
+    |                      |      +-------------+
+    |                      |
+    |                      |      +-------------+
+    |                      | ws   |             | websocket
+    |                      +----->+ Web Browser |--------> Neo (custom dashboard)
+    |                      +--+   |             |
+    +----------------------+  |   +-------------+
+                              |
+                              |   +----------------+
+                              |   |                |
+                              +-->+ Java, PHP, C++ |--------> Fluentd, Kafka, Hive
+                                  |                |
+                                  +----------------+
+```
+
+---
+
+# Publish
+
+```
+$ cat > /tmp/event.json
+{"foo": "bar"}
+$
+$ cobra publish --path /tmp/event.json --channel foobar
+Processing 1 items
+[10:51:52.589338][32079aac] 1 events
+sleeping for 0.1 ms
+```
+
+---
+
+# Subscribe
+
+## Subscribing to a channel (without a stream sql expression)
+
+```
+$ cobra -v subscribe --channel foobar --position 0-0   
+2020-04-21 10:52:55 INFO client > {"action":"auth/handshake","body":{"data":{"role":"pubsub"},"method":"role_secret"},"id":0}
+2020-04-21 10:52:55 INFO client < {'action': 'auth/handshake/ok', 'id': 0, 'body': {'data': {'nonce': 'MTk2MTU0Mjc4MjA0MTAxMjE3Ng==', 'version': '2.9.7', 'connection_id': 'ec3edacf08fb', 'node': 'bsergeant.local'}}}
+2020-04-21 10:52:55 INFO client > {"action":"auth/authenticate","body":{"method":"role_secret","credentials":{"hash":"4n5P8FVkAUYdeWeMcDy/Iw=="}},"id":1}
+2020-04-21 10:52:55 INFO client < {'action': 'auth/authenticate/ok', 'id': 1, 'body': {}}
+2020-04-21 10:52:55 INFO client > {"action":"rtm/subscribe","body":{"subscription_id":"foobar","channel":"foobar","fast_forward":true,"filter":null,"batch_size":1,"position":"0-0"},"id":2}
+RSS: 44.72 MB
+#7 tasks
+
+position None #messages 0 msg/s 0
+2020-04-21 10:52:55 INFO client < {'action': 'rtm/subscribe/ok', 'id': 2, 'body': {'position': '1519190184:559034812775', 'subscription_id': 'foobar', 'redis_node': 'localhost', 'stream_exists': True, 'stream_length': 1}}
+2020-04-21 10:52:55 INFO {'foo': 'bar'} at position 1587491533293-0
+```
+
+---
+
+# Chat
+
+![pic](demo_chat.svg)
+
+---
+
 # Open
 
-## Open source
-## Protocol described as a WebSocket Sub-Protocol (like WAMP)
+* [Open](https://github.com/machinezone/cobra) source, many client libraries available.
+* [Registered](https://www.iana.org/assignments/websocket/websocket.xml) WebSocket Sub-Protocol
+
+---
+
+# Limitations
+
+* Message delivery when subscribers choke (publisher has a queue + retry)
+* Scalability of our Redis setup
 
 ---
 
@@ -182,44 +275,82 @@ We used this to deprecate sending low res assets to old devices, as very few of 
   ## Redis Streams
 ]
 
----
-
-# Make cobra better
-
-* More reliable (message dropped)
-* More scalable
+.right-column[
+  ![image](fire_and_forget.png)
+]
 
 ---
 
-# Subscribers down/upgraded
+# Murphys's law
 
-## Down
-## Upgraded
-## Network partitioning
+* Down
+* Upgraded
+* Network partitioning
 
-Usage tracking / Performance monitoring (aggregates)
+# Use cases
+
+* Performance monitoring (OK)
+* Usage tracking (Not OK)
 
 ---
 
 # Redis Streams
 
-Saw a Stream presentation at RedisConf 2019 and scratched an itch.
-
-Like log file.
+Like a log file (csv)
 
 * You can append to them (XADD)
 * You can tail -f them (XREAD)
 * You can truncate them (XTRIM or XADD with trim option)
+* You can check their size (XLEN)
+* You can get more attribute, ls -l (XINFO)
+* They have a 'line number' (Entry ID)
+* You can extract some lines out of them, with sed (XRANGE)
+
+... saw a Stream presentation at RedisConf 2019 and scratched an itch
+
+---
+
+# Subscriber changes
+
+* Expose the Entry ID through the cobra protocol/api
+* Keep it around
+
+## Handling errors
+
+* Network disconnection: resume subscribe at the previous position
+* Restart or crash:
+* (1) resume subscribe at the first position, and dedup
+* (2) resume subscribe at the last saved position
+
+---
+
+# Challenges
+
+* Command more complicated than PubSub (parsing the result, consumer groups)
+* 'new' in Redis 5, not all client library support them
+* redis cluster client can be buggy with them (extracting key location in the command)
+
+---
+
+.left-column[
+  ## Cobra
+  ## Redis Streams
+  ## Redis Cluster
+]
+
+.right-column[
+  ![picture](rabbits_cluster.jpg)
+]
 
 ---
 
 # Scaling cobra
 
-## Handling lots of traffic
-### Scaling horizontally with more redis instances
-## What about failover. Master-Replica ?
-## Redis Sentinel ?
-## Redis Cluster !
+* Handling lots of traffic
+* Scaling horizontally with more redis instances
+* What about failover. Master-Replica ?
+* Redis Sentinel ?
+* Redis Cluster !
 
 ---
 
@@ -249,7 +380,81 @@ Like log file.
 
 # Redis Cluster
 
-Every problem in computer science is solved by adding one level of indirection.
+"Every problem in computer science is solved by adding one level of indirection"
+
+```
+                           Redis Client            Master          Replica
+                          +-------------+         +---------+     +---------+
+                          |             |         | redis-1 | <-> | redis-4 |
+       engine_fps_id +-------+          |         +---------+     +---------+
+                          |  | crc16()  |                                     
+                          |  |          |         +---------+     +---------+
+       engine_mem_id +--------------------------->+ redis-2 | <-> + redis-5 |
+                          |  |          |         +---------+     +---------+
+           ....           |  |          |                                     
+                          |  |          |         +---------+     +---------+
++-----------+---------+   |  +------------------->+ redis-3 | <-> + redis-6 |
+| hash slot | node    |   |                       +---------+     +---------+
++-----------|---------+   +-------------+                                     
+|   0       | redis-3 |
+|   1       | redis-2 |                              .....           .....
+|   2       | redis-1 |
+|   ...     |         |
+|   65382   | redis-2 |
+|   65383   | redis-1 |
++-----------+---------+
+```
+---
+
+# PubSub vs Streams
+
+* No 'key' concept with PubSub
+
+```
+PubSub in Redis Cluster is very simple. Every PUBLISH to any Redis Cluster 
+node gets copied to every other Redis Cluster node on the Redis Cluster 
+inter-node cluster bus.
+```
+
+* Scalability concern
+
+---
+
+# Challenges
+
+## Client support
+
+* Main python asyncio library does not support the cluster protocol
+* -> user another one
+* -> redis cluster proxy
+
+## Deployment
+
+* (ip address, setup, which kubernete objects to use etc...)
+* -> tool, operator, 'pro' (Redis Enterprise, AWS Elasticache, Google Memorystore)
+
+---
+
+# Solution
+
+(2 months ?)
+
+* Try another library (aredis)
+* Fix it
+* Fail
+* Try the redis cluster proxy
+* Report bugs about it (kudo to dev, super responsive)
+* Fail
+* Write mine
+* Fail
+* Optimize optimize
+* Fail
+* Try yet another one
+* Fail
+* Realize that the cluster is configured to run on rasbery pie like instances
+* (very slow interpreter, redis-cli takes forever)
+* Reconfigure the redis cluster instances (more ram + cpu)
+* Success !!!!!
 
 ---
 
@@ -258,6 +463,10 @@ Every problem in computer science is solved by adding one level of indirection.
   ## Redis Streams
   ## Redis Cluster
   ## Key space analysis
+]
+
+.right-column[
+  ![pic](many_keys.jpg)
 ]
 
 ---
@@ -330,9 +539,37 @@ XADD streams mykey maybe_a_very_large_value
 
 ---
 
-# Demo
+# Demo 1
 
 ![Alt text](demo_keyspace_simple.svg)
+
+---
+
+# Demo 2
+
+![Alt text](demo_keyspace_cluster.svg)
+
+---
+
+# Production instance (inbalanced)
+
+* ~ 5 millions commands 
+* 10 master/replicas
+
+```
+== Nodes ==
+# each ∎ represents a count of 15417. total 5003266
+ 172.25.241.24:6379 [940378] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+172.24.239.218:6379 [879581] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+ 172.24.244.78:6379 [690303] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+ 172.24.86.253:6379 [627516] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  172.24.56.49:6379 [431098] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+172.28.138.193:6379 [343696] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+ 172.29.62.140:6379 [340555] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+172.26.145.223:6379 [277856] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+172.25.184.203:6379 [258128] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+172.31.104.188:6379 [214155] ∎∎∎∎∎∎∎∎∎∎∎∎∎
+```
 
 ---
 
@@ -344,17 +581,311 @@ XADD streams mykey maybe_a_very_large_value
   ## Resharding
 ]
 
+.right-column[
+  ![picture](santa_reindeer_fly_christmas.jpg)
+]
+
 ---
 
-# Distributing keys to redis-cluster instances
+# Distributing keys to cluster nodes
 
---
+* Technique discovered when working on fast asset delivery
+* Wikipedia is your friend (Multiple knapsack problem)
+* Innovation: apply method X from domain A to domain B
+
+---
+
+# Knapsack problem
+
+![](knapsack.svg)
+
+* What about multiple knapsacks ?
+* -> Heuristic distribution of weighted items to bins
+
+---
 
 # Bin-packing
 
-"Heuristic distribution of weighted items to bins"
+## Input
+
+```
+# [name, weight] pairs, in a dictionary
+b = {
+    'a': 10,
+    'b': 10,
+    'c': 11,
+    'd': 1,
+    'e': 2,
+    'f': 7
+}
+```
+
+## Output
+
+```
+11 {'c': 11}
+10 {'b': 10}
+10 {'a': 10}
+10 {'f': 7, 'e': 2, 'd': 1}
+```
 
 ---
+
+# Random-packing
+
+```
+# First try
+9 {'e': 2, 'f': 7}
+1 {'d': 1}
+31 {'a': 10, 'b': 10, 'c': 11}
+0 {}
+
+# Second try
+12 {'a': 10, 'e': 2}
+18 {'c': 11, 'f': 7}
+11 {'b': 10, 'd': 1}
+0 {}
+
+# Third try
+0 {}
+22 {'b': 10, 'c': 11, 'd': 1}
+2 {'e': 2}
+17 {'a': 10, 'f': 7}
+```
+
+---
+
+# (simplified) production data set
+
+```
+Channel name   Published items
+------------   ---------------
+channel_1      16             
+channel_2      46889          
+channel_3      4284           
+channel_4      13444          
+channel_5      46745          
+channel_6      14714          
+channel_7      4251           
+channel_8      4356           
+channel_9      677400         
+channel_10     4322           
+channel_11     163277         
+channel_12     5585           
+channel_13     360998         
+channel_14     485541         
+channel_15     3811           
+channel_16     2              
+channel_17     4339           
+channel_18     4392           
+channel_19     9307           
+channel_20     685            
+channel_21     176710         
+channel_22     264            
+channel_23     43157          
+...
+```
+
+---
+
+# Random-packing 1
+
+![picture](random_1_pie_chart.png)
+
+---
+
+# Random-packing 2
+
+![picture](random_2_pie_chart.png)
+
+---
+
+# Bin-packing
+
+![picture](bin_packing_pie_chart.png)
+
+---
+
+# Code 1/2
+
+```
+def to_constant_bin_number(d, N_bin):
+    """
+    Distributes a dictionary of weights
+    to a fixed number of bins while trying to keep the weight distribution constant.
+    INPUT:
+    --- d: dictionary where each (key,value)-pair carries the weight as value
+    """
+
+    # Sort by decreasing weight
+    items = [(val, key) for key, val in d.items()]
+    items.sort()
+    items.reverse()
+    weights = [item[0] for item in items]
+    keys = [item[1] for item in items]
+
+    bins = [{} for i in range(N_bin)]
+
+    # the total volume is the sum of all weights
+    V_total = sum(weights)
+
+    # the first estimate of the maximum bin volume is
+    # the total volume divided to all bins
+    V_bin_max = V_total / float(N_bin)
+
+    # prepare array containing the current weight of the bins
+    weight_sum = [0.0 for _ in range(N_bin)]
+```
+
+---
+
+# Code 2/2
+
+```
+    # iterate through the weight list, starting with heaviest
+    for i, weight in enumerate(weights):
+        key = keys[i]
+
+        # put next value in bin with lowest weight sum
+        b, _ = min(enumerate(weight_sum), key=operator.itemgetter(1))
+
+        # calculate new weight of this bin
+        new_weight_sum = weight_sum[b] + weight
+
+        found_bin = False
+        while not found_bin:
+            # if this weight fits in the bin
+            if new_weight_sum < V_bin_max:
+                # ...put it in
+                bins[b][key] = weight
+                # increase weight sum of the bin and continue with next item
+                weight_sum[b] = new_weight_sum
+                found_bin = True
+            else:
+                # increase the max volume by the sum of the rest of the bins per bin
+                V_bin_max += sum(weights[i:]) / float(N_bin)
+
+    return bins
+```
+
+---
+
+# Resharding
+
+* ~ 300 lines of python [code](https://github.com/machinezone/rcc/blob/master/rcc/cluster/reshard.py)
+* Input: csv file (generated by `rcc keyspace`)
+
+## Pseudo code
+
+```
+# Setup
+cluster_master_nodes = ...
+bins_count = len(cluster_master_nodes)
+slot_bins = compute_slot_groups('weigths.csv', bins_count)
+
+# Moving hash slots around
+for node, slot_group in zip(cluster_nodes, slot_bins):
+  for slot in slot_group:
+     migrate(slot, node)
+
+  # XXX
+  waitForAllNodesTobeConsistent()
+  # then move to the next node
+```
+
+---
+
+## Features
+
+* Deterministic, nodes are sorted by ip:port (we could use the nodeid)
+* Flexible, (use a csv file as input) 
+* Dry mode, print a command to migrate all the slots one at a time
+
+```
+$ rcc reshard -r redis://localhost:11000 --dry
+file descriptors ulimit: 1024
+
+== 6619f8b3ad35b5c3c6b607865f7602b7c97f7c62 / 127.0.0.1:11000 ==
+rcc migrate --src-addr redis://127.0.0.1:11002 --dst-addr redis://127.0.0.1:11000 11364 
+migrated 1 slots
+Waiting for cluster view to be consistent....
+
+== 9a2aef27d5adb163af27dc41a2a358dad387c43a / 127.0.0.1:11001 ==
+rcc migrate --src-addr redis://127.0.0.1:11000 --dst-addr redis://127.0.0.1:11001 943 
+rcc migrate --src-addr redis://127.0.0.1:11000 --dst-addr redis://127.0.0.1:11001 3161 
+rcc migrate --src-addr redis://127.0.0.1:11000 --dst-addr redis://127.0.0.1:11001 3293 
+rcc migrate --src-addr redis://127.0.0.1:11000 --dst-addr redis://127.0.0.1:11001 4345 
+migrated 4 slots
+Waiting for cluster view to be consistent....
+
+== d31741e4dd322ed940c2f7d669ba66c1aa708c1e / 127.0.0.1:11002 ==
+rcc migrate --src-addr redis://127.0.0.1:11000 --dst-addr redis://127.0.0.1:11002 216 
+rcc migrate --src-addr redis://127.0.0.1:11000 --dst-addr redis://127.0.0.1:11002 340 
+...
+migrated 6 slots
+Waiting for cluster view to be consistent....
+total migrated slots: 11
+
+```
+
+---
+
+## Results
+
+```
+== Nodes ==
+# each ∎ represents a count of 10615. total 5004030
+ 172.27.36.226:6379 [647515] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  172.26.25.36:6379 [581910] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+172.24.244.119:6379 [566576] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  172.27.86.24:6379 [562850] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  172.24.34.11:6379 [560954] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+ 172.25.225.42:6379 [551802] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  172.26.42.94:6379 [536849] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+172.25.145.138:6379 [499993] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+ 172.26.32.220:6379 [495581] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+```
+
+---
+
+## Limitations / Open questions
+
+* How does this work with lots of keys ?
+* frequency of the resharding (ad'hoc', daily, weekly ?)
+* Migrating keys with a batch size of 100, good number in all cases ?
+* Migrating big keys (hard-coded 5 seconds timeout)
+* Failure modes (can run redis-cli --cluster fix after)
+* Extending redis-cli resharding with this algorithm ?
+
+---
+
+# Conclusion
+
+* Go give rcc a try and look at your keyspace
+* Go say hi in the cobra chat (bavarde client)
+* If you use PubSub already, explore STREAMS
+* Leave the sharding to the 'pros' (use redis cluster and not your home-grown solution)
+* Use redis-cluster-proxy to get started
+
+---
+
+# Thank you !
+
+## 'Installers'
+
+* [rcc](https://github.com/machinezone/rcc)
+
+```
+URL=https://raw.githubusercontent.com/machinezone/rcc/master/tools/install.sh
+/bin/sh -c "`curl -fsSL $URL`"
+```
+
+* [cobra](https://github.com/machinezone/cobra)
+
+```
+URL=https://raw.githubusercontent.com/machinezone/cobra/master/tools/install.sh
+/bin/sh -c "`curl -fsSL $URL`"
+```
 
     </textarea>
     <!-- <script src="https://remarkjs.com/downloads/remark-latest.min.js"> -->
