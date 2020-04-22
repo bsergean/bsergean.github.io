@@ -112,18 +112,15 @@ ___________\\|===| //_____,----""""""""""-----,_
 
 ```
 
-
-
-
    
               Publishers        Message Broker            Subscribers
              
                            +-----------------------+
-                           |                       |
+               channel A   |                       |   channel A
              +-----------> |     Cobra             | +-------------->
-                           |                       |
+               channel B   |                       |   channel B
              +-----------> |     * Python3         | +-------------->
-                           |     * Redis PubSub    |
+               channel C   |     * Redis PubSub    |   channel C
              +-----------> |                       | +-------------->
                            |                       |
                            +-----------------------+
@@ -133,16 +130,21 @@ ___________\\|===| //_____,----""""""""""-----,_
 
 # PubSub for analytics
 
-## N subscribers
+* Publishers: Mobile game client running C++ code
+* Subscribers: Daemon process running in our data center
+
 
 ```
-       Publishers                           Broker                  Subscribers
+
+
+
+       Publishers     (Channels)             Broker              (Channels)  Subscribers
                                 +-------------------------------+
-                                |                               |
-{ id: fps_id,          ----->   | SELECT data.fps from `fps_id` +------>  60
+                       fps_id   |                               | fps_id
+{ id: fps_id,          ----->   | SELECT data.fps from `fps_id` +---------->  60
   data: { fps: 60 } }           |                               |
-                                |                               |
-{ id: mem_id,          ----->   | SELECT data.mem from `mem_id` +------>  100000
+                       mem_id   |                               | mem_id
+{ id: mem_id,          ----->   | SELECT data.mem from `mem_id` +---------->  100000
   data: { mem: 100000 } }       |                               |
                                 |                               |
                                 +-------------------------------+
@@ -342,7 +344,7 @@ Like a log file (csv)
 
 ## Handling errors
 
-* Network disconnection: resume subscribe at the previous position
+* Network disconnection: resume subscription at the previous position
 * Restart or crash:
 * (1) resume subscribe at the first position, and dedup
 * (2) resume subscribe at the last saved position
@@ -419,7 +421,7 @@ Like a log file (csv)
            ....           |  |          |                                     
                           |  |          |         +---------+     +---------+
 +-----------+---------+   |  +------------------->+ redis-3 | <-> + redis-6 |
-| hash slot | node    |   |                       +---------+     +---------+
+| hash slot | node    |   |             |         +---------+     +---------+
 +-----------|---------+   +-------------+                                     
 |   0       | redis-3 |
 |   1       | redis-2 |                              .....           .....
@@ -455,7 +457,7 @@ inter-node cluster bus.
 
 ## Deployment
 
-* (ip address, setup, which kubernete objects to use etc...)
+* (ip address changing on [pod reboot](https://machinezone.github.io/rcc/cluster_ips/), initializing, which kubernete objects to use etc...)
 * -> tool, operator, 'pro' (Redis Enterprise, AWS Elasticache, Google Memorystore)
 
 ---
@@ -656,7 +658,7 @@ XADD streams mykey maybe_a_very_large_value
 ## Input
 
 ```
-# [name, weight] pairs, in a dictionary
+# [name, weight] pairs, in a dictionary + number of bins (4)
 b = {
     'a': 10,
     'b': 10,
@@ -883,15 +885,30 @@ total migrated slots: 11
 
 # Live Demo
 
-![mov](magic.png)
+![mov](magic.jpg)
 
 ---
 
-## Results
+# Production instance
+
+Before resharding
 
 ```
-== Nodes ==
-# each ∎ represents a count of 10615. total 5004030
+ 172.25.241.24:6379 [940378] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+172.24.239.218:6379 [879581] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+ 172.24.244.78:6379 [690303] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+ 172.24.86.253:6379 [627516] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  172.24.56.49:6379 [431098] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+172.28.138.193:6379 [343696] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+ 172.29.62.140:6379 [340555] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+172.26.145.223:6379 [277856] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+172.25.184.203:6379 [258128] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+172.31.104.188:6379 [214155] ∎∎∎∎∎∎∎∎∎∎∎∎∎
+```
+
+After resharding
+
+```
  172.27.36.226:6379 [647515] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
   172.26.25.36:6379 [581910] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
 172.24.244.119:6379 [566576] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
@@ -902,6 +919,7 @@ total migrated slots: 11
 172.25.145.138:6379 [499993] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
  172.26.32.220:6379 [495581] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
 ```
+
 
 ---
 
@@ -946,7 +964,7 @@ URL=https://raw.githubusercontent.com/machinezone/cobra/master/tools/install.sh
 
 ---
 
-name: first
+name: last
 
     </textarea>
     <!-- <script src="https://remarkjs.com/downloads/remark-latest.min.js"> -->
