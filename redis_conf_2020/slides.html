@@ -256,6 +256,31 @@ position None #messages 0 msg/s 0
 
 ---
 
+# Chat public server
+
+```
+$ curl https://jeanserge.com                                            
+
+   ___      _
+  / __\___ | |__  _ __ __ _
+ / /  / _ \| '_ \| '__/ _` |
+/ /__| (_) | |_) | | | (_| |
+\____/\___/|_.__/|_|  \__,_|
+
+Cobra is a realtime messaging server using Python3, WebSockets and Redis.
+
+Version 2.9.7
+Running on localhost
+Start time 2020-04-21 05:17:21
+    
+$ cobra health --endpoint wss://jeanserge.com --rolesecret ccc02DE4Ed8CAB9aEfC8De3e13BfBE5E --rolename pubsub --appkey _pubsub
+Client version: 2.9.11
+Server version: 2.9.7
+System is healthy
+```
+
+---
+
 # Open
 
 * [Open](https://github.com/machinezone/cobra) source, many client libraries available.
@@ -435,25 +460,45 @@ inter-node cluster bus.
 
 ---
 
-# Solution
+# The long road to redis cluster
 
-(2 months ?)
+* Try another redis client library, with cluster support [aredis](https://github.com/NoneGG/aredis)
+* [Fix](https://github.com/NoneGG/aredis/commit/bea279b7d436242b221f7e9aabb13f1484ec261c) [some](https://github.com/NoneGG/aredis/commit/2a263e0405d1014167abcd10d4cd4c5810f33db7) [bugs](https://github.com/NoneGG/aredis/commit/234356407f84163ee452fccd953220435f764ec3)
+* Fail
 
-* Try another library (aredis)
-* Fix it
+---
+
+# Detour 1
+
+* Try the [redis cluster proxy](https://github.com/RedisLabs/redis-cluster-proxy)
+* Report some bugs about it, [binding](https://github.com/RedisLabs/redis-cluster-proxy/issues/16), [pipelining](https://github.com/RedisLabs/redis-cluster-proxy/issues/21) (kudo to dev, super responsive)
 * Fail
-* Try the redis cluster proxy
-* Report bugs about it (kudo to dev, super responsive)
+
+---
+
+# Detour 2
+
+* Write my redis client library, [rcc](https://github.com/machinezone/rcc)
 * Fail
-* Write mine
+* Try to optimize it, (multiplexing, ...)
 * Fail
-* Optimize optimize
+* (write about it in reddit)
+
+---
+
+# Detour 3
+
+* Try yet another one, [justredis](https://github.com/tzickel/justredis/)
 * Fail
-* Try yet another one
-* Fail
+
+---
+
+# Finish line ...
+
+* Login to the cluster to reset it, very slow interpreter, redis-cli takes forever
 * Realize that the cluster is configured to run on rasbery pie like instances
-* (very slow interpreter, redis-cli takes forever)
 * Reconfigure the redis cluster instances (more ram + cpu)
+* Setup redis-cluster-proxy
 * Success !!!!!
 
 ---
@@ -471,7 +516,7 @@ inter-node cluster bus.
 
 ---
 
-# Help knowing if the traffic is well distributed to our machines
+# Is the traffic well distributed to our machines
 
 * Key access frequency analysis
 * Wrote a generic tool to help, rcc
@@ -587,8 +632,10 @@ XADD streams mykey maybe_a_very_large_value
 
 ---
 
-# Distributing keys to cluster nodes
+# Optimization problem
 
+* Well studied field ([operational research](https://en.wikipedia.org/wiki/Operations_research#Historical_origins))
+* Linear programming (simplex), convex optimization, ...
 * Technique discovered when working on fast asset delivery
 * Wikipedia is your friend (Multiple knapsack problem)
 * Innovation: apply method X from domain A to domain B
@@ -801,6 +848,10 @@ for node, slot_group in zip(cluster_nodes, slot_bins):
 * Flexible, (use a csv file as input) 
 * Dry mode, print a command to migrate all the slots one at a time
 
+---
+
+## Dry run
+
 ```
 $ rcc reshard -r redis://localhost:11000 --dry
 file descriptors ulimit: 1024
@@ -827,6 +878,12 @@ Waiting for cluster view to be consistent....
 total migrated slots: 11
 
 ```
+
+---
+
+# Live Demo
+
+![mov](magic.png)
 
 ---
 
@@ -886,6 +943,10 @@ URL=https://raw.githubusercontent.com/machinezone/rcc/master/tools/install.sh
 URL=https://raw.githubusercontent.com/machinezone/cobra/master/tools/install.sh
 /bin/sh -c "`curl -fsSL $URL`"
 ```
+
+---
+
+name: first
 
     </textarea>
     <!-- <script src="https://remarkjs.com/downloads/remark-latest.min.js"> -->
