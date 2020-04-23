@@ -598,7 +598,7 @@ XADD streams mykey maybe_a_very_large_value
 
 ---
 
-# Production instance (inbalanced)
+# Production instance
 
 * ~ 5 millions commands 
 * 10 master/replicas
@@ -636,20 +636,29 @@ XADD streams mykey maybe_a_very_large_value
 
 # Optimization problem
 
-* Well studied field ([operational research](https://en.wikipedia.org/wiki/Operations_research#Historical_origins))
-* Linear programming (simplex), convex optimization, ...
-* Technique discovered when working on fast asset delivery
-* Wikipedia is your friend (Multiple knapsack problem)
-* Innovation: apply method X from domain A to domain B
+* N redis machines
+* List of (key, weight)
 
----
+```
+ _pubsub::snake_channel_3 [   223] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+ _pubsub::snake_channel_6 [   214] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+_pubsub::snake_channel_15 [   195] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+ _pubsub::snake_channel_7 [   101] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+ _pubsub::snake_channel_4 [    54] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+_pubsub::snake_channel_16 [    50] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+ _pubsub::snake_channel_5 [    48] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+_pubsub::snake_channel_18 [    45] ∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+_pubsub::snake_channel_17 [    18] ∎∎∎∎∎∎
+_pubsub::snake_channel_20 [    17] ∎∎∎∎∎
+_pubsub::snake_channel_14 [    17] ∎∎∎∎∎
+_pubsub::snake_channel_19 [    14] ∎∎∎∎
+...
+```
 
-# Knapsack problem
+## Distribute K keys, based on their weights, to N redis nodes
 
-![](knapsack.svg)
-
-* What about multiple knapsacks ?
-* -> Heuristic distribution of weighted items to bins
+* (luck factor) I have run into that problem before !!
+* Variation of the Knapsack problem, called bin-packing
 
 ---
 
