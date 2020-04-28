@@ -330,7 +330,7 @@ Like a log file (csv)
 * You can truncate them (XTRIM or XADD with trim option)
 * You can check their size (XLEN)
 * You can get more attribute, ls -l (XINFO)
-* They have a 'line number' (Entry ID)
+* They have a 'line number' (Entry ID, based on timestamps)
 * You can extract some lines out of them, with sed (XRANGE)
 
 ... saw a Stream presentation at RedisConf 2019 and scratched an itch
@@ -348,6 +348,7 @@ Like a log file (csv)
 * Restart or crash:
 * (1) resume subscribe at the first position, and dedup
 * (2) resume subscribe at the last saved position
+* (3) use a timestamp approach (now - last N minutes, hours, etc...)
 
 ---
 
@@ -552,7 +553,6 @@ channel_5                             346                            35
 channel_6                            4182                           193
 channel_7                            1597                            93
 channel_8                              46                             2
-sms_republished_v1_neo              17786                           841
 ```
 
 ???
