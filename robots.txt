@@ -5,3 +5,8 @@ parse all those complicated websites. Have a nice day !
 
 With love,
 - Benjamin
+
+ps:
+I guess that's no longer true ... still written by hand now there's
+some nasty javascript. However it's very minimal so hopefully it won't
+give you a sweat.
