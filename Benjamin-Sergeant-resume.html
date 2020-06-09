@@ -381,11 +381,26 @@ div.tag-cloud a {
 		<div class="page-break"></div> 
 		<h1>Experience</h1>
 		<div style="padding: 10px;" class="entry">
-			<h3>Machine Zone, Inc.</h3>
+			<h3>Machine Zone, Inc, now part of AppLovin.</h3>
 			<em style="padding: 10px;">Palo Alto, California - Staff Software Engineer: January 2016--Present</em>
 			<ul >
 			<li>
-			Working on fast asset delivery, real time systems and crash monitoring.
+                Wrote a real time <a href="https://github.com/machinezone/cobra">messaging system</a>, Cobra, used mainly for game analytics, with message dispatching built on top of Redis Streams. Cobra handles 50,000 1K messages per seconds at peak, is running on kubernetes and was <a href="https://www.youtube.com/watch?v=o8CC8qYfRQE&t=436s">presented</a> at the Redis conference in 2019. The system was used for performance monitoring and game usage analytics. Worked to spread Cobra usage accross departments, which lead to some important new use cases such as live code or asset reloading for development and lua <a href="http://www.brendangregg.com/flamegraphs.html">flame graphs</a> creation used to find performance bottlenecks.
+			</li>
+			<li>
+                Wrote a python <a href="https://github.com/machinezone/rcc/tree/master/rcc">redis client</a> library and a companion tool which can be used to monitor key space usage and do an <a href="https://bsergean.github.io/binpacking/">optimal resharding</a> of a redis cluster, using a bin packing algorithm. This work was selected to be presented at Redis Conf 2020 and will be presented in a redislabs Webinar.
+			</li>
+			<li>
+                Rewrote the chat and the real time system networking layer on top of a WebSocket transport with MessagePack data marshalling instead of XMPP. The protocol is implemented in lua which makes it very easy to update, unlike the previous implementation. The C++ WebSocket implementation was open-sourced and is used by <a href="https://github.com/machinezone/IXWebSocket/stargazers">many users</a>, and contains a client and server library, and an HTTP 1.1 client and server. The library is available on <a href="https://github.com/microsoft/vcpkg/tree/master/ports/ixwebsocket">vcpkg</a> and the companion busy-box like <a href="https://pkgs.alpinelinux.org/package/edge/community/x86_64/ws">networking tool</a> is packaged for Alpine Linux.
+			</li>
+			<li>
+                Worked on fast asset delivery to improve the first time user experience of our games. Introduced the usage of binary patching to transfer file deltas and reduce the transfered payload by 10 to 20x. Reworked the localization file formats to be more compact and benefit from binary patching. Implemented C++ client and Python build part for both changes. Developed a python tool used to replicate a complex C++ engine code base and calculate offline the amount of downloaded asset data required to login into our games, which is used to validate each game release.
+			</li>
+			<li>
+                Fixed a long standing nasty luajit bug which was responsible for 90% of all the Android crashes, which required a multi-month backward compatible rollout process. Due to its high frequency the bug had been thought to be a memory pressure crash while it was not.
+			</li>
+			<li>
+                Re-architected the crash handling and reporting tool by creating a bridge from the game clients to <a href="https://sentry.io/welcome/">sentry</a>, with extra native C/C++ crash support. Open-sourced the <a href="https://github.com/machinezone/stackwalker">stack walking</a> code which served as a reference implementation of sentry builtin latter support, and added many features such as handling of lua and java crashes and displaying code snippets alongside backtrace information which made fixing some bugs trivial. Devops of associated services, container migration and switched to sentry saas in 2019. This work was rewarded by an internal technical achievement award.
 			</li>
 			</ul>
 		</div>
@@ -431,6 +446,8 @@ div.tag-cloud a {
 			</li>
 			</ul>
 		</div>
+
+		<div class="page-break"></div> 
 		<div style="padding: 10px;" class="entry">
 			<h3>Adobe Systems, Inc.</h3>
 			<em style="padding: 10px;">San Jose, California - Computer scientist: January 2005--May 2010</em>
