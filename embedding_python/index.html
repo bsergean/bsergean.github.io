@@ -1,0 +1,237 @@
+<html>
+<xmp theme="united" style="display:none;">
+
+<img src="python-logo.png" />
+
+# Embedding Python in C/C++.
+
+There are times when you have an existing C++ application, for performance or
+legacy reason, where it would be very convenient to write small chunk of it, or
+extend it with a simple to use scripting language. Not everyone knows C++ and
+building or working with it can be a pain. Python is great for that as its
+syntax is very clear, it is battery included, and its main implementation is
+written in C which makes embedding it easy.
+
+That use case recently came out for
+[cobra](https://machinezone.github.io/cobra/), and I'm almost done rewriting
+some bits of my C++ code into Python. The C++ code that embed Python is
+[here](https://github.com/machinezone/IXWebSocket/blob/master/ixbots/ixbots/IXCobraToPythonBot.cpp),
+as part of cobra bot framework.
+
+Python has a very good
+[documentation](https://docs.python.org/3/extending/embedding.html) on doing
+this as part of its C API, but this walk through should help explaining the
+process even further.
+
+## Linking with Python
+
+Your first task will be to link with the Python runtime and find headers. Today
+CMake is the most ubiquitous solution for building and there are simple
+directives to do that.
+
+```
+find_package(Python COMPONENTS Development)
+if (NOT Python_FOUND)
+  message(FATAL_ERROR "Python not found")
+endif()
+message("Python_FOUND:${Python_FOUND}")
+message("Python_VERSION:${Python_VERSION}")
+message("Python_Development_FOUND:${Python_Development_FOUND}")
+message("Python_LIBRARIES:${Python_LIBRARIES}")
+
+# Then link with ${Python_LIBRARIES} and add ${Python_INCLUDE_DIRS} to your header search path
+```
+
+## Initializing Python
+
+You initialize the Python runtime with Py_InitializeEx. In my use case I pass
+in the 0 as the first argument, as this prevents Python from installing its
+signal handler which breaks the class Ctrl-C behavior to interrupt my program.
+
+If there is an error at any point calling Python functions, you should call
+PyErr_Print() to get the details.
+
+## Importing your module
+
+You module is a path on disk, where the .py extension is stripped. Also make
+sure you follow the normal loading module rules, do not put a dash in your file
+name for example. You will have to set the PYTHONPATH for your module to be
+found, to keep it simple I set the current working directory to the place where
+the python script lives, and then set to the current folder with PYTHONPATH=.
+
+```
+PyObject* pyModuleName = PyUnicode_DecodeFSDefault(modulePath.c_str());
+
+if (pyModuleName == nullptr)
+{
+    CoreLogger::error("Python error: Cannot decode file system path");
+    PyErr_Print();
+    return false;
+}
+
+// Import module
+PyObject* pyModule = PyImport_Import(pyModuleName);
+Py_DECREF(pyModuleName);
+if (pyModule == nullptr)
+{
+    CoreLogger::error("Python error: Cannot import module.");
+    CoreLogger::error("Module name cannot countain dash characters.");
+    CoreLogger::error("Is PYTHONPATH set correctly ?");
+    PyErr_Print();
+    return false;
+}
+```
+
+## Defining an interface and loading your function
+
+You will need to define the name of the function you want to call. I choose
+**run**. The function takes 2 arguments and returns a list of dictionaries. The
+first argument is a version number which I can bump in case I want to change
+the interface or the rather the function signature. For example I would like to
+not pass a serialized json string, but a dictionary or a normal python object,
+but I have a memory leak at this point when I do so...
+
+```
+def run(version: int, serializedJson: str) -> list:
+    # json parse str
+    # extract some parameters
+    # do some computation
+    # ... all in python
+    # then return that result
+    return [{"kind": "counter", "key": "foo.bar.baz", "value": 12}]
+```
+
+The first step will be to load your function with PyObject_GetAttrString, and
+verify that this symbol is a function.
+
+```
+// module main funtion name is named 'run'
+const std::string entryPoint("run");
+PyObject* pyFunc = PyObject_GetAttrString(pyModule, entryPoint.c_str());
+
+if (!pyFunc)
+{
+    CoreLogger::error("run symbol is missing from module.");
+    PyErr_Print();
+    return false;
+}
+
+if (!PyCallable_Check(pyFunc))
+{
+    CoreLogger::error("run symbol is not a function.");
+    PyErr_Print();
+    return false;
+}
+```
+
+## Calling your function
+
+The function arguments are defined as a tuple. You should be able to pass
+kwargs** kind of arguments as well, but I did not choose to do that.
+
+PyTuple_New is used to create the tuple, and PyTuple_SetItem is used to set its
+entries. Finally PyObject_CallObject is used to invoke the function.
+
+```
+//
+// Invoke python script here. First build function parameters, a tuple
+//
+const int kVersion = 1; // We can bump this and let the interface evolve
+
+PyObject *pyArgs = PyTuple_New(2);
+PyTuple_SetItem(pyArgs, 0, PyLong_FromLong(kVersion)); // First argument
+
+//
+// It would be better to create a Python object (a dictionary)
+// from the json msg, but it is simpler to serialize it to a string
+// and decode it on the Python side of the fence
+//
+PyObject* pySerializedJson = PyUnicode_FromString(msg.toStyledString().c_str());
+PyTuple_SetItem(pyArgs, 1, pySerializedJson); // Second argument
+
+// Invoke the python routine
+PyObject* pyList = PyObject_CallObject(pyFunc, pyArgs);
+```
+
+## Capturing the output
+
+If something failed, PyObject_CallObject will return NULL. Calling
+PyErr_Print() will often show you a syntax error or a runtime error.
+
+Now in the happy case, you will have to extract the function return value, and
+do something with it. In our case we want to send some data to statsd with
+our own UDP C++ code. We use the entries in the dictionary to tell use which
+kind of statsd event we want to send (a counter, a gauge or a timing), the name
+of the key and the value.
+
+```
+// The result is a list of dict containing sufficient info
+// to send messages to statsd
+auto listSize = PyList_Size(pyList);
+
+for (Py_ssize_t i = 0 ; i < listSize; ++i)
+{
+    PyObject* dict = PyList_GetItem(pyList, i);
+
+    ... process each dict
+```
+
+The argument parsing is not very glorious code, and this is where binding
+generators can prove useful for large code base, but in our case we keep it
+simple and just use the normal Python function, and try to be careful, checking
+object types and entry existence. Here is how to extract an entry from a
+dictionary, check that it is a string and convert it to an std::string.
+
+```
+//
+// Retrieve object key
+//
+PyObject* pyKey = PyDict_GetItemString(dict, "key");
+if (!PyUnicode_Check(pyKey))
+{
+    fatalCobraError = true;
+    CoreLogger::error("key entry is not a string");
+    continue;
+}
+std::string key(PyUnicode_AsUTF8(pyKey));
+```
+
+Once all your data is represented in your own C++ data structure, you can just
+call your function and be done with this.
+
+```
+if (counter)
+{
+    statsdClient.count(key, value);
+}
+else if (gauge)
+{
+    statsdClient.gauge(key, value);
+}
+else if (timing)
+{
+    statsdClient.timing(key, value);
+}
+```
+
+## Conclusion
+
+If the Python bits you are going to invoke will be slow (say 10 seconds), it is
+OK to just shell out / fork and invoke the Python interpreter. The downside of
+this approach is that passing arguments and capturing return value can be
+tedious and expensive. You could run into limitation on the command line if you
+need to pass a lot of data to Python, so usually you write arguments to temp
+files, which you have to delete later, and if your program crash you have
+leaked a resource. To capture output you will also need to so that as well. You
+could use pipes, but then your program will nott be portable as pipe works very
+differently on Windows and UNIX. It is not all shiny when embedding Python, but
+at least there is an explicit API to do that, and it is more efficient to call
+C program in process as opposed to shelling out. Game engines typically do
+this, Unity does it with CSharp, many proprieatary engines embed lua which is a
+fine choice too.
+
+It is also possible to make a C python module, and call your C++ code directly from Python.
+</xmp>
+
+<script src="strapdown.js"></script>
+</html>
