@@ -1,0 +1,82 @@
+<html>
+<xmp theme="united" style="display:none;">
+
+# Renewing a letsencrypt certificate
+
+## Problem
+
+```
+$ bavarde client
+> 2020-07-20 19:17:55 ERROR [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1121)
+2020-07-20 19:17:56 ERROR [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1121)
+2020-07-20 19:17:58 ERROR [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1121)
+2020-07-20 19:17:59 ERROR [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1121)
+2020-07-20 19:18:00 ERROR [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1121)
+^C
+Aborted!
+
+```
+
+Your certificate will expire, every 3 months when using the free ones from lets encrypt. The good news is that updating a cert is pretty easy thanks to the certbot tool. I use nginx as a proxy in front of the cobra server that runs at jeanserge.com, so this is where my certificates path are referenced.
+
+## Solution
+
+### Step 1
+
+Edit your SSL section in nginx config file ... mine is here /etc/nginx/conf.d/default.conf
+
+```
+
+server {
+        listen 443 ssl;
+
+        ssl_certificate /etc/letsencrypt/live/jeanserge.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/jeanserge.com/privkey.pem;
+
+        # Comment this block when running certbot renew
+        # This way cobra will not handle your request, and the ACME protocol can
+        # run and find the file that will be written
+        location / {
+                proxy_pass http://websocket;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection $connection_upgrade;
+                proxy_set_header Host $host;
+        }
+
+        # Un-comment this when running certbot renew
+        # root /var/www/html;
+```        
+
+### Step 2
+
+As a root user:
+
+```
+certbot renew
+```
+
+I did not take notes the first time I did this ... I think I did this.
+
+```
+certbot certonly --email my@email.com -d jeanserge.com
+```
+
+### Step 3
+
+Just restore your previous nginx config file.
+
+## Even better Solution
+
+Automate everything I just did: 
+
+1. With a cron file that runs every 2 months maybe.
+2. Duplicates the nginx config files, so that we have 2 versions.
+3. A shell script overrides the current one, go `nginx -s reload`, run `certbot renew`, copy back the 'good' nginx config file.
+
+Younger myself would have done it, but it's dinner time and current myself might do it in 2 months :)
+
+</xmp>
+
+<script src="strapdown.js"></script>
+</html>
