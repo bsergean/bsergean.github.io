@@ -78,5 +78,65 @@ Younger myself would have done it, but it's dinner time and current myself might
 
 </xmp>
 
+## Wildcard SSL certificate
+
+Instructions are slightly different if you are working with a wildcard cert. Follow this [guide](https://medium.com/@saurabh6790/generate-wildcard-ssl-certificate-using-lets-encrypt-certbot-273e432794d7).
+
+```
+certbot certonly --manual --email my@email.com -d *.jeanserge.com
+```
+
+You will need to add a TXT record through your DNS provider (I use godaddy because I'm a dad). You'll have to wait a bit, and you can use dig to check that the TXT record is available. If the AUTHORITY SECTION is not empty it means you're good to go (and press enter at the certbot prompt.
+
+```
+bsergean.github.io$ dig _acme-challenge.jeanserge.com
+
+; <<>> DiG 9.10.6 <<>> _acme-challenge.jeanserge.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 60458
+;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4000
+;; QUESTION SECTION:
+;_acme-challenge.jeanserge.com.	IN	A
+
+;; AUTHORITY SECTION:
+jeanserge.com.		900	IN	SOA	ns55.domaincontrol.com. dns.jomax.net. 2020081404 28800 7200 604800 3600
+
+;; Query time: 30 msec
+;; SERVER: 192.168.169.200#53(192.168.169.200)
+;; WHEN: Fri Aug 14 14:44:20 PDT 2020
+;; MSG SIZE  rcvd: 126
+```
+
+Now we can press enter at the certbot prompt.
+
+```
+Before continuing, verify the record is deployed.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Press Enter to Continue
+Waiting for verification...
+Cleaning up challenges
+
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/jeanserge.com-0001/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/jeanserge.com-0001/privkey.pem
+   Your cert will expire on 2020-11-12. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot
+   again. To non-interactively renew *all* of your certificates, run
+   "certbot renew"
+ - If you like Certbot, please consider supporting our work by: ...
+```
+
+Renewing the wildcard cert seems to work differently, the previous instructions did not work 3 months later ... to renew my cert I had to stop nginx, and then:
+
+```
+certbot certonly -d jeanserge.com
+```
+
 <script src="strapdown.js"></script>
 </html>
