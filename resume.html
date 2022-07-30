@@ -1,0 +1,628 @@
+<html>
+<head>
+	<style type="text/css">
+
+/* Page break 
+   http://davidwalsh.name/css-page-breaks
+ */
+@media all
+{
+	.page-break	{ display:none; }
+}
+
+@media print
+{
+	.page-break	{ display:block; page-break-before:always; }
+}
+	
+body {
+    font-family: 'Georgia', serif;
+    margin: 40px auto;
+    width: 740px;
+    font-size: 16px;
+    padding: 0;
+    line-height: 1.2;
+}
+ 
+div.homelink a {
+    display: block;
+    position: absolute;
+    height: 120px;
+    width: 120px;
+    margin-top: -12px;
+    margin-left: 150px;
+    text-decoration: none;
+}
+ 
+div.homelink a:hover {
+    background: transparent;
+}
+ 
+div.homelink a span {
+    display: none;
+}
+ 
+img {
+    border: none;
+}
+ 
+a {
+    color: #666;
+}
+ 
+p {
+    margin: 10px 0;
+}
+ 
+a:hover {
+    color: #5a7c1a;
+    background: #eff3e8;
+}
+ 
+h1, h2, h3 {
+    font-variant: small-caps;
+    font-weight: normal;    
+    margin-bottom: 0; /* BS */
+}
+ 
+h2 { font-size: 32px; margin: 15px 0 0 -15px; color: #333; }
+/*h3 { font-size: 24px; margin: 15px 0 0 -15px; } */
+h3 { font-size: 24px; margin: 15px 0 0 0px; } 
+
+h3.foo { font-size: 24px; margin: 5px 0 0 0px; } 
+ 
+abbr {
+    font-variant: small-caps;
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+}
+ 
+var {
+    font-variant: small-caps;
+    text-transform: lowercase;
+    font-style: normal;
+    letter-spacing: 0.05em;
+}
+ 
+pre, tt, code {
+    font-family: 'Consolas', 'Monaco', 'Bitstream Vera Sans Mono', monospace;
+}
+ 
+tt, code {
+    font-size: 75%;
+}
+ 
+pre {
+    margin: 20px 0;
+    line-height: 1.3;
+    font-size: 12px;
+}
+ 
+blockquote {
+    margin: 10px 0 10px 30px;
+    padding: 0;
+    color: #333;
+}
+ 
+blockquote blockquote {
+    color: #666;
+}
+ 
+blockquote blockquote blockquote {
+    color: #999;
+}
+ 
+div.header {
+    text-align: right;
+    height: 150px;
+}
+ 
+div.contents {
+    padding: 0 0 0 15px;
+}
+ 
+div.header h1 {
+    margin: 0;
+    font-size: 31px;
+    color: #333;
+}
+ 
+div.header p.navigation {
+    margin: 5px 0;
+    color: #bbb;
+    font-size: 14px;
+}
+ 
+div.header p.navigation a {
+    text-decoration: none;
+    font-variant: small-caps;
+    text-transform: lowercase;
+}
+ 
+div.header p.navigation a:hover {
+    text-decoration: underline;
+}
+ 
+div.entry {
+    padding: 10px 0;
+}
+ 
+div.entry p,
+div.entry li,
+div.entry dl dd,
+div.entry dl dt {
+    line-height: 1.4;
+}
+ 
+div.entry dl dd {
+    margin: 0 0 0 30px;
+    padding: 0;
+}
+ 
+div.entry li p {
+    line-height: 1.2;
+}
+ 
+div.entry h3 {
+    margin: 0 0 0 -15px;
+}
+ 
+div.entry h3 a {
+    color: #333;
+    text-decoration: none;
+}
+
+div.entry h3 a:hover {
+    color: #5a7c1a;
+    background: #eff3e8;
+    border-bottom: 1px solid #95aa6d;
+}
+ 
+div.entry p.meta {
+    font-size: 14px;
+    margin: 3px 0;
+    color: #666;
+}
+ 
+div.entry p.related {
+    margin: 15px 0;
+    font-size: 14px;
+    text-align: right;
+}
+ 
+div.entry h2 {
+    margin: 0 0 0 -15px;
+}
+ 
+div.entry h3 {
+    color: #111;
+    font-size: 26px;
+    margin: 10px 0 10px -10px;
+}
+ 
+div.entry h4 {
+    color: #111;
+    font-size: 18px;
+    margin: 10px 0 10px -10px;
+}
+ 
+div.entry h5 {
+    color: #111;
+    font-size: 18px;
+    margin: 10px 0;
+}
+ 
+div.entry + div.entry {
+    padding-top: 30px;
+    background: url(ruler.png) no-repeat center 0;
+}
+ 
+form.comments {
+    margin: 0;
+}
+ 
+form.comments dl {
+    margin: 0;
+    padding: 0;
+}
+ 
+form.comments dl dd {
+    padding: 5px 0;
+    margin: 0;
+}
+ 
+form.comments dl dt {
+    padding: 5px 0 0 0;
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+ 
+form.comments textarea {
+    margin: 5px 0;
+}
+ 
+ol#comments {
+    margin: 0 0 0 25px;
+    color: #5a7c1a;
+    font-weight: bold;
+    padding: 0;
+}
+ 
+ol#comments li {
+    margin: 10px 0 30px 0;
+    padding: 0;
+}
+ 
+ol#comments li li {
+    margin: 10px 0;
+}
+ 
+ol#comments p {
+    margin: 0;
+    padding: 0;
+}
+ 
+ol#comments div.text {
+    color: black;
+    font-weight: normal;
+}
+ 
+ol#comments div.text p {
+    margin: 10px 0 0 0;
+}
+ 
+ol#comments p.meta {
+    color: #666;
+    text-align: right;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 10px 0 0 0;
+    padding: 0;
+}
+ 
+ol#comments li div.blocked {
+    margin: -4px -8px -4px -40px;
+    padding: 2px 8px 12px 40px;
+    background: #eee;
+}
+ 
+#comment-message {
+    margin: 10px 0;
+    font-size: 14px;
+    color: #888;
+}
+ 
+div.pagination {
+    font-size: 14px;
+    text-align: right;
+}
+ 
+table.standalone {
+    margin: 10px 0 10px 0;
+    border: 1px solid #aaa;
+    border-collapse: collapse;
+}
+ 
+table.standalone th {
+    background: #eee;
+    font-variant: small-caps;
+    padding: 2px 5px;
+    border-bottom: 1px solid black;
+}
+ 
+table.standalone td {
+    padding: 2px 5px;
+}
+ 
+div.tag-cloud {
+    margin: 20px 0;
+    font-size: 12px;
+    text-align: justify;
+    line-height: 240%;
+}
+ 
+div.tag-cloud a {
+    padding: 2px 10px;
+    text-decoration: none;
+}
+	</style>
+
+	<title>Benjamin Sergeant Resume</title>
+</head>
+<body>
+	<div>
+		<h1 style="text-align: center;">Benjamin Sergeant</h1>
+		<hr>
+
+		<div style="float: left;">
+			Bay area, California
+		</div>
+		<div style="float: right;">
+			<a href="mailto:bsergean@gmail.com">bsergean@gmail.com</a>
+		</div>
+	</div>
+
+	<div>
+		<br>
+		<h1>Education</h1>
+			<div style="padding: 10px;" class="entry">
+				<h3>M.Sc in Computer Graphics</h3>
+				<em style="padding-left: 10px;">Grenoble, France: 2002--2003</em>
+				<ul >
+				<li>
+				    (Formerly named DEA IVR) Digital Imaging, Computer Vision and Robotics.
+				</li>
+				</ul>
+			</div>
+			<div style="padding: 10px;" class="entry">
+				<h3>M.Eng in Telecommunications</h3>
+				<em style="padding-left: 10px;">Grenoble, France: 1999--2002</em> / <a href="http://ensimag.grenoble-inp.fr/">Link</a>
+				<ul >
+				<li>Telecoms department of ENSERG-ENSIMAG engineering school. Majoring in Computer Science and Hardware Design.
+				</li>
+				<li>Main projects: Compiler for a subset of Pascal, Operating System Kernel, 8 bit CPU design with real hardware, VLSI chip for computing the convex hull of a set of points.
+				</li>
+				</ul>
+			</div>
+			<div style="padding: 10px;" class="entry">
+				<h3>Classes Pr&eacute;paratoires</h3>
+				<em style="padding-left: 10px;">Paris, France: 1996--1999</em>
+				<ul >
+				<li>French classes preparing students for
+				  the competitive exams required to enter
+				  engineering schools. Doing mostly Maths and Physics.
+				  </li>
+				</ul>
+			</div>
+		<br>
+		<!-- <hr> -->
+
+		<div class="page-break"></div> 
+		<h1>Experience</h1>
+		<div style="padding: 10px;" class="entry">
+			<h3>Machine Zone, Inc, now part of AppLovin.</h3>
+			<em style="padding: 10px;">Palo Alto, California - Staff Software Engineer: January 2016--Present</em>
+			<ul >
+			<li>
+                Wrote a real time <a href="https://github.com/machinezone/cobra">messaging system</a>, Cobra, used mainly for game analytics, with message dispatching built on top of Redis Streams. Cobra handles 50,000 1K messages per seconds at peak, is running on kubernetes and was <a href="https://www.youtube.com/watch?v=o8CC8qYfRQE&t=436s">presented</a> at the Redis conference in 2019. The system was used for performance monitoring and game usage analytics. Worked to spread Cobra usage accross departments, which lead to some important new use cases such as live code or asset reloading for development and lua <a href="http://www.brendangregg.com/flamegraphs.html">flame graphs</a> creation used to find performance bottlenecks.
+			</li>
+			<li>
+                Wrote a python <a href="https://github.com/machinezone/rcc/tree/master/rcc">redis client</a> library and a companion tool which can be used to monitor key space usage and do an <a href="https://bsergean.github.io/binpacking/">optimal resharding</a> of a redis cluster, using a bin packing algorithm. This work was selected to be presented at Redis Conf 2020 and will be presented in a redislabs Webinar.
+			</li>
+			<li>
+                Rewrote the chat and the real time system networking layer on top of a WebSocket transport with MessagePack data marshalling instead of XMPP. The protocol is implemented in lua which makes it very easy to update, unlike the previous implementation. The C++ WebSocket implementation was open-sourced and is used by <a href="https://github.com/machinezone/IXWebSocket/stargazers">many users</a>, and contains a client and server library, and an HTTP 1.1 client and server. The library is available on <a href="https://github.com/microsoft/vcpkg/tree/master/ports/ixwebsocket">vcpkg</a> and the companion busy-box like <a href="https://pkgs.alpinelinux.org/package/edge/community/x86_64/ws">networking tool</a> is packaged for Alpine Linux.
+			</li>
+			<li>
+                Worked on fast asset delivery to improve the first time user experience of our games. Introduced the usage of binary patching to transfer file deltas and reduce the transfered payload by 10 to 20x. Reworked the localization file formats to be more compact and benefit from binary patching. Implemented C++ client and Python build part for both changes. Developed a python tool used to replicate a complex C++ engine code base and calculate offline the amount of downloaded asset data required to login into our games, which is used to validate each game release.
+			</li>
+			<li>
+                Fixed a long standing nasty luajit bug which was responsible for 90% of all the Android crashes, which required a multi-month backward compatible rollout process. Due to its high frequency the bug had been thought to be a memory pressure crash while it was not.
+			</li>
+			<li>
+                Re-architected the crash handling and reporting tool by creating a bridge from the game clients to <a href="https://sentry.io/welcome/">sentry</a>, with extra native C/C++ crash support. Open-sourced the <a href="https://github.com/machinezone/stackwalker">stack walking</a> code which served as a reference implementation of sentry builtin latter support, and added many features such as handling of lua and java crashes and displaying code snippets alongside backtrace information which made fixing some bugs trivial. Devops of associated services, container migration and switched to sentry saas in 2019. This work was rewarded by an internal technical achievement award.
+			</li>
+			</ul>
+		</div>
+
+		<div style="padding: 10px;" class="entry">
+			<h3>Heartflow, Inc.</h3>
+            <em style="padding: 10px;">Redwood City, California - Contractor: July 2015--November 2015</em> / <a href="https://www.youtube.com/watch?v=bNAyfT-VLjg">Link</a>
+			<ul >
+			<li>
+                Wrote a WebGL visualization engine from scratch to display Heart 3D models with interactive 3D pin placement. Engine was written in Coffescript and could work in a web browser and offline on Linux for PDF generation thanks to <a href="https://github.com/stackgl/headless-gl">headless</a> GL.
+			</li>
+			</ul>
+		</div>
+
+		<div style="padding: 10px;" class="entry">
+			<h3>DreamWorks Animation SKG, Inc.</h3>
+			<em style="padding: 10px;">Redwood City, California - Software Engineer: May 2010--December 2015</em>
+			<ul >
+			<li>
+			Working on moonlight, an off-line software renderer. The renderer is the software computing final images that people see on screen. Wrote an analytic web tool for render logs, processing hundred of millions of events on a single machine using a custom database engine.
+			</li>
+			<li>
+			Worked on torch, the next generation lighting software, used to lit Turbo, How to train your Dragons 2 and all Dreamworks movies going forward. Scrum lead of the team owning the 3D Viewer, the curve editor, the interface with the Renderer.
+			</li>
+			<li>
+			Lead of the torch show reactive team, working on bugs and optimizations requested by shows with fast turnaround. Optimized a regioning workflow operation which on a large crowd scene was taking 15 minutes to run and was consuming 10 Gigabytes of memory. Reduced it to a runtime of 0.2 seconds and a memory consumption of 300M (4500x speedup / 30x memory reduction).
+			</li>
+			<li>
+			Wrote an analytic web tool for monitoring the stability of torch. The tool was later expanded to support the animation, the rig and the rendering softwares. The tool was given an internal tech award; tech awards are usually given to work leading to patents or published papers.
+			</li>
+			<li>
+			Wrote a prediction/error compression system for baked animated sequences (Surfaces and Meshes), reducing the disk
+			footprint by 10x on average and 20 to 30x on best case. Integrated the system in Dreamworks pipeline.
+			</li>
+			<li>
+			Reworked the polygonal/subdivision surfaces file format and shrunk disk usage by 15% to 25% 
+			with simple and efficient techniques while maintaining it lossless and backward compatible.
+			The prototype was written in Python (full re-implementation of the file format IO).
+			</li>
+			<li>
+			Lots of cleanup and improvements to the very rich Dreamworks geometric toolset
+			(command lines, operators, Python/C++ binding, 3D viewers).
+			</li>
+			</ul>
+		</div>
+
+		<div class="page-break"></div> 
+		<div style="padding: 10px;" class="entry">
+			<h3>Adobe Systems, Inc.</h3>
+			<em style="padding: 10px;">San Jose, California - Computer scientist: January 2005--May 2010</em>
+			<ul >
+
+				<li>Lead developer of Adobe Acrobat Capture Utility for UNIX, shipped with Adobe Acrobat 3D (7.0.7, 8.1 and 9.0) on HP-UX, Solaris, IRIX and AIX.
+				</li>
+				<li>Enhanced support of 3D Capture for numerous CAD applications (many different versions) (Dassault Catia v4, 4DNav, Catia v5, DMU, UGS I-Deas, Teamcenter, NX) on all supported platforms.
+				</li>
+				<li>PDF Export with embedded U3D and PRC. The U3D and PRC libraries were ported to Unix. PDF custom digital signature implemented with OpenSSL.
+				</li>
+				<li>
+				Internationalization and localization in French, German and Japanese. The Japanese support did not exist in wxMotif and we had to work with core wxWidgets library maintainers to add it.
+				</li>
+				<li>
+				Rewrote the whole GUI code using the Trolltech Qt toolkit, switched the whole build-system to Qt qmake projects, and switched installers to native OS packages (like msi files on Windows).
+				</li>
+				<li>
+				Created a 3D-PDF iPhone application that was demoed at
+	  the BU all hands and that went to the final round of qualification
+	  for the MAX conference. The application was network aware and could
+	  do 3D file streaming, caching of the geometric datas, remote
+	  conference, and trigger 3D capture on a desktop and download the
+	  capture.
+				</li>
+				<li>
+				Ported the Digital Edition PDF rendering code to iPhone and wrote a minimal PDF renderer (OpenGL based) that worked on iPhone and on the Mac.
+				</li>
+				<li>
+				Wrote a prototype of a network file system using MacFuse and Acrobat.com for the backend.
+				</li>
+				<li>
+				Wrote a Flash build-system in python with projects dependancy tracking, incremental build and parallel build support.
+				</li>
+				<li>
+				Wrote a Raider3D file viewer in Python (File format reader/writer, interactive manipulation of the 3D scene).
+				</li>
+				<li>
+				Wrote a web application for integrated browsing of Perforce and the Adobe proprietary bug tracker similar to Trac.
+				</li>
+				<li>
+				Setup lots of web applications ; bug tracker (roundup), forum (phpBB), wiki (mediawiki), mail archive (MHonArc), project management (Trac). Wrote a command line directory service, a bridge to Acrobat.com. Also did a lot of UNIX admin on a large set of machines. 
+				</li>
+			</ul>
+		</div>
+
+		<div style="padding: 10px;" class="entry">
+			<h3>Hitpost, Inc (aquired by Yahoo)</h3>
+			<em style="padding: 10px;">San Francisco, California - First engineer on board : April 2009--September 2009</em>
+			<ul >
+			<li>
+			Wrote the first version of a sport crowd site for Mobile devices using Google App Engine (focused on the backend). The site was demoed to several Venture Capitalist from the bay area. Official play by play are retrieved from stats.com using ftp push and inotify.
+			</li>
+			<li>
+			Helped build the technical team, found two top notch developers (back-end and front-end).
+			</li>
+			</ul>
+		</div>
+		<div class="page-break"></div> 
+		<div style="padding: 10px;" class="entry">
+			<h3>Okyz, Inc. (aquired by Adobe)</h3>
+			<em style="padding: 10px;">Paris, France - Software Engineer: July 2003--December 2004</em>
+			<ul >
+			<li>
+		Port of Raider3D Capture and Viewer on
+            HP-UX. Capture port required collaboration with HP R&amp;D, a thorough understanding of the specific
+            HP OpenGL implementation and the development of a special code generator
+            from OpenGL C prototypes (using Lex/Yacc).
+			</li>
+			<li>
+		  Worked on the AIX and on the Mac OS X Raider3D Viewer ports.
+			</li>
+			<li>
+          Evaluated the Hoops3D library providing 3D
+            compression algorithm to be integrated inside the r3d format.
+			</li>
+			<li>
+          Maintained the Mac OS X Raider3D Viewer, and HP-UX,
+            Solaris, IRIX, AIX Raider3D Viewer, Capture, Conference
+            server versions.
+			</li>
+			<li>
+          Responsible for the support of the Renault account, and in
+            general for most of the Unix support. Set up Unix machine
+            during OKYZ participation in trade shows.
+			</li>
+			<li>
+Develop a user-friendly front-end for the
+            license generation tool, and simplify the preparation of
+            Unix products distribution media (tarballs, update ftp
+            links, Cd's), using UNIX Shells Scripts.
+			</li>
+			</ul>
+		</div>
+		<div style="padding: 10px;" class="entry">
+			<h3>Maverick Lab (Inria)</h3>
+			<em style="padding-left: 10px;">Grenoble, France - Research internship: October 2002--June 2003</em> / <a href="http://maverick.inria.fr/">Link</a>
+			<ul >
+			<li>
+          Extraction of semantic information in a 3d scene
+            with only geometric information using naive Bayes classification. Try to solve the
+            following questions : which set of polygons form an object, what kind of scene is it ?.
+			</li>
+			<li>
+          Prototype programmed in C++ using Qt and OpenGL. Used octrees for spacial indexing.
+			</li>
+			</ul>
+		</div>
+		<div style="padding: 10px;" class="entry">
+			<h3>Sls group (Tima lab)</h3>
+			<em style="padding-left: 10px;">Grenoble, France - Research internship: March 2002--June 2002</em> / <a href="http://tima.imag.fr/tima/fr/sls/slsoverview.html">Link</a>
+			<ul >
+			<li>
+          Study of the interoperability between the Coware
+            co-simulation tool and the SOC (System On Chip) design flow.
+			</li>
+			</ul>
+		</div>
+		<br>
+		<!-- <hr> -->
+		<div class="page-break"></div> 
+		<h1>Skills </h1>
+			<div style="padding-top: 5px; padding-left: 10px">
+				<h3 class="foo">Computer Languages</h3>
+				<ul>
+		<li>Proficient in Python, C++, UNIX Shells Scripts.</li>
+		<li>Intermediate level in Javascript, HTML, CSS, lua.</li>
+		<li>Familiar with ActionScript, Perl, Ada95, Scheme, VHDL.</li>
+				</ul>
+			</div>
+			<div style="padding-top: 5px; padding-left: 10px">
+				<h3>Library, Tools and Software</h3>
+				<ul>
+		<li>wxWidgets, Qt, OpenGL, OpenSSL, zlib, libpng.</li>
+		<li>Flask, Django, web.py, Google App Engine, memcached, SQLAlchemy, PostgreSQL, Apache, Nginx, Sentry, WebSockets, Redis</li>
+		<li>Perforce, Subversion, git, CVS, accurev.</li>
+		<li>Trac, Roundup, Mediawiki, jira.</li>
+		<li>QMake, Autotools, GNU Make, SCons, SSH, NFS.</li>
+		<li>Lex/Yacc, Python-PLY.</li>
+		<li>Maya, Several UNIX CAD software: Catia v4-v5, 4DNav, NX, Teamcenter, I-Deas.</li>
+		<li>vi :), Visual Studio, XCode, Flex Builder, QtCreator.</li>
+				</ul>
+			</div>
+			<div style="padding-top: 5px; padding-left: 10px">
+				<h3>Languages</h3>
+				<ul>
+				<li>
+		Native French speaker, fluent English
+		  (lived and worked in the US since 2005).
+				</li>
+				</ul>
+			</div>
+		<br>
+		<!-- <hr> -->
+		<h1>Hobbies and interests</h1>
+			<ul >
+			<li style="padding-bottom: 5px;">
+			Python and open source enthusiast. A couple of hacks on github, google code (pytof: a program for exporting pictures from Apple iPhoto, and a WebSocket C++ library). Did a rapid presentation of test coverage in Python at the bay area baypiggies group. I also presented a talk about an analytic system I wrote at Machine Zone at RedisConf 2019.
+			</li>
+
+			<li style="padding-bottom: 5px;">
+	Used to manage several association at the
+	engineer school (musical association, the students cafeteria).
+			</li>
+
+			<li style="padding-bottom: 5px;">
+	<strong>Sports</strong> : Soccer, Climbing, Hiking, Tennis, Biking, Roller Skating, Snowboard.
+			</li>
+
+			<li style="padding-bottom: 5px;">
+	<strong>Others</strong> : Guitar, Juggling, Unicycling, History, Reading, Rubik's.
+			</li>
+			</ul>
+		<br>
+	</div>
+</body>
+</html>
+
