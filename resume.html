@@ -381,8 +381,24 @@ div.tag-cloud a {
 		<div class="page-break"></div> 
 		<h1>Experience</h1>
 		<div style="padding: 10px;" class="entry">
+			<h3>AppLovin</h3>
+			<em style="padding: 10px;">Palo Alto, California - Senior Techlead Manager: September 2020--Present</em>
+			<ul >
+			<li>
+                Wrote and maintained the first version of the real time inference server backing up AXON-2.
+			</li>
+			<li>
+                Rewrote and maintained an internal file based in memory cache, similar to LevelDB or RocksDB. Used Go.
+			</li>
+			<li>
+                Rewrote and maintained the internal C++ client library on top of curl and libuv, handling an enormous amount of traffic.
+			</li>
+			</ul>
+		</div>
+
+		<div style="padding: 10px;" class="entry">
 			<h3>Machine Zone, Inc, now part of AppLovin.</h3>
-			<em style="padding: 10px;">Palo Alto, California - Staff Software Engineer: January 2016--Present</em>
+			<em style="padding: 10px;">Palo Alto, California - Staff Software Engineer: January 2016--September 2020</em>
 			<ul >
 			<li>
                 Wrote a real time <a href="https://github.com/machinezone/cobra">messaging system</a>, Cobra, used mainly for game analytics, with message dispatching built on top of Redis Streams. Cobra handles 50,000 1K messages per seconds at peak, is running on kubernetes and was <a href="https://www.youtube.com/watch?v=o8CC8qYfRQE&t=436s">presented</a> at the Redis conference in 2019. The system was used for performance monitoring and game usage analytics. Worked to spread Cobra usage accross departments, which lead to some important new use cases such as live code or asset reloading for development and lua <a href="http://www.brendangregg.com/flamegraphs.html">flame graphs</a> creation used to find performance bottlenecks.
