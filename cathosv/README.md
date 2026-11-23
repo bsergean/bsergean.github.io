@@ -84,3 +84,5 @@ Only purpose-specific external destinations remain: maps, Instagram, the parish 
 Additional image sources from the original Marches page:
 - `assets/marche-hommes-2026.jpg`: https://static.wixstatic.com/media/063db8_f2f990314ae34ea8a87ff203c11eb568~mv2.jpg
 - `assets/marche-femmes-2026.jpg`: https://static.wixstatic.com/media/063db8_cae1398a936246bb928a291eee55675d~mv2.png
+
+The same primary menu is present on every page, with direct top-level links to all nine mockup pages (including Marches), and `aria-current` marks the current page.
