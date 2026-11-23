@@ -78,3 +78,9 @@ Images are reused for this CathoSV design proposal; no ownership or broader reus
 All former links to the official site in the preview now lead to local pages: `messes.html`, `agenda.html`, `bienvenue.html`, `jeunes.html`, `adultes.html`, `donner.html`, and `newsletter.html`. They reuse the homepage CSS and navigation script. Homepage links to specific events and activities include the appropriate section anchor.
 
 Only purpose-specific external destinations remain: maps, Instagram, the parish payment portal, the existing Google registration form, and email contacts. The newsletter page prepares an email signup request; it does not claim to subscribe visitors automatically.
+
+`marches.html` is the dedicated equivalent of the original Marches page: upcoming 2027 dates, condensed recaps of the 2026 men's and women's walks, two local photographs, and earlier 2025/2024 memories. It is a summary rather than a verbatim archive of all articles and galleries.
+
+Additional image sources from the original Marches page:
+- `assets/marche-hommes-2026.jpg`: https://static.wixstatic.com/media/063db8_f2f990314ae34ea8a87ff203c11eb568~mv2.jpg
+- `assets/marche-femmes-2026.jpg`: https://static.wixstatic.com/media/063db8_cae1398a936246bb928a291eee55675d~mv2.png
