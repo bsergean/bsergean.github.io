@@ -21,27 +21,29 @@ document.addEventListener('keydown', (event) => {
   }
 });
 const filters = document.querySelector('.filters');
-const events = [...document.querySelectorAll('.event')];
-const today = new Intl.DateTimeFormat('en-CA', {timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-function filterEvents(category) {
-  let count = 0;
-  events.forEach((event) => {
-    const show = event.dataset.end >= today && (category === 'all' || event.dataset.category === category);
-    event.hidden = !show;
-    if (show) count++;
+if (filters) {
+  const events = [...document.querySelectorAll('.event')];
+  const today = new Intl.DateTimeFormat('en-CA', {timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+  function filterEvents(category) {
+    let count = 0;
+    events.forEach((event) => {
+      const show = event.dataset.end >= today && (category === 'all' || event.dataset.category === category);
+      event.hidden = !show;
+      if (show) count++;
+    });
+    document.querySelector('.empty').hidden = count > 0;
+    document.querySelector('#event-status').textContent = `${count} rendez-vous à venir · Sélection des annonces de novembre 2026`;
+  }
+  filters.hidden = false;
+  filters.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-filter]');
+    if (!button) return;
+    filters.querySelectorAll('button').forEach((item) => {
+      const active = item === button;
+      item.classList.toggle('active', active);
+      item.setAttribute('aria-pressed', String(active));
+    });
+    filterEvents(button.dataset.filter);
   });
-  document.querySelector('.empty').hidden = count > 0;
-  document.querySelector('#event-status').textContent = `${count} rendez-vous à venir · Sélection des annonces de novembre 2026`;
+  filterEvents('all');
 }
-filters.hidden = false;
-filters.addEventListener('click', (event) => {
-  const button = event.target.closest('[data-filter]');
-  if (!button) return;
-  filters.querySelectorAll('button').forEach((item) => {
-    const active = item === button;
-    item.classList.toggle('active', active);
-    item.setAttribute('aria-pressed', String(active));
-  });
-  filterEvents(button.dataset.filter);
-});
-filterEvents('all');

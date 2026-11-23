@@ -9,7 +9,7 @@ This is a responsive design prototype, published as an isolated folder in the ex
 - French homepage with Mass times, directions, agenda, welcome information, and activities.
 - Responsive desktop and phone layouts, mobile navigation, accessible native disclosure controls, keyboard focus states, and reduced-motion support.
 - Agenda category filtering and automatic hiding of past entries, using the America/Los_Angeles calendar date. Without JavaScript all sample announcements remain visible.
-- Real links to the official site, email, maps, and Instagram. Newsletter and event registrations use the current site; no subscriber information is collected here.
+- Real links to the official site, email, maps, and Instagram. Content links stay within the preview. Donations use the parish payment provider; the solidarity event uses its existing Google Form. Newsletter signup is requested by email; no subscriber information is collected here.
 - Local optimized images and system fonts; no runtime CDN, third-party JavaScript, cookies, database, or build dependency.
 
 ## Preview locally
@@ -52,7 +52,7 @@ Official references:
 3. Preview and publish; deployment runs automatically.
 4. Hand the role to another volunteer by updating repository/CMS access.
 
-CMS installation, permissions, content schemas, full page migration, redirects, and a volunteer usability check are **not implemented in this prototype**. Do those before moving the official domain. Keep newsletter signups and donations with their current providers unless the organization requests a separate migration.
+CMS installation, permissions, content schemas, complete archival content migration, redirects, and a volunteer usability check are **not implemented in this prototype**. Do those before moving the official domain. Keep newsletter signups and donations with their current providers unless the organization requests a separate migration.
 
 ## Content and images
 
@@ -72,3 +72,9 @@ The source homepage and Mass page disagree on Pittsburg's start time (16:30 vs 1
 `assets/community.jpg`: CathoSV community photograph used on the current homepage. Original source: `https://static.wixstatic.com/media/f0c182_1b883215458d490391cb6c66511875ed~mv2.jpeg`.
 
 Images are reused for this CathoSV design proposal; no ownership or broader reuse license is asserted. Confirm publishing permissions with the organization for the final official website.
+
+## Local content pages
+
+All former links to the official site in the preview now lead to local pages: `messes.html`, `agenda.html`, `bienvenue.html`, `jeunes.html`, `adultes.html`, `donner.html`, and `newsletter.html`. They reuse the homepage CSS and navigation script. Homepage links to specific events and activities include the appropriate section anchor.
+
+Only purpose-specific external destinations remain: maps, Instagram, the parish payment portal, the existing Google registration form, and email contacts. The newsletter page prepares an email signup request; it does not claim to subscribe visitors automatically.
