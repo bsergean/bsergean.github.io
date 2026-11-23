@@ -10,7 +10,7 @@ This is a responsive design prototype, published as an isolated folder in the ex
 - Responsive desktop and phone layouts, mobile navigation, accessible native disclosure controls, keyboard focus states, and reduced-motion support.
 - Agenda category filtering and automatic hiding of past entries, using the America/Los_Angeles calendar date. Without JavaScript all sample announcements remain visible.
 - Real links to the official site, email, maps, and Instagram. Content links stay within the preview. Donations use the parish payment provider; the solidarity event uses its existing Google Form. Newsletter signup is requested by email; no subscriber information is collected here.
-- Local optimized images and system fonts; no runtime CDN, third-party JavaScript, cookies, database, or build dependency.
+- Local optimized images and system fonts; no runtime CDN, third-party JavaScript, cookies, database, or build dependency. Migration scripts run separately from the website.
 
 ## Preview locally
 
@@ -75,9 +75,9 @@ Images are reused for this CathoSV design proposal; no ownership or broader reus
 
 ## Local content pages
 
-All former links to the official site in the preview now lead to local pages: `messes.html`, `agenda.html`, `bienvenue.html`, `jeunes.html`, `adultes.html`, `donner.html`, and `newsletter.html`. They reuse the homepage CSS and navigation script. Homepage links to specific events and activities include the appropriate section anchor.
+Content navigation stays local. The explicitly requested “Ancien site” link at the top of every page opens the official website in a new tab. Local pages include: `messes.html`, `agenda.html`, `bienvenue.html`, `jeunes.html`, `adultes.html`, `donner.html`, and `newsletter.html`. They reuse the homepage CSS and navigation script. Homepage links to specific events and activities include the appropriate section anchor.
 
-Only purpose-specific external destinations remain: maps, Instagram, the parish payment portal, the existing Google registration form, and email contacts. The newsletter page prepares an email signup request; it does not claim to subscribe visitors automatically.
+Apart from the explicit old-site banner link, external destinations are purpose-specific: maps, Instagram, the parish payment portal, the existing Google registration form, and email contacts. The newsletter page prepares an email signup request; it does not claim to subscribe visitors automatically.
 
 `marches.html` is the dedicated equivalent of the original Marches page: upcoming 2027 dates, condensed recaps of the 2026 men's and women's walks, two local photographs, and earlier 2025/2024 memories. It is a summary rather than a verbatim archive of all articles and galleries.
 
@@ -85,4 +85,26 @@ Additional image sources from the original Marches page:
 - `assets/marche-hommes-2026.jpg`: https://static.wixstatic.com/media/063db8_f2f990314ae34ea8a87ff203c11eb568~mv2.jpg
 - `assets/marche-femmes-2026.jpg`: https://static.wixstatic.com/media/063db8_cae1398a936246bb928a291eee55675d~mv2.png
 
-The same primary menu is present on every page, with direct top-level links to all nine mockup pages (including Marches), and `aria-current` marks the current page.
+The same primary menu is present on every page, with direct top-level links to all ten mockup pages (including Marches), and `aria-current` marks the current page.
+
+## Desktop layout and complete image transfer
+
+The layout now uses a wider desktop canvas, paired title/cover layouts, full-width photo grids, and a compact horizontal related-links area. Content pages use two columns where appropriate; phone layouts collapse to one column. The menu collapses below 1100px to avoid crowding on laptops/tablets.
+
+`photos.html` is a complete browsable image archive grouped by original page and blog post. Every original Marches content image (23 total) is also displayed in its corresponding section, and matching images are restored on the youth, adult, community, Mass, and donation pages. The Photos menu entry appears everywhere.
+
+The transfer inventory covers all 138 public URLs listed in the original site's sitemaps. It includes image references in HTML and Wix image metadata. Original image bytes are preserved in `assets/migrated/`; `migration/image-manifest.json` records each source URL, source page, file size, and SHA-256 checksum. Private or unlisted pages and non-image videos are outside this inventory.
+
+Smaller WebP previews in `assets/previews/` make galleries faster to browse. Selecting an image opens an accessible viewer with previous/next controls and a direct original-file link. The originals also open directly without JavaScript. The archive's albums remain closed until requested to avoid loading every image on a phone.
+
+To repeat the inventory and rebuild previews (a maintainer operation, not a volunteer publishing step):
+
+```sh
+python3 cathosv/scripts/migrate-images.py
+# Use a Python environment with Pillow installed for the gallery builder.
+python3 cathosv/scripts/build-galleries.py
+```
+
+Review source changes before publishing. The Marches grouping deliberately checks the expected 23 content images so a changed source layout is not silently assigned to the wrong year. Original photos account for roughly 356 MiB of the repository; normal page views use the much smaller previews.
+
+The homepage Mass invitation now lives in a separate responsive strip below the hero, with heading, time/address, and directions laid out independently. It no longer depends on a narrow floating card inside the hero.

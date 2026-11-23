@@ -47,3 +47,73 @@ if (filters) {
   });
   filterEvents('all');
 }
+
+// Native dialog keeps gallery navigation keyboard accessible; links still work without JS.
+const photoLinks = [...document.querySelectorAll('a[data-photo]')];
+if (photoLinks.length) {
+  const viewer = document.createElement('dialog');
+  viewer.className = 'photo-viewer';
+  viewer.setAttribute('aria-label', 'Visionneuse de photos');
+  viewer.innerHTML = '<div class="viewer-toolbar"><p>Photos CathoSV</p><button type="button" data-close>Fermer</button></div><img class="viewer-image" alt=""><p class="viewer-caption" aria-live="polite"></p><div class="viewer-controls"><button type="button" data-previous>Précédente</button><a target="_blank" rel="noopener noreferrer" data-original>Ouvrir l’original</a><button type="button" data-next>Suivante</button></div>';
+  document.body.append(viewer);
+  let collection = [];
+  let selected = 0;
+  let opener;
+  const image = viewer.querySelector('.viewer-image');
+  function showPhoto(index) {
+    selected = (index + collection.length) % collection.length;
+    const link = collection[selected];
+    image.src = link.href;
+    image.alt = link.dataset.caption;
+    viewer.querySelector('[data-original]').href = link.href;
+    viewer.querySelector('.viewer-caption').textContent = `${link.dataset.caption} · ${selected + 1} / ${collection.length}`;
+    viewer.querySelector('[data-previous]').disabled = collection.length < 2;
+    viewer.querySelector('[data-next]').disabled = collection.length < 2;
+  }
+  photoLinks.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      opener = link;
+      collection = [...link.closest('.photo-grid').querySelectorAll('[data-photo]')];
+      showPhoto(collection.indexOf(link));
+      viewer.showModal();
+      viewer.querySelector('[data-close]').focus();
+    });
+  });
+  viewer.querySelector('[data-close]').addEventListener('click', () => viewer.close());
+  viewer.querySelector('[data-previous]').addEventListener('click', () => showPhoto(selected - 1));
+  viewer.querySelector('[data-next]').addEventListener('click', () => showPhoto(selected + 1));
+  viewer.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') { event.preventDefault(); showPhoto(selected - 1); }
+    if (event.key === 'ArrowRight') { event.preventDefault(); showPhoto(selected + 1); }
+  });
+  viewer.addEventListener('click', (event) => {
+    const bounds = viewer.getBoundingClientRect();
+    if (event.target === viewer && (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom)) viewer.close();
+  });
+  viewer.addEventListener('close', () => {
+    image.removeAttribute('src');
+    if (opener) opener.focus({ preventScroll: true });
+  });
+}
+
+const albumPicker = document.querySelector('#album-picker');
+function revealAlbum() {
+  const album = document.getElementById(location.hash.slice(1));
+  if (album?.matches('details.album')) {
+    album.open = true;
+    album.scrollIntoView({ block: 'start' });
+    if (albumPicker) albumPicker.value = album.id;
+  }
+}
+if (albumPicker) {
+  albumPicker.addEventListener('change', () => {
+    if (albumPicker.value) {
+      location.hash = albumPicker.value;
+      revealAlbum();
+    }
+  });
+  window.addEventListener('hashchange', revealAlbum);
+  revealAlbum();
+}
