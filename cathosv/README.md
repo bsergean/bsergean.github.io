@@ -74,3 +74,7 @@ Static HTML is committed under `cathosv/`. GitHub Pages currently builds from `m
 ## Production handoff
 
 The volunteer-facing visual editor, access management, redirects for a domain migration, and operational handoff are still separate work. A production Astro + Pages CMS setup remains an option when there is an occasional technical maintainer. If nobody will maintain that setup, redesigning within Wix remains the simpler handoff. Neither option justifies changing the authors' wording during migration.
+
+## Homepage presentation
+
+The homepage uses its own `front.css` stylesheet: welcome text beside the community photo, four Mass cards, expandable event cards, newsletter/support/social information, and the original Blog highlights. Complete additional announcements are grouped in an expandable list. No authored wording is summarized or removed. Decorative source line breaks may reflow naturally on small screens. Native disclosure controls work without JavaScript; source links pointing into an announcement expand it automatically when JavaScript is available. The renderer verifies that every original homepage block is assigned once.

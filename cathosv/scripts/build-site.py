@@ -164,8 +164,9 @@ def footer(page,current):
     return '<footer id="contact" class="wrap source-footer"><div class="original-footer">'+render_blocks(page,current,footer=True)+'</div></footer>'
 
 def shell(current,title,body,page,description=''):
+    extra_style=('<link rel="stylesheet" href="front.css?v='+sha256((ROOT/'front.css').read_bytes()).hexdigest()[:12]+'">') if current=='index.html' else ''
     return f'''<!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#173f35"><meta name="robots" content="noindex, nofollow"><meta name="description" content="{escape(description or title,quote=True)}"><title>{escape(title)} · CathoSV</title><link rel="icon" href="{relative('assets/favicon.svg',current)}" type="image/svg+xml"><link rel="stylesheet" href="{relative('style.css',current)}?v={CSS}"><script src="{relative('script.js',current)}?v={JS}" defer></script></head><body>{header(current)}<main id="contenu">{body}</main>{footer(page,current)}</body></html>'''
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#173f35"><meta name="robots" content="noindex, nofollow"><meta name="description" content="{escape(description or title,quote=True)}"><title>{escape(title)} · CathoSV</title><link rel="icon" href="{relative('assets/favicon.svg',current)}" type="image/svg+xml"><link rel="stylesheet" href="{relative('style.css',current)}?v={CSS}">{extra_style}<script src="{relative('script.js',current)}?v={JS}" defer></script></head><body>{header(current)}<main id="contenu">{body}</main>{footer(page,current)}</body></html>'''
 
 def intro(page,current):
     title=escape(page['title']);meta=''
@@ -179,16 +180,133 @@ def post_list(current):
     # Original titles and author names are used without generated descriptions.
     return '<div class="original-post-list">'+''.join('<article><h2><a href="'+relative(p['local_path'],current)+'">'+escape(p['title'])+'</a></h2><p>'+escape(p.get('author') or '')+'</p></article>' for p in posts)+'</div>'
 
+def front_page(page,current):
+    """Arrange the complete original homepage into readable, expandable sections."""
+    assert len(page['blocks'])==156, 'Review homepage layout against the updated source snapshot.'
+    used=Counter()
+    def take(indices):
+        indices=list(indices);used.update(indices)
+        return render_blocks(page,current,indices)
+    def soup_html(html):
+        soup=BeautifulSoup(html,'lxml')
+        return soup
+    def body_html(soup):return ''.join(str(child) for child in soup.body.contents)
+    def linked_heading(index,href,button=False):
+        soup=soup_html(take([index]))
+        heading=soup.find(re.compile('^h[1-6]$'))
+        assert heading is not None,(index,'Expected an original heading')
+        for existing in list(heading.find_all('a')):existing.unwrap()
+        a=soup.new_tag('a',href=href)
+        if button:a['class']='button'
+        for child in list(heading.contents):a.append(child.extract())
+        heading.append(a)
+        return body_html(soup)
+
+    # Original welcome wording; only the typography and semantic heading change.
+    welcome=soup_html(take([2]))
+    paragraphs=welcome.select('.source-text p')
+    assert len(paragraphs)==2
+    paragraphs[0]['class']='front-eyebrow'
+    paragraphs[1].name='h1'
+    welcome_html=body_html(welcome)
+    jump=linked_heading(3,'#evenements',button=True)
+    portrait=take([1])
+    hero='<section class="front-hero"><div class="wrap front-hero-grid"><div class="front-welcome">'+welcome_html+'<div class="front-hero-jump">'+jump+'</div></div><div class="front-hero-visual">'+portrait+'</div></div></section>'
+
+    # Preserve each city's full original sentence, with a useful local destination.
+    mass_title=take([4])
+    masses=soup_html(take([5]))
+    container=masses.select_one('.source-text > div')
+    assert container is not None
+    container['class']='front-mass-grid'
+    destinations=[('Los Altos','messes.html'),('San Francisco',ROUTES['/copy-of-east-bay-st-jarlath']),('Pittsburg',ROUTES['/general-1-1']),('Oakland',ROUTES['/east-bay-st-jarlath'])]
+    cities=[]
+    for paragraph in container.find_all('p',recursive=False):
+        text=norm(paragraph.get_text())
+        if not text.strip('\u200b\ufeff '):continue
+        name,target=next((name,target) for name,target in destinations if text.startswith(name))
+        original_text=paragraph.get_text('',strip=False)
+        label=re.match(r'(\s*'+re.escape(name)+r'\s*:?[ \u00a0]*)',original_text)
+        assert label is not None
+        paragraph.clear()
+        anchor=masses.new_tag('a',href=relative(target,current))
+        strong=masses.new_tag('strong');strong.string=label[1]
+        anchor.append(strong);anchor.append(original_text[label.end():])
+        paragraph.append(anchor);paragraph['class']='front-mass-city';cities.append(name)
+    assert len(cities)==4
+    mass='<section class="front-masses"><div class="wrap">'+mass_title+body_html(masses)+'</div></section>'
+
+    # Source teasers are paired with their complete original announcements.
+    teasers=[
+        (16,17,37,41),(18,19,54,58),(20,21,62,66),(22,23,45,49),
+        (24,25,58,62),(26,27,83,86),(28,29,49,54),(30,31,41,45),
+        (32,33,79,83),(34,35,66,70),
+    ]
+    def summary_content(indices):
+        soup=soup_html(take(indices))
+        # The whole native summary opens the announcement; avoid nested links.
+        for br in list(soup.find_all('br')):br.decompose()
+        for a in list(soup.find_all('a')):
+            if a.get('data-source-image'):
+                image=a.find('img');image['data-source-image']=a['data-source-image']
+            a.unwrap()
+        return body_html(soup)
+    cards=[]
+    for image,title,start,end in teasers:
+        summary=summary_content([image,title])
+        story=take(range(start,end))
+        cards.append(f'<details class="front-event-card" id="front-story-{start}"><summary><div class="front-card-summary">'+summary+'</div></summary><div class="front-story-content">'+story+'</div></details>')
+
+    other_ranges=[(72,76),(76,79),(86,89),(89,93),(93,102),(102,125),(125,130),(130,134),(134,138)]
+    more=[]
+    for start,end in other_ranges:
+        summary=summary_content([start]);story=take(range(start+1,end))
+        more.append(f'<details class="front-story-row" id="front-story-{start}"><summary>'+summary+'</summary><div class="front-story-content">'+story+'</div></details>')
+
+    # Original newsletter, support, social and Monday information become an aside.
+    newsletter=linked_heading(9,'newsletter.html')+take([13])
+    support=soup_html(take([10,11,12]))
+    for a in support.select('[data-source-block="12"] a'):a['class']='button'
+    social=take([6,7,8])
+    mondays=take([70,71])
+    sidebar='<aside class="front-sidebar"><section class="front-sidebar-card front-newsletter">'+newsletter+'</section><section class="front-sidebar-card front-support">'+body_html(support)+'</section><section class="front-sidebar-card front-social">'+social+'</section><section class="front-sidebar-note">'+mondays+'</section></aside>'
+
+    event_heading=take([14]);event_instruction=take([15]);agenda_link=linked_heading(36,'agenda.html',button=True)
+    events='<div class="wrap front-content-grid"><section class="front-events"><div class="front-events-heading"><div>'+event_heading+event_instruction+'</div><div class="front-agenda-link">'+agenda_link+'</div></div><div class="front-event-grid">'+''.join(cards)+'</div></section>'+sidebar+'</div><section class="wrap front-more-section"><details class="front-more"><summary>Autres annonces <span>'+str(len(more))+'</span></summary><div class="front-story-list">'+''.join(more)+'</div></details></section>'
+
+    # Preserve all original Blog highlights without showing Wix's duplicate slides.
+    blog_heading=take([138]);blog_cards=[]
+    for indices,title_index in [([139,140,141],141),([142,143,144],144),([145,146,147,148],148)]:
+        soup=soup_html(take(indices))
+        matches=[p for p in PAGES if p['kind']=='post' and norm(p['title'])==norm(page['blocks'][title_index]['text'])]
+        assert len(matches)==1,('Blog highlight target',title_index)
+        href=relative(matches[0]['local_path'],current)
+        seen=set()
+        for tile in list(soup.select('[data-source-image]')):
+            identity=(tile['data-source-image'],tile.get('href'))
+            if identity in seen:tile.decompose();continue
+            seen.add(identity)
+            tile['href']=href;tile.attrs.pop('data-photo',None)
+        heading=soup.select_one(f'[data-source-block="{title_index}"]')
+        if not heading.find('a'):
+            tag=heading.find(re.compile('^h[1-6]$'))
+            a=soup.new_tag('a',href=href)
+            for child in list(tag.contents):a.append(child.extract())
+            tag.append(a)
+        blog_cards.append('<article class="front-blog-card">'+body_html(soup)+'</article>')
+    blog='<section class="front-blog"><div class="wrap">'+blog_heading+'<div class="front-blog-grid">'+''.join(blog_cards)+'</div></div></section>'
+
+    # Retain the original calendar block without exposing its setup panel by default.
+    calendar='<section class="wrap front-calendar"><details class="front-story-row"><summary>'+summary_content([149])+'</summary><div class="front-story-content">'+take(range(150,156))+'</div></details></section>'
+    used.update([0]);bridge=page['blocks'][0];asset=ASSETS[bridge['key']]
+    scenery='<div class="wrap front-scenery"><figure data-source-image="'+escape(bridge['key'],quote=True)+'"><img src="'+asset['display']+'" width="'+str(asset['width'])+'" height="'+str(asset['height'])+'" alt="'+escape(bridge.get('alt',''),quote=True)+'" loading="lazy"><figcaption>'+escape(bridge.get('alt',''))+'</figcaption></figure></div>'
+    assert used==Counter(range(len(page['blocks']))),('Homepage blocks omitted or duplicated',used-Counter(range(len(page['blocks']))),Counter(range(len(page['blocks'])))-used)
+    return '<div class="front-page">'+hero+mass+events+blog+calendar+scenery+'</div>'
+
 for page in PAGES:
     current=page['local_path'];outpath=ROOT/current;outpath.parent.mkdir(exist_ok=True)
     if current=='index.html':
-        # Reuse original welcome and Mass blocks in the existing visual regions.
-        welcome=render_blocks(page,current,[2])
-        welcome=welcome.replace('<p>','<h1>',1).replace('</p>','</h1>',1)
-        hero='<section class="hero original-home-hero" data-source-image="'+page['blocks'][0]['key']+'"><div class="hero-inner wrap"><div class="hero-copy">'+welcome+'<a class="button gold" href="#evenements">Les événements CathoSV</a></div></div><p class="photo-credit">'+escape(page['blocks'][0].get('alt',''))+'</p></section>'
-        mass='<section class="mass-banner"><div class="wrap original-mass-banner">'+render_blocks(page,current,[4,5])+'</div></section>'
-        remaining=[i for i in range(len(page['blocks'])) if i not in [0,2,4,5]]
-        body=hero+mass+'<div class="wrap original-content original-home">'+render_blocks(page,current,remaining)+'</div>'
+        body=front_page(page,current)
     else:
         body=intro(page,current)+'<div class="wrap original-content'+(' original-post' if page['kind']=='post' else '')+'">'+render_blocks(page,current)+'</div>'
         if current=='blog.html':body+='<section class="wrap section"><h2>Blog</h2>'+post_list(current)+'</section>'

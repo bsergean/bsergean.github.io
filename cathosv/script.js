@@ -131,3 +131,21 @@ document.addEventListener('click', (event) => {
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') navigationGroups.forEach((group) => { group.open = false; });
 });
+
+// Source links and shared URLs may point inside a collapsed homepage story.
+if (document.querySelector('.front-page')) {
+  function revealFrontTarget() {
+    if (!location.hash) return;
+    let id;
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
+    const target = document.getElementById(id);
+    if (!target) return;
+    let expanded = false;
+    for (let node = target; node; node = node.parentElement) {
+      if (node.matches('details') && !node.open) { node.open = true; expanded = true; }
+    }
+    if (expanded) requestAnimationFrame(() => target.scrollIntoView({block:'start'}));
+  }
+  window.addEventListener('hashchange', revealFrontTarget);
+  revealFrontTarget();
+}
