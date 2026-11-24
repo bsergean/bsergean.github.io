@@ -117,3 +117,17 @@ if (albumPicker) {
   window.addEventListener('hashchange', revealAlbum);
   revealAlbum();
 }
+
+// The original menu groups work with native details controls, with or without JS.
+const navigationGroups = [...document.querySelectorAll('#navigation .nav-group')];
+navigationGroups.forEach((group) => {
+  group.addEventListener('toggle', () => {
+    if (group.open) navigationGroups.forEach((other) => { if (other !== group) other.open = false; });
+  });
+});
+document.addEventListener('click', (event) => {
+  if (!nav.contains(event.target) && !toggle.contains(event.target)) navigationGroups.forEach((group) => { group.open = false; });
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') navigationGroups.forEach((group) => { group.open = false; });
+});
